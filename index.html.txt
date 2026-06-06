@@ -125,7 +125,7 @@
 
         .gacha-card {
             background: var(--bg-container);
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             padding: 15px;
             border-radius: 5px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -187,19 +187,19 @@
 </div>
 
 <script>
-    // Конфигурация цветов для новых буквенных рангов
+    // Красивые кастомные цвета под новые ранги (в духе редких предметов из RPG)
     const TIERS = {
-        'N':    { name: 'Normal (Обычный)', color: '#808080' },
-        'R':    { name: 'Rare (Редкий)', color: '#1EFF00' },
-        'SR':   { name: 'Super Rare (Сверхредкий)', color: '#0070DD' },
-        'SSR':  { name: 'Super Super Rare (Топовый)', color: '#A335EE' },
-        'SSRX': { name: 'Super Super Rare Extra (Высший)', color: '#FF8000' }
+        'N':    { name: 'Normal (Обычный)', color: '#888888' },
+        'R':    { name: 'Rare (Редкий)', color: '#3498db' },
+        'SR':   { name: 'Super Rare (Сверхредкий)', color: '#9b59b6' },
+        'SSR':  { name: 'Super Super Rare (Топовый)', color: '#e67e22' },
+        'SSRX': { name: 'Super Super Rare Extra (Высший)', color: '#ffd700' }
     };
 
-    let FANDOMS_REGISTRY = []; // Список из fandoms_list.txt
+    let FANDOMS_REGISTRY = []; // Массив для fandoms_list.txt
     let CURRENT_LOTS = [];     // Лоты текущего выбранного фандома
 
-    // Автоматическая загрузка реестра при старте страницы
+    // Загрузка реестра при старте страницы
     window.addEventListener('DOMContentLoaded', () => {
         loadFandomsRegistry();
     });
@@ -252,13 +252,13 @@
         resBox.style.color = 'var(--color-gold)';
         resBox.innerText = `🎯 Тебе выпал баннер: ${selected.name}`;
         
-        // Автоматически переключаем выпадающий список на этот фандом для удобства автора
+        // Переключаем выпадающий список на этот фандом для удобства автора
         const select = document.getElementById('fandomSelect');
         select.value = selected.id;
         onFandomChange();
     }
 
-    // Загрузка лотов конкретного фандома при смене выбора
+    // Загрузка и парсинг лотов конкретного фандома при смене выбора
     async function onFandomChange() {
         const id = document.getElementById('fandomSelect').value;
         if (!id) return;
@@ -294,7 +294,7 @@
                             inlineDesc = rest.substring(hashIndex + 1).trim();
                         }
 
-                        // Убираем точку на конце имени, если она осталась после копирования
+                        // Убираем случайную точку в конце названия, если она осталась после копирования
                         if (name.endsWith('.')) name = name.slice(0, -1).trim();
 
                         currentLot = { tier, name, desc: inlineDesc ? [inlineDesc] : [] };
@@ -310,17 +310,17 @@
         }
     }
 
-    // Крутка с гарантированным исключением дубликатов внутри одной сессии
+    // Крутка с гарантированным исключением дубликатов внутри одной сессии (х10)
     function rollGacha(count) {
         if (CURRENT_LOTS.length === 0) {
-            alert('Сначала выберите фандом!');
+            alert('Сначала выберите фандом из списка!');
             return;
         }
 
         const container = document.getElementById('gachaResultsContainer');
         container.innerHTML = '';
 
-        // Создаем временную копию базы, чтобы удалять оттуда лоты по мере выпадения
+        // Копируем пул, чтобы вырезать из него предметы по мере выпадения
         let pool = [...CURRENT_LOTS];
         let rolls = Math.min(count, pool.length);
 
@@ -328,7 +328,7 @@
             const index = Math.floor(Math.random() * pool.length);
             const item = pool[index];
             
-            // Удаляем лот из пула, обеспечивая 100% уникальность в этой прокрутке
+            // Удаляем лот из пула, обеспечивая уникальность внутри этой прокрутки
             pool.splice(index, 1);
 
             const card = document.createElement('div');
