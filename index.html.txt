@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiverse Chaos Gacha</title>
+    <style>
+        :root {
+            --bg-body: #0a0a0a;
+            --bg-container: #121212;
+            --bg-card: #1a1a1a;
+            --color-text: #ffffff;
+            --color-text-muted: #aaaaaa;
+            --color-gold: #ffd700;
+            --border-color: #ffd700;
+            --border-style: 2px solid var(--color-gold);
+            --shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--color-text);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--bg-container);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border: var(--border-style);
+            box-sizing: border-box;
+        }
+
+        h1 { 
+            text-align: center;
+            color: var(--color-gold); 
+            margin-top: 0; 
+            font-size: 32px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .section {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--color-gold);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .roulette-box {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .roll-btn {
+            background: var(--color-gold);
+            color: var(--bg-container);
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            margin: 10px;
+        }
+
+        .roll-btn:hover {
+            background: transparent;
+            color: var(--color-gold);
+        }
+
+        .roulette-result {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 30px;
+        }
+
+        .gacha-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        select {
+            background: var(--bg-container);
+            color: var(--color-text);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            font-family: inherit;
+            flex-grow: 1;
+            outline: none;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gacha-card {
+            background: var(--bg-container);
+            border: 2px solid var(--border-color);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-tier {
+            font-weight: bold;
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .card-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #dddddd;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>МУЛЬТИВСЕЛЕНСКАЯ ХАОС-ГАЧА</h1>
+
+    <div class="section">
+        <div class="section-title">🎰 Рулетка Баннеров (Советчик)</div>
+        <div class="roulette-box">
+            <p style="color: var(--color-text-muted); margin-top: 0;">Не знаете, что покрутить? Испытайте удачу в рулетке сеттингов!</p>
+            <button class="roll-btn" onclick="rollBannerRoulette()">КРУТИТЬ РУЛЕТКУ</button>
+            <div class="roulette-result" id="rouletteResult"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🔮 Зал Баннеров</div>
+        
+        <div class="gacha-controls">
+            <select id="fandomSelect" onchange="onFandomChange()">
+                <option value="" disabled selected>Загрузка фандомов...</option>
+            </select>
+            
+            <button class="roll-btn" onclick="rollGacha(1)">КРУТИТЬ х1</button>
+            <button class="roll-btn" onclick="rollGacha(10)">КРУТИТЬ х10</button>
+        </div>
+
+        <div id="statusInfo" style="color: var(--color-text-muted); text-align: center; font-size: 14px;"></div>
+        
+        <div class="results-grid" id="gachaResultsContainer"></div>
+    </div>
+</div>
+
+<script>
+    const TIERS = {
+        'N':    { name: 'Normal (Обычный)', color: '#888888' },
+        'R':    { name: 'Rare (Редкий)', color: '#3498db' },
+        'SR':   { name: 'Super Rare (Сверхредкий)', color: '#9b59b6' },
+        'SSR':  { name: 'Super Super Rare (Топовый)', color: '#e67e22' },
+        'SSRX': { name: 'Super Super Rare Extra (Высший)', color: '#ffd700' }
+    };
+
+    let FANDOMS_REGISTRY = []; 
+    let CURRENT_LOTS = [];     
+
+    window.addEventListener('DOMContentLoaded', () => {
+        loadFandomsRegistry();
+    });
+
+    async function loadFandomsRegistry() {
+        try {
+            const response = await fetch('fandoms_list.txt');
+            if (!response.ok) throw new Error('Не найден файл fandoms_list.txt');
+            const text = await response.text();
+            
+            FANDOMS_REGISTRY = text.split('\n')
+                .map(line => line.trim())
+                .filter(line => line && !line.startsWith('#'))
+                .map(line => {
+                    const [id, name, weight] = line.split('|').map(s => s.trim());
+                    return { id, name, weight: parseFloat(weight) || 1 };
+                });
+
+            const select = document.getElementById('fandomSelect');
+            select.innerHTML = '<option value="" disabled selected>-- Выберите фандом для прокрутки --</option>';
+            
+            FANDOMS_REGISTRY.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f.id;
+                opt.innerText = f.name;
+                select.appendChild(opt);
+            });
+            
+            document.getElementById('statusInfo').innerText = `База данных синхронизирована. Доступно баннеров: ${FANDOMS_REGISTRY.length}`;
+        } catch (err) {
+            console.error(err);
+            document.getElementById('statusInfo').innerText = "Ошибка: не удалось загрузить fandoms_list.txt";
+        }
+    }
+
+    function rollBannerRoulette() {
+        if (FANDOMS_REGISTRY.length === 0) return;
+        
+        const totalWeight = FANDOMS_REGISTRY.reduce((sum, f) => sum + f.weight, 0);
+        let random = Math.random() * totalWeight;
+        
+        let selected = FANDOMS_REGISTRY[0];
+        for (let f of FANDOMS_REGISTRY) {
+            random -= f.weight;
+            if (random <= 0) { selected = f; break; }
+        }
+
+        const resBox = document.getElementById('rouletteResult');
+        resBox.style.color = 'var(--color-gold)';
+        resBox.innerText = `🎯 Тебе выпал баннер: ${selected.name}`;
+        
+        const select = document.getElementById('fandomSelect');
+        select.value = selected.id;
+        onFandomChange();
+    }
+
+    async function onFandomChange() {
+        const id = document.getElementById('fandomSelect').value;
+        if (!id) return;
+
+        try {
+            const response = await fetch(`banners_data/${id}.txt`);
+            if (!response.ok) throw new Error(`Не найден файл лотов banners_data/${id}.txt`);
+            const text = await response.text();
+
+            const lines = text.split('\n').map(l => l.trim());
+            CURRENT_LOTS = [];
+            let currentLot = null;
+
+            for (let line of lines) {
+                if (!line) continue;
+
+                if (line.startsWith('#')) {
+                    if (currentLot) {
+                        currentLot.desc.push(line.substring(1).trim());
+                    }
+                } else {
+                    const dotIndex = line.indexOf('.');
+                    if (dotIndex !== -1) {
+                        const tier = line.substring(0, dotIndex).trim().toUpperCase();
+                        let rest = line.substring(dotIndex + 1).trim();
+                        
+                        let name = rest;
+                        let inlineDesc = "";
+                        
+                        const hashIndex = rest.indexOf('#');
+                        if (hashIndex !== -1) {
+                            name = rest.substring(0, hashIndex).trim();
+                            inlineDesc = rest.substring(hashIndex + 1).trim();
+                        }
+
+                        if (name.endsWith('.')) name = name.slice(0, -1).trim();
+
+                        currentLot = { tier, name, desc: inlineDesc ? [inlineDesc] : [] };
+                        CURRENT_LOTS.push(currentLot);
+                    }
+                }
+            }
+            document.getElementById('statusInfo').innerText = `Успешно загружено лотов из баннера: ${CURRENT_LOTS.length}`;
+            document.getElementById('gachaResultsContainer').innerHTML = ''; 
+        } catch (err) {
+            console.error(err);
+            alert('Не удалось загрузить лоты для этого баннера. Проверьте наличие файла в папке banners_data/.');
+        }
+    }
+
+    function rollGacha(count) {
+        if (CURRENT_LOTS.length === 0) {
+            alert('Сначала выберите фандом из списка!');
+            return;
+        }
+
+        const container = document.getElementById('gachaResultsContainer');
+        container.innerHTML = '';
+
+        let pool = [...CURRENT_LOTS];
+        let rolls = Math.min(count, pool.length);
+
+        for (let i = 0; i < rolls; i++) {
+            const index = Math.floor(Math.random() * pool.length);
+            const item = pool[index];
+            
+            pool.splice(index, 1);
+
+            const card = document.createElement('div');
+            card.className = 'gacha-card';
+            
+            const tierData = TIERS[item.tier] || { name: item.tier, color: '#ffffff' };
+            card.style.borderColor = tierData.color;
+
+            card.innerHTML = `
+                <div class="card-tier" style="color: ${tierData.color};">[${tierData.name}]</div>
+                <div class="card-name" style="color: ${tierData.color};">${item.name}</div>
+                <div class="card-desc">${item.desc.join('\n') || 'Описание отсутствует.'}</div>
+            `;
+            container.appendChild(card);
+        }
+    }
+</script>
+</body>
+</html>
