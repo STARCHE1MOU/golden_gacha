@@ -5,199 +5,335 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiverse Chaos Gacha</title>
     <style>
+        /* Оригинальная палитра: глубокая тьма и золото */
         :root {
-            --bg-body: #0a0a0a;
-            --bg-container: #121212;
-            --bg-card: #1a1a1a;
+            --bg-body: #050505;
+            --bg-container: #0d0d0d;
+            --bg-card: #141414;
             --color-text: #ffffff;
-            --color-text-muted: #aaaaaa;
+            --color-text-muted: #777777;
             --color-gold: #ffd700;
-            --border-color: #ffd700;
-            --border-style: 2px solid var(--color-gold);
-            --shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            --color-gold-dark: #b39200;
+            --border-color: #222222;
+            --font-main: 'Courier New', Courier, monospace;
         }
 
         body {
             background-color: var(--bg-body);
             color: var(--color-text);
-            font-family: 'Courier New', Courier, monospace;
+            font-family: var(--font-main);
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
         
-        .container {
-            max-width: 1000px;
+        .wrapper {
+            max-width: 1100px;
             width: 100%;
-            background: var(--bg-container);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            border: var(--border-style);
             box-sizing: border-box;
+            padding: 40px 20px;
         }
 
-        h1 { 
+        header {
             text-align: center;
-            color: var(--color-gold); 
-            margin-top: 0; 
-            font-size: 32px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            margin-bottom: 40px;
         }
 
-        .section {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
+        header h1 {
             color: var(--color-gold);
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
+            font-size: 28px;
+            letter-spacing: 4px;
             text-transform: uppercase;
+            margin: 0 0 10px 0;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
         }
 
-        .roulette-box {
-            text-align: center;
-            padding: 15px;
+        header p {
+            color: var(--color-text-muted);
+            font-size: 14px;
+            margin: 0;
         }
 
-        .roll-btn {
-            background: var(--color-gold);
-            color: var(--bg-container);
-            font-size: 18px;
+        /* НАВИГАЦИЯ (МЕНЮ ПЕРЕКЛЮЧЕНИЯ РАЗДЕЛОВ) */
+        nav {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            font-family: var(--font-main);
+            font-size: 15px;
             font-weight: bold;
-            padding: 12px 30px;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
+            padding: 15px 25px;
             cursor: pointer;
+            text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.2s;
-            margin: 10px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-text);
+        }
+
+        .tab-btn.active {
+            color: var(--color-gold);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-gold);
+            box-shadow: 0 0 10px var(--color-gold);
+        }
+
+        /* ОКНА СЕКЦИЙ */
+        .tab-content {
+            display: none; /* По умолчанию скрываем все разделы */
+            background: var(--bg-container);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        .tab-content.active {
+            display: block; /* Показываем только активный раздел */
+        }
+
+        /* РАЗДЕЛ 1: МАНИФЕСТ */
+        .manifesto-text {
+            line-height: 1.8;
+            color: #dddddd;
+            font-size: 15px;
+        }
+        .manifesto-text h3 {
+            color: var(--color-gold);
+            text-transform: uppercase;
+            margin-top: 25px;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        /* КНОПКИ И УПРАВЛЕНИЕ */
+        .roll-btn {
+            background: transparent;
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: bold;
+            padding: 14px 35px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s ease;
         }
 
         .roll-btn:hover {
-            background: transparent;
-            color: var(--color-gold);
+            background: var(--color-gold);
+            color: var(--bg-body);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .roulette-wrapper {
+            text-align: center;
+            padding: 40px 0;
         }
 
         .roulette-result {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
-            margin-top: 15px;
-            min-height: 30px;
+            margin-top: 30px;
+            min-height: 40px;
+            letter-spacing: 1px;
         }
 
-        .gacha-controls {
+        .gacha-interface {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .controls-row {
             display: flex;
             gap: 15px;
             align-items: center;
-            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         select {
-            background: var(--bg-container);
+            background: var(--bg-body);
             color: var(--color-text);
             border: 1px solid var(--border-color);
-            padding: 10px;
-            font-size: 16px;
+            padding: 14px;
+            font-size: 15px;
             border-radius: 4px;
             font-family: inherit;
             flex-grow: 1;
             outline: none;
+            cursor: pointer;
+            letter-spacing: 1px;
         }
 
+        select:focus {
+            border-color: var(--color-gold);
+        }
+
+        #statusInfo {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* СЕТКА И СТИЛЬ КАРТОЧЕК ЛОТОВ */
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
             margin-top: 20px;
         }
 
         .gacha-card {
-            background: var(--bg-container);
-            border: 2px solid var(--border-color);
-            padding: 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px;
             border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gacha-card:hover {
+            transform: translateY(-2px);
         }
 
         .card-tier {
             font-weight: bold;
-            font-size: 12px;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
 
         .card-name {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
 
         .card-desc {
-            font-size: 14px;
-            color: #dddddd;
-            line-height: 1.4;
+            font-size: 13px;
+            color: #b0b0b0;
+            line-height: 1.5;
             white-space: pre-wrap;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>МУЛЬТИВСЕЛЕНСКАЯ ХАОС-ГАЧА</h1>
+<div class="wrapper">
+    <header>
+        <h1>Multiverse Chaos Gacha</h1>
+        <p id="statusInfo">Синхронизация с системой...</p>
+    </header>
 
-    <div class="section">
-        <div class="section-title">🎰 Рулетка Баннеров (Советчик)</div>
-        <div class="roulette-box">
-            <p style="color: var(--color-text-muted); margin-top: 0;">Не знаете, что покрутить? Испытайте удачу в рулетке сеттингов!</p>
-            <button class="roll-btn" onclick="rollBannerRoulette()">КРУТИТЬ РУЛЕТКУ</button>
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('manifesto')">📜 Манифест</button>
+        <button class="tab-btn" onclick="switchTab('roulette')">🎰 Рулетка</button>
+        <button class="tab-btn" onclick="switchTab('hall')">🔮 Зал Круток</button>
+    </nav>
+
+    <div id="manifesto" class="tab-content active">
+        <div class="manifesto-text">
+            <h3>Добро пожаловать в генератор Мультивселенной</h3>
+            <p>Этот инструмент создан специально для писателей, авторов фанфиков и создателей миров. Если ваш сюжет зашел в тупик, или вы хотите добавить в главу чистокровного, непредсказуемого хаоса — вы обратились по адресу.</p>
+            
+            <h3>Манифест Писателя</h3>
+            <p>Мы не считаем килотонны энергии и не выстраиваем жесткие математические балансы силы. Помните: Хаос правит бал. Если вашему персонажу в фанфике по реалистичному сеттингу внезапно выпадает Элитра или Алмазная кирка из Майнкрафта — ваша задача как автора не ломать логику, а изящно адаптировать этот лот под физику и законы вашего собственного мира.</p>
+            
+            <h3>Как это использовать?</h3>
+            <p>Перейдите в раздел <strong>Рулетки</strong>, чтобы случайным образом определить, какой именно фандом ворвется в вашу историю. Либо откройте <strong>Зал Круток</strong>, выберите желаемую вселенную вручную и заставьте судьбу выдать вам случайный предмет или спутника уровня от Normal до Сверх-ранга SSRX.</p>
+        </div>
+    </div>
+
+    <div id="roulette" class="tab-content">
+        <div class="roulette-wrapper">
+            <p style="color: var(--color-text-muted); margin-bottom: 25px;">Испытайте удачу и определите случайный сеттинг для вашей следующей главы:</p>
+            <button class="roll-btn" onclick="rollBannerRoulette()">Запустить систему</button>
             <div class="roulette-result" id="rouletteResult"></div>
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-title">🔮 Зал Баннеров</div>
-        
-        <div class="gacha-controls">
-            <select id="fandomSelect" onchange="onFandomChange()">
-                <option value="" disabled selected>Загрузка фандомов...</option>
-            </select>
+    <div id="hall" class="tab-content">
+        <div class="gacha-interface">
+            <div class="controls-row">
+                <select id="fandomSelect" onchange="onFandomChange()">
+                    <option value="" disabled selected>Загрузка доступных вселенных...</option>
+                </select>
+                
+                <button class="roll-btn" onclick="rollGacha(1)">Крутить х1</button>
+                <button class="roll-btn" onclick="rollGacha(10)">Крутить х10</button>
+            </div>
             
-            <button class="roll-btn" onclick="rollGacha(1)">КРУТИТЬ х1</button>
-            <button class="roll-btn" onclick="rollGacha(10)">КРУТИТЬ х10</button>
+            <div class="results-grid" id="gachaResultsContainer"></div>
         </div>
-
-        <div id="statusInfo" style="color: var(--color-text-muted); text-align: center; font-size: 14px;"></div>
-        
-        <div class="results-grid" id="gachaResultsContainer"></div>
     </div>
 </div>
 
 <script>
+    // Настройка неонового свечения и цветов для карточек
     const TIERS = {
-        'N':    { name: 'Normal (Обычный)', color: '#888888' },
-        'R':    { name: 'Rare (Редкий)', color: '#3498db' },
-        'SR':   { name: 'Super Rare (Сверхредкий)', color: '#9b59b6' },
-        'SSR':  { name: 'Super Super Rare (Топовый)', color: '#e67e22' },
-        'SSRX': { name: 'Super Super Rare Extra (Высший)', color: '#ffd700' }
+        'N':    { name: 'Normal', color: '#666666', glow: 'rgba(102,102,102,0.1)' },
+        'R':    { name: 'Rare', color: '#3498db', glow: 'rgba(52,152,219,0.2)' },
+        'SR':   { name: 'Super Rare', color: '#9b59b6', glow: 'rgba(155,89,182,0.2)' },
+        'SSR':  { name: 'Super Super Rare', color: '#e67e22', glow: 'rgba(230,126,34,0.3)' },
+        'SSRX': { name: 'Super Super Rare Extra', color: '#ffd700', glow: 'rgba(255,215,0,0.4)' }
     };
 
     let FANDOMS_REGISTRY = []; 
     let CURRENT_LOTS = [];     
 
+    // ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ РАЗДЕЛОВ (ТАБОВ)
+    function switchTab(tabId) {
+        // Убираем класс active у всех окон разделов
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        // Убираем класс active у всех кнопок меню
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Включаем нужные элементы
+        document.getElementById(tabId).classList.add('active');
+        
+        // Находим кнопку, которая вызвала эту функцию, и делаем её активной
+        const eventBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+        if (eventBtn) eventBtn.classList.add('active');
+    }
+
+    // Загрузка реестра при старте страницы
     window.addEventListener('DOMContentLoaded', () => {
         loadFandomsRegistry();
     });
@@ -217,7 +353,7 @@
                 });
 
             const select = document.getElementById('fandomSelect');
-            select.innerHTML = '<option value="" disabled selected>-- Выберите фандом для прокрутки --</option>';
+            select.innerHTML = '<option value="" disabled selected>-- Выберите вселенную для крутки --</option>';
             
             FANDOMS_REGISTRY.forEach(f => {
                 const opt = document.createElement('option');
@@ -226,10 +362,10 @@
                 select.appendChild(opt);
             });
             
-            document.getElementById('statusInfo').innerText = `База данных синхронизирована. Доступно баннеров: ${FANDOMS_REGISTRY.length}`;
+            document.getElementById('statusInfo').innerText = `Система синхронизирована. Доступно вселенных: ${FANDOMS_REGISTRY.length}`;
         } catch (err) {
             console.error(err);
-            document.getElementById('statusInfo').innerText = "Ошибка: не удалось загрузить fandoms_list.txt";
+            document.getElementById('statusInfo').innerText = "Критическая ошибка при синхронизации реестра.";
         }
     }
 
@@ -247,7 +383,7 @@
 
         const resBox = document.getElementById('rouletteResult');
         resBox.style.color = 'var(--color-gold)';
-        resBox.innerText = `🎯 Тебе выпал баннер: ${selected.name}`;
+        resBox.innerHTML = `🎯 Выпавший сеттинг: <span style="text-shadow: 0 0 10px rgba(255,215,0,0.5);">${selected.name}</span>`;
         
         const select = document.getElementById('fandomSelect');
         select.value = selected.id;
@@ -260,7 +396,7 @@
 
         try {
             const response = await fetch(`banners_data/${id}.txt`);
-            if (!response.ok) throw new Error(`Не найден файл лотов banners_data/${id}.txt`);
+            if (!response.ok) throw new Error(`Не найден файл banners_data/${id}.txt`);
             const text = await response.text();
 
             const lines = text.split('\n').map(l => l.trim());
@@ -296,17 +432,17 @@
                     }
                 }
             }
-            document.getElementById('statusInfo').innerText = `Успешно загружено лотов из баннера: ${CURRENT_LOTS.length}`;
+            document.getElementById('statusInfo').innerText = `Фандом [${id}] загружен. Лотов в пуле: ${CURRENT_LOTS.length}`;
             document.getElementById('gachaResultsContainer').innerHTML = ''; 
         } catch (err) {
             console.error(err);
-            alert('Не удалось загрузить лоты для этого баннера. Проверьте наличие файла в папке banners_data/.');
+            alert('Ошибка доступа к файлу лотов баннера.');
         }
     }
 
     function rollGacha(count) {
         if (CURRENT_LOTS.length === 0) {
-            alert('Сначала выберите фандом из списка!');
+            alert('Сначала выберите вселенную в выпадающем списке!');
             return;
         }
 
@@ -325,13 +461,16 @@
             const card = document.createElement('div');
             card.className = 'gacha-card';
             
-            const tierData = TIERS[item.tier] || { name: item.tier, color: '#ffffff' };
+            const tierData = TIERS[item.tier] || { name: item.tier, color: '#ffffff', glow: 'rgba(255,255,255,0.1)' };
+            
+            // Динамический дизайн карточки под цвет ее ранга
             card.style.borderColor = tierData.color;
+            card.style.boxShadow = `0 4px 20px rgba(0,0,0,0.5), 0 0 15px ${tierData.glow}`;
 
             card.innerHTML = `
                 <div class="card-tier" style="color: ${tierData.color};">[${tierData.name}]</div>
                 <div class="card-name" style="color: ${tierData.color};">${item.name}</div>
-                <div class="card-desc">${item.desc.join('\n') || 'Описание отсутствует.'}</div>
+                <div class="card-desc">${item.desc.join('\n') || 'Описание характеристик отсутствует.'}</div>
             `;
             container.appendChild(card);
         }
