@@ -1,0 +1,17 @@
+real_life | Реальная Жизнь | 1
+minecraft | Майнкрафт | 1
+witcher | Ведьмак | 1
+dc_universe | Вселенная DC | 1
+Bleach | Блич | 1
+Wakfu | Вакфу | 1
+One_Piece | Ван Пис | 1
+Terraria | Террария | 1
+DMC | Дьявол может плакать | 1
+Fairy_tail | Хвост фей | 1
+Fate | Судьба | 1
+Marvel | Марвел | 1
+Boys | Пацаны | 1
+Dark_souls | Темные души | 1
+Elden_ring | Кольцо Элдена | 1
+Naruto | Наруто | 1
+Worm | Червь | 1
