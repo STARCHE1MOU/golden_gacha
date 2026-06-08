@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaos Gacha System</title>
+    <style>
+        /* Переменные для тем оформления (Строго Тьма/Белизна и Золото) */
+        :root {
+            --bg-body: #0a0a0a;
+            --bg-container: #121212;
+            --bg-card: #1a1a1a;
+            --color-text: #ffffff;
+            --color-text-muted: #aaaaaa;
+            --color-gold: #ffd700;
+            --color-gold-bright: #ffdf00;
+            --border-color: #ffd700;
+            --border-style: 2px solid var(--color-gold);
+            --shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f4f4f4;
+            --bg-container: #ffffff;
+            --bg-card: #fcfcfc;
+            --color-text: #111111;
+            --color-text-muted: #555555;
+            --color-gold: #d4af37;
+            --color-gold-bright: #aa7c11;
+            --border-color: #d4af37;
+            --border-style: 2px solid var(--color-gold);
+            --shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--color-text);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--bg-container);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border: var(--border-style);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Кнопка переключения темы */
+        .theme-toggle-container {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+        }
+        .theme-btn {
+            background: transparent;
+            color: var(--color-gold);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .theme-btn:hover {
+            background: var(--color-gold);
+            color: var(--bg-container);
+        }
+
+        h1 { 
+            text-align: center; 
+            color: var(--color-gold-bright); 
+            margin-top: 0; 
+            margin-bottom: 20px;
+            font-size: 32px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Вкладки навигации */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .nav-btn {
+            background: transparent;
+            color: var(--color-text-muted);
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 25px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { color: var(--color-gold); border-color: var(--border-color); }
+        .nav-btn.active { background: var(--color-gold); color: var(--bg-container); border-color: var(--border-color); }
+
+        .file-section {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px dashed var(--border-color);
+            text-align: center;
+        }
+        .file-input-btn {
+            background: transparent;
+            color: var(--color-gold);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .file-input-btn:hover { background: var(--color-gold); color: var(--bg-container); }
+        input[type="file"] { display: none; }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 20px;
+        }
+        .sidebar {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--color-gold-bright);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .sidebar button {
+            background: transparent;
+            color: var(--color-text);
+            border: 1px solid transparent;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .sidebar button:hover { border-color: var(--border-color); color: var(--color-gold); }
+        .sidebar button.active { background: var(--color-gold); color: var(--bg-container); font-weight: bold; }
+
+        .display-panel {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 400px;
+            position: relative;
+        }
+        .ticket-info {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            background: var(--bg-container);
+            padding: 12px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--color-gold);
+            line-height: 1.4;
+        }
+        .roll-trigger {
+            background: var(--color-gold);
+            color: var(--bg-container);
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px 50px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            margin: 20px 0;
+            text-align: center;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .roll-trigger:hover { background: transparent; color: var(--color-gold); }
+        
+        .result-box {
+            text-align: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .res-tier { font-size: 16px; margin-bottom: 5px; font-weight: bold; letter-spacing: 1px; }
+        .res-name { font-size: 28px; font-weight: bold; margin-bottom: 15px; min-height: 35px; text-shadow: 0 0 5px rgba(255,215,0,0.2); }
+        .res-desc { font-size: 15px; color: var(--color-text); line-height: 1.5; background: var(--bg-container); padding: 15px; border-radius: 4px; border: 1px solid var(--border-color); text-align: left; white-space: pre-wrap; }
+        
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .action-btn { background: transparent; border: 1px solid var(--border-color); color: var(--color-gold); font-size: 12px; padding: 6px 15px; border-radius: 4px; }
+        .action-btn:hover { background: var(--color-gold); color: var(--bg-container); }
+        .status-tag { color: var(--color-text-muted); font-size: 12px; margin-top: 5px; font-weight: bold; }
+
+        /* Стили для Базы Данных */
+        .search-filters {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .filter-item { display: flex; flex-direction: column; gap: 5px; }
+        .filter-item label { font-size: 12px; color: var(--color-text-muted); font-weight: bold; }
+        .filter-item input, .filter-item select {
+            background: var(--bg-container);
+            color: var(--color-text);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+            font-family: inherit;
+            outline: none;
+        }
+        .db-table-container { width: 100%; overflow-x: auto; }
+        .db-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: left;
+        }
+        .db-table th, .db-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        .db-table th { background: var(--bg-card); color: var(--color-gold-bright); font-weight: bold; border-bottom: 2px solid var(--border-color); }
+        .db-table tr:hover { background: var(--bg-card); }
+        .tier-badge { font-weight: bold; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ЗОЛОТАЯ ГАЧА</h1>
+
+    <!-- Кнопка смены темы -->
+    <div class="theme-toggle-container">
+        <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">☀️ Светлая тема</button>
+    </div>
+
+    <!-- Переключатель страниц -->
+    <div class="nav-tabs">
+        <button class="nav-btn active" id="tabGacha" onclick="switchPage('gacha')">🎰 Крутить Гачу</button>
+        <button class="nav-btn" id="tabDatabase" onclick="switchPage('database')">📖 База Данных</button>
+    </div>
+    
+    <!-- Секция загрузки файлов -->
+    <div class="file-section">
+        <strong>📁 Списки вещей</strong><br>
+        <div id="fileStatus" class="status-tag">Проверяю встроенные списки...</div>
+        <small style="color: var(--color-text-muted); display:block; margin-top: 5px;">Или загрузи свои .txt файлы с ПК вручную (через Ctrl):</small>
+        <label class="file-input-btn">
+            Загрузить свои .txt файлы
+            <input type="file" id="fileLoader" multiple accept=".txt" onchange="loadFilesManually(event)">
+        </label>
+    </div>
+
+    <!-- СТРАНИЦА 1: ГАЧА ИНТЕРФЕЙС -->
+    <div class="main-layout" id="pageGacha">
+        <div class="sidebar">
+            <div class="section-title">Категория</div>
+            <div class="btn-group" id="categoryGroup">
+                <button class="active" onclick="setCategory('ability', this)">Abilities (Способность)</button>
+                <button onclick="setCategory('item', this)">Items (Предмет)</button>
+                <button onclick="setCategory('trait', this)">Traits (Черта)</button>
+                <button onclick="setCategory('skill', this)">Skills (Навык)</button>
+                <button onclick="setCategory('familiar', this)">Familiars (Фамильяр)</button>
+                <button onclick="setCategory('random', this)">🎲 Random (Случайно)</button>
+            </div>
+
+            <div class="section-title">Выбор билета</div>
+            <div class="btn-group" id="ticketGroup">
+                <button class="active" onclick="setTicket(1, this)">Железный билет</button>
+                <button onclick="setTicket(2, this)">Бронзовый билет</button>
+                <button onclick="setTicket(3, this)">Серебряный билет</button>
+                <button onclick="setTicket(4, this)">Золотой билет</button>
+                <button onclick="setTicket(5, this)">Платиновый билет</button>
+                <button onclick="setTicket(6, this)">Бриллиантовый билет</button>
+                <button onclick="setTicket(7, this)">Мифический билет</button>
+                <button onclick="setTicket(8, this)">Божественный билет</button>
+                <button onclick="setTicket(9, this)">Эфирный билет</button>
+                <button onclick="setTicket(10, this)">Трансцендентный билет</button>
+            </div>
+        </div>
+
+        <div class="display-panel">
+            <div class="ticket-info" id="ticketAchievement">
+                <strong>Достижение для Железного билета:</strong> Освоить новый бытовой навык или базовую профессию с нуля. Успешно сдать сложный экзамен. Скопить деньги и сделать первую крупную бытовую покупку. Приручить бродячую собаку.
+            </div>
+
+            <button class="roll-trigger" onclick="rollGacha()">КРУТИТЬ ГАЧУ</button>
+
+            <div class="result-box" id="resultBlock" style="display:none;">
+                <div class="res-tier" id="resTier">ТИР</div>
+                <div class="res-name" id="resName">Название вещи</div>
+                <div class="res-desc" id="resDesc">Описание...</div>
+                
+                <div class="action-bar">
+                    <button class="action-btn" onclick="copyResult()">📋 Скопировать результат</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- СТРАНИЦА 2: БАЗА ДАННЫХ И ПОИСК -->
+    <div id="pageDatabase" style="display: none; width: 100%;">
+        <div class="search-filters">
+            <div class="filter-item">
+                <label>Поиск по названию / описанию</label>
+                <input type="text" id="searchQuery" placeholder="Введите слово..." oninput="filterDatabase()">
+            </div>
+            <div class="filter-item">
+                <label>Категория</label>
+                <select id="filterCategory" onchange="filterDatabase()">
+                    <option value="all">Все категории</option>
+                    <option value="ability">Abilities (Способность)</option>
+                    <option value="item">Items (Предмет)</option>
+                    <option value="trait">Traits (Черта)</option>
+                    <option value="skill">Skills (Навык)</option>
+                    <option value="familiar">Familiars (Фамильяр)</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label>Редкость (От худшей)</label>
+                <select id="filterTierMin" onchange="filterDatabase()">
+                </select>
+            </div>
+            <div class="filter-item">
+                <label>Редкость (До лучшей)</label>
+                <select id="filterTierMax" onchange="filterDatabase()">
+                </select>
+            </div>
+        </div>
+
+        <div class="db-table-container">
+            <table class="db-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">Уровень</th>
+                        <th style="width: 200px;">Редкость</th>
+                        <th style="width: 120px;">Категория</th>
+                        <th style="width: 220px;">Название</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody id="dbTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align:center; color: var(--color-text-muted);">Загрузите файлы, чтобы увидеть список предметов.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Возвращены оригинальные цвета для редкостей
+    const TIERS = {
+        1:  { name: "Трансцендентный (Мультивселенная)", color: "#FF007F" },
+        2:  { name: "Абсолютный (Вселенная)", color: "#4B0082" },
+        3:  { name: "Космический (Галактика)", color: "#800020" },
+        4:  { name: "Титанический (Звездная система)", color: "#00FFFF" },
+        5:  { name: "Божественный (Планетарный)", color: "#FAC800" },
+        6:  { name: "Мифический (Континентальный)", color: "#FF0000" },
+        7:  { name: "Легендарный (Страна)", color: "#FF8000" },
+        8:  { name: "Эпический (Город)", color: "#A335EE" },
+        9:  { name: "Исключительный (Городской квартал)", color: "#0070DD" },
+        10: { name: "Редкий (Здание)", color: "#1EFF00" },
+        11: { name: "Необычный (Стена)", color: "#FFFFFF" },
+        12: { name: "Обычный (Обычный человек)", color: "#808080" }
+    };
+
+    const TICKETS = {
+        1: { name: "Железный билет", desc: "Выдается за базовые, но требующие волевых усилий действия, доступные любому человеку. Освоить новый бытовой навык или базовую профессию с нуля. Успешно сдать сложный экзамен. Скопить деньги и сделать первую крупную бытовую покупку.", rates: [{t:12, p:85}, {t:11, p:14}, {t:10, p:1}] },
+        2: { name: "Бронзовый билет", desc: "Выдается за преодоление локальных физических препятствий или победу над превосходящим по силе существе. Найти скрытый тайник времен ВМВ. В одиночку отбиться от группы маргиналов (3-4 человека). Одолеть крупного хищника без снаряжения.", rates: [{t:12, p:60}, {t:11, p:35}, {t:10, p:5}] },
+        3: { name: "Серебряный билет", desc: "Выдается за действия, которые ставят под угрозу, защищают или полностью меняют ситуацию в рамках одного крупного объекта. Взломать систему безопасности банка. Одолеть низшего сверхъестественного противника будучи обычным человеком.", rates: [{t:11, p:65}, {t:10, p:30}, {t:9, p:4}, {t:8, p:1}] },
+        4: { name: "Золотой билет", desc: "Выдается за свершения, которые становятся заметным событием для целого района или влияют на жизни сотен людей. Возглавить уличную банду. Захватить/уничтожить военный склад. Полностью зачистить криминальный квартал.", rates: [{t:11, p:40}, {t:10, p:50}, {t:9, p:9}, {t:8, p:1}] },
+        5: { name: "Платиновый билет", desc: "Выдается за переломные моменты, которые делают вас ключевой фигурой, известной во всем городе. Обрушить или полностью подчинить себе инфраструктуру мегаполиса. В одиночку остановить наступление целой армии на город.", rates: [{t:10, p:25}, {t:9, p:40}, {t:8, p:34}, {t:7, p:1}] },
+        6: { name: "Бриллиантовый билет", desc: "Выдается за свершения геополитического масштаба. Действия героя меняют историю конкретного государства. Устроить в одиночку государственный переворот. Выкрасть или уничтожить главную национальную реликвию.", rates: [{t:9, p:30}, {t:8, p:25}, {t:7, p:40}, {t:6, p:4}, {t:5, p:1}] },
+        7: { name: "Мифический билет", desc: "Выдается за действия, которые меняют ландшафт планеты или спасают/губят целые материки. Открыть стабильный портал в другое измерение. Создать магию/технологию, меняющую биосферу континента.", rates: [{t:8, p:20}, {t:7, p:40}, {t:6, p:25}, {t:5, p:14}, {t:4, p:1}] },
+        8: { name: "Божественный билет", desc: "Выдается за свершения, результаты которых видны из космоса. Спасение или уничтожение цивилизации планеты. Подчинить себе волю целой планеты. Предотвратить падение гигантского астероида, способного расколоть планету.", rates: [{t:7, p:50}, {t:6, p:25}, {t:5, p:20}, {t:4, p:4}, {t:3, p:1}] },
+        9: { name: "Эфирный билет", desc: "Выдается за покорение космоса и изменение баланса сил на межзвездном уровне. Запустить процесс терраформирования звездной системы. Построить Сферу Дайсона. Выиграть масштабную войну между межгалактическими империями.", rates: [{t:4, p:50}, {t:3, p:35}, {t:2, p:12}, {t:1, p:1}] },
+        10: { name: "Трансцендентный билет", desc: "Выдается за концептуальные подвиги, ломающие законы самого мироздания, времени, пространства или Четвертой стены. Полностью переписать законы магии/физики во вселенной.", rates: [{t:3, p:50}, {t:2, p:40}, {t:1, p:10}] }
+    };
+
+    let GACHA_DATABASE = { ability: {}, item: {}, familiar: {}, trait: {}, skill: {} };
+    for (let cat in GACHA_DATABASE) {
+        for (let i = 1; i <= 12; i++) GACHA_DATABASE[cat][i] = [];
+    }
+
+    let currentCategory = 'ability';
+    let currentTicketId = 1;
+    let loadedFilesCount = 0;
+    const expectedFiles = ['ability.txt', 'item.txt', 'familiar.txt', 'trait.txt', 'skill.txt'];
+
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeToggleBtn');
+        
+        if (body.getAttribute('data-theme') === 'light') {
+            body.removeAttribute('data-theme');
+            btn.innerText = '☀️ Светлая тема';
+        } else {
+            body.setAttribute('data-theme', 'light');
+            btn.innerText = '🌙 Темная тема';
+        }
+        if (document.getElementById('pageDatabase').style.display === 'block') {
+            filterDatabase();
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const minSelect = document.getElementById('filterTierMin');
+        const maxSelect = document.getElementById('filterTierMax');
+        
+        for (let i = 12; i >= 1; i--) {
+            let optMin = document.createElement('option');
+            optMin.value = i; optMin.innerText = `${i}. ${TIERS[i].name}`;
+            minSelect.appendChild(optMin);
+
+            let optMax = document.createElement('option');
+            optMax.value = i; optMax.innerText = `${i}. ${TIERS[i].name}`;
+            maxSelect.appendChild(optMax);
+        }
+        minSelect.value = 12;
+        maxSelect.value = 1;
+
+        expectedFiles.forEach(fileName => {
+            fetch(fileName)
+                .then(response => { if (!response.ok) throw new Error(); return response.text(); })
+                .then(text => {
+                    parseTextData(fileName, text);
+                    loadedFilesCount++;
+                    updateStatusText();
+                    filterDatabase();
+                })
+                .catch(() => updateStatusText());
+        });
+    });
+
+    function switchPage(page) {
+        document.getElementById('tabGacha').classList.remove('active');
+        document.getElementById('tabDatabase').classList.remove('active');
+        document.getElementById('pageGacha').style.display = 'none';
+        document.getElementById('pageDatabase').style.display = 'none';
+
+        if (page === 'gacha') {
+            document.getElementById('tabGacha').classList.add('active');
+            document.getElementById('pageGacha').style.display = 'grid';
+        } else {
+            document.getElementById('tabDatabase').classList.add('active');
+            document.getElementById('pageDatabase').style.display = 'block';
+            filterDatabase();
+        }
+    }
+
+    function updateStatusText() {
+        const status = document.getElementById('fileStatus');
+        if (loadedFilesCount > 0) {
+            status.innerText = `Авто-загрузка: Готово! Подключено файлов: ${loadedFilesCount}/${expectedFiles.length}`;
+            status.style.color = 'var(--color-gold)';
+        } else {
+            status.innerText = "Запущено локально. Пожалуйста, выберите .txt файлы кнопкой ниже 👇";
+            status.style.color = 'var(--color-gold)';
+        }
+    }
+
+    function parseTextData(fileName, text) {
+        let catName = fileName.replace('.txt', '').toLowerCase();
+        if (!(catName in GACHA_DATABASE)) return;
+
+        for (let i = 1; i <= 12; i++) GACHA_DATABASE[catName][i] = [];
+        const lines = text.split('\n');
+        let currentItem = null;
+
+        for (let line of lines) {
+            let trimmed = line.trim();
+            if (!trimmed) continue;
+
+            let match = trimmed.match(/^(\d+)\.\s*([^,]+),\s*([\d.]+)/);
+            if (match) {
+                if (currentItem) GACHA_DATABASE[catName][currentItem.tier].push(currentItem);
+                currentItem = { name: match[2].trim(), tier: parseInt(match[3].trim()), desc: [] };
+            } else {
+                if (currentItem) currentItem.desc.push(trimmed);
+            }
+        }
+        if (currentItem) GACHA_DATABASE[catName][currentItem.tier].push(currentItem);
+    }
+
+    function loadFilesManually(event) {
+        const files = event.target.files;
+        let readCount = 0;
+        for (let file of files) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parseTextData(file.name, e.target.result);
+                readCount++;
+                if (readCount === files.length) {
+                    document.getElementById('fileStatus').innerText = `Файлы (${files.length} шт.) успешно обновлены вручную!`;
+                    filterDatabase();
+                }
+            };
+            reader.readAsText(file, "UTF-8");
+        }
+    }
+
+    function filterDatabase() {
+        const query = document.getElementById('searchQuery').value.toLowerCase();
+        const catFilter = document.getElementById('filterCategory').value;
+        const tierMin = parseInt(document.getElementById('filterTierMin').value);
+        const tierMax = parseInt(document.getElementById('filterTierMax').value);
+
+        const tbody = document.getElementById('dbTableBody');
+        tbody.innerHTML = '';
+
+        let allMatchedItems = [];
+
+        for (let cat in GACHA_DATABASE) {
+            if (catFilter !== 'all' && cat !== catFilter) continue;
+
+            for (let tier = 1; tier <= 12; tier++) {
+                let minBound = Math.max(tierMin, tierMax);
+                let maxBound = Math.min(tierMin, tierMax);
+                if (tier > minBound || tier < maxBound) continue;
+
+                let items = GACHA_DATABASE[cat][tier];
+                for (let item of items) {
+                    let fullDesc = item.desc.join('\n');
+                    let matchesQuery = item.name.toLowerCase().includes(query) || fullDesc.toLowerCase().includes(query);
+                    
+                    if (matchesQuery) {
+                        allMatchedItems.push({ cat: cat, tier: tier, name: item.name, desc: fullDesc });
+                    }
+                }
+            }
+        }
+
+        allMatchedItems.sort((a, b) => a.tier - b.tier);
+
+        if (allMatchedItems.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--color-text-muted);">Ничего не найдено по заданным фильтрам.</td></tr>`;
+            return;
+        }
+
+        allMatchedItems.forEach(item => {
+            let tr = document.createElement('tr');
+            let catRu = { ability: 'Способность', item: 'Предмет', trait: 'Черта', skill: 'Навык', familiar: 'Фамильяр' }[item.cat];
+
+            // Названия редкостей и имена предметов теперь красятся в оригинальные цвета тиров
+            tr.innerHTML = `
+                <td style="color: var(--color-text-muted); font-weight: bold;">${item.tier}</td>
+                <td><span class="tier-badge" style="color: ${TIERS[item.tier].color}">${TIERS[item.tier].name}</span></td>
+                <td style="color: var(--color-text-muted);">${catRu}</td>
+                <td style="font-weight: bold; color: ${TIERS[item.tier].color}">${item.name}</td>
+                <td style="color: var(--color-text); white-space: pre-wrap; font-size:13px;">${item.desc}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function setCategory(cat, btn) {
+        currentCategory = cat;
+        clearActive(document.getElementById('categoryGroup'));
+        btn.classList.add('active');
+    }
+
+    function setTicket(id, btn) {
+        currentTicketId = id;
+        clearActive(document.getElementById('ticketGroup'));
+        btn.classList.add('active');
+        document.getElementById('ticketAchievement').innerHTML = `<strong>Достижение для ${TICKETS[id].name}:</strong> ${TICKETS[id].desc}`;
+    }
+
+    function clearActive(container) {
+        const btns = container.getElementsByTagName('button');
+        for (let b of btns) b.classList.remove('active');
+    }
+
+    function rollGacha() {
+        let activeCat = currentCategory;
+        if (activeCat === 'random') {
+            const cats = ['ability', 'item', 'familiar', 'trait', 'skill'];
+            activeCat = cats[Math.floor(Math.random() * cats.length)];
+        }
+
+        const ticket = TICKETS[currentTicketId];
+        let rand = Math.random() * 100;
+        let selectedTier = 12;
+        let currentSum = 0;
+        
+        for (let rate of ticket.rates) {
+            currentSum += rate.p;
+            if (rand <= currentSum) { selectedTier = rate.t; break; }
+        }
+
+        let pool = GACHA_DATABASE[activeCat][selectedTier];
+        const resBlock = document.getElementById('resultBlock');
+        const resTier = document.getElementById('resTier');
+        const resName = document.getElementById('resName');
+        const resDesc = document.getElementById('resDesc');
+        
+        resBlock.style.display = 'block';
+        resTier.innerText = `[${TIERS[selectedTier].name}] — Категория: ${activeCat.toUpperCase()}`;
+        
+        // Возвращено динамическое окрашивание результатов под цвет выпавшего тира
+        resTier.style.color = TIERS[selectedTier].color;
+        resName.style.color = TIERS[selectedTier].color;
+
+        if (!pool || pool.length === 0) {
+            resName.innerText = "Пусто!";
+            resDesc.innerText = `В базе нет предметов редкости ${selectedTier} для категории ${activeCat}.\nЗагрузите файлы кнопкой выше.`;
+            return;
+        }
+
+        let rolledItem = pool[Math.floor(Math.random() * pool.length)];
+        resName.innerText = rolledItem.name;
+        resDesc.innerText = rolledItem.desc.join('\n') || "Описание отсутствует.";
+    }
+
+    function copyResult() {
+        const tier = document.getElementById('resTier').innerText;
+        const name = document.getElementById('resName').innerText;
+        const desc = document.getElementById('resDesc').innerText;
+        const fullText = `★ ВЫПАВШИЙ ПРЕДМЕТ ★\n${tier}\nНазвание: ${name}\nОписание:\n${desc}`;
+        navigator.clipboard.writeText(fullText).then(() => alert("Результат скопирован!")).catch(() => alert("Ошибка копирования"));
+    }
+</script>
+</body>
+</html>
