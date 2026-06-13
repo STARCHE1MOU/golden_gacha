@@ -14,7 +14,6 @@
             --accent: #6366f1;
             --border: #2e344e;
             
-            /* Цвета новых рангов редкости лотов */
             --r-trash: #64748b;
             --r-common: #94a3b8;
             --r-uncommon: #22c55e;
@@ -65,8 +64,9 @@
         .lot-rarity-badge.dark-txt { color: #000; }
         .lot-desc { background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 4px solid var(--rarity-color); text-align: left; white-space: pre-wrap; font-size: 1rem; }
 
-        .db-filters { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; }
-        @media (max-width: 900px) { .db-filters { grid-template-columns: 1fr 1fr; } }
+        /* Обновленная сетка фильтров БД для вмещения лимита */
+        .db-filters { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; }
+        @media (max-width: 1000px) { .db-filters { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 600px) { .db-filters { grid-template-columns: 1fr; } }
         
         .db-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -128,6 +128,7 @@
                 <div class="form-group" style="margin-bottom: 25px;">
                     <label>2. Выберите используемый билет</label>
                     <select id="roll-ticket">
+                        <option value="all_random" selected>🎲 Билет "Рандом" [0.1 - 10.0]</option>
                         <option value="bronze">🟤 Бронзовый билет [0.1 - 3.3]</option>
                         <option value="silver">⚪ Серебряный билет [0.5 - 4.3]</option>
                         <option value="gold">🟡 Золотой билет [1.5 - 5.3]</option>
@@ -189,10 +190,21 @@
                     <option value="rate-asc">Рейтинг: Ниже → Выше</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label>Показывать лотов</label>
+                <select id="filter-limit" onchange="applyFilters()">
+                    <option value="10">10 лотов</option>
+                    <option value="20">20 лотов</option>
+                    <option value="50" selected>50 лотов</option>
+                    <option value="100">100 лотов</option>
+                    <option value="all">Все сразу</option>
+                </select>
+            </div>
         </div>
 
         <div style="margin-bottom: 15px; font-size: 0.95rem; color: var(--text-muted);">
-            Найдено лотов: <span id="db-counter" style="color: var(--text-main); font-weight: bold;">0</span>
+            Найдено соответствующих лотов: <span id="db-counter" style="color: var(--text-main); font-weight: bold;">0</span>
+            <span id="db-limit-note" style="margin-left: 10px; font-style: italic; color: var(--accent);"></span>
         </div>
 
         <div class="db-grid" id="db-results-grid"></div>
@@ -210,8 +222,8 @@
         familiars: { name: 'Фамильяр', icon: '🐉' }
     };
 
-    // Массив диапазонов для билетов
     const ticketRanges = {
+        all_random: { min: 0.1, max: 10.0 }, // Диапазон для билета Рандом
         bronze: { min: 0.1, max: 3.3 },
         silver: { min: 0.5, max: 4.3 },
         gold: { min: 1.5, max: 5.3 },
@@ -222,7 +234,6 @@
         divine: { min: 6.5, max: 10.0 }
     };
 
-    // Новое распределение рангов редкости лотов на основе числового рейтинга
     function getRarityMeta(rating) {
         const r = parseFloat(rating);
         if (r >= 0.1 && r <= 0.9) return { label: 'Мусор', color: '#64748b', darkTxt: false };
@@ -299,12 +310,10 @@
         if (document.getElementById('tab-database').classList.contains('active')) applyFilters();
     }
 
-    // ЛОГИКА КРУТКИ С УЧЕТОМ ДИАПАЗОНА БИЛЕТОВ
     function performRoll() {
         const chosenCategory = document.getElementById('roll-category').value;
         const chosenTicket = document.getElementById('roll-ticket').value;
         
-        // Получаем рамки из настроек билета
         const minRate = ticketRanges[chosenTicket].min;
         const maxRate = ticketRanges[chosenTicket].max;
 
@@ -325,7 +334,7 @@
         if (filteredPool.length === 0) {
             displayZone.innerHTML = `
                 <div class="status-indicator status-error" style="font-size: 1.1rem; padding: 15px;">
-                    ❌ Нет доступных лотов в диапазоне выбранного бита!<br>Убедитесь, что базы загружены корректно.
+                    ❌ Нет доступных лотов в диапазоне выбранного билета!<br>Убедитесь, что файлы баз загружены корректно.
                 </div>`;
             return;
         }
@@ -350,6 +359,7 @@
         const catFilter = document.getElementById('filter-category').value;
         const rarityFilter = document.getElementById('filter-rarity-class').value;
         const sortBy = document.getElementById('filter-sort').value;
+        const limitVal = document.getElementById('filter-limit').value;
 
         let combinedData = [];
         Object.keys(gachaDatabase).forEach(cat => {
@@ -385,16 +395,34 @@
         else if (sortBy === 'rate-desc') combinedData.sort((a, b) => b.rating - a.rating);
         else if (sortBy === 'rate-asc') combinedData.sort((a, b) => a.rating - b.rating);
 
-        document.getElementById('db-counter').textContent = combinedData.length;
+        const totalFound = combinedData.length;
+        document.getElementById('db-counter').textContent = totalFound;
+
+        // Логика ограничения количества отображаемых лотов
+        let displayData = combinedData;
+        const limitNoteEl = document.getElementById('db-limit-note');
+        
+        if (limitVal !== 'all') {
+            const limit = parseInt(limitVal);
+            if (totalFound > limit) {
+                displayData = combinedData.slice(0, limit);
+                limitNoteEl.textContent = `(Показаны первые ${limit} результатов)`;
+            } else {
+                limitNoteEl.textContent = '';
+            }
+        } else {
+            limitNoteEl.textContent = '';
+        }
+
         const grid = document.getElementById('db-results-grid');
         grid.innerHTML = '';
 
-        if (combinedData.length === 0) {
+        if (displayData.length === 0) {
             grid.innerHTML = '<div class="placeholder-text" style="grid-column: 1/-1; text-align: center; padding: 20px 0;">Лоты не найдены.</div>';
             return;
         }
 
-        combinedData.forEach(item => {
+        displayData.forEach(item => {
             const meta = getRarityMeta(item.rating);
             const catMeta = categoriesMeta[item.categoryKey];
             const card = document.createElement('div');
