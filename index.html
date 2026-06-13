@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaos Gacha: Персональный Симулятор</title>
+    <title>Chaos Gacha: Blue Edition</title>
     <style>
         :root {
             --bg-main: #0f111a;
@@ -97,13 +97,13 @@
 
 <div class="container">
     <header>
-        <h1>Chaos Gacha Engine</h1>
-        <p>Ваша персональная база лотов и симулятор круток</p>
+        <h1>Chaos Gacha: Blue Edition</h1>
+        <p>Боги Хаоса благословили тебя!</p>
     </header>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('gacha')">🎰 Симулятор Гачи</button>
-        <button class="tab-btn" onclick="switchTab('database')">📚 База Данных лотов</button>
+        <button class="tab-btn" onclick="switchTab('database')">📚 База Данных</button>
     </div>
 
     <div class="source-config">
@@ -124,7 +124,7 @@
                 <h3 style="margin-bottom: 15px;">Настройки Ролла</h3>
                 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label>1. Выберите категорию лотов</label>
+                    <label>1. Выберите категорию</label>
                     <select id="roll-category">
                         <option value="random">🎲 Случайная (Random)</option>
                         <option value="abilities">🔮 Способности (Ability)</option>
@@ -151,7 +151,7 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 25px;">
-                    <label>3. Количество круток за раз</label>
+                    <label>3. Количество круток</label>
                     <select id="roll-count">
                         <option value="1" selected>1 крутка</option>
                         <option value="2">2 крутки</option>
@@ -162,7 +162,7 @@
                         <option value="7">7 круток</option>
                         <option value="8">8 круток</option>
                         <option value="9">9 круток</option>
-                        <option value="10">10 круток (Мультиролл)</option>
+                        <option value="10">10 круток</option>
                     </select>
                 </div>
 
@@ -193,7 +193,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Ранг редкости лота</label>
+                <label>Ранг редкости</label>
                 <select id="filter-rarity-class" onchange="applyFilters()">
                     <option value="all">Все ранги</option>
                     <option value="trash">Мусор (0.1 - 0.9)</option>
