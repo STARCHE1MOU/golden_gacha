@@ -60,7 +60,6 @@
             letter-spacing: 2px;
         }
 
-        /* Навигация между вкладками */
         .tabs {
             display: flex;
             justify-content: center;
@@ -95,7 +94,6 @@
             display: block;
         }
 
-        /* Настройки путей к файлам */
         .source-config {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
@@ -157,7 +155,6 @@
             opacity: 0.9;
         }
 
-        /* Стили вкладки Роллов */
         .gacha-panel {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -190,7 +187,6 @@
             position: relative;
         }
 
-        /* Анимация и карточки лотов */
         .lot-card {
             background: linear-gradient(145deg, #1e2235, #151824);
             border: 2px solid var(--rarity-color, var(--border));
@@ -246,7 +242,6 @@
             font-size: 1rem;
         }
 
-        /* База данных и фильтры */
         .db-filters {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
@@ -314,7 +309,6 @@
             white-space: pre-wrap;
         }
 
-        /* Статусы подгрузки */
         .status-indicator {
             padding: 4px 8px;
             border-radius: 4px;
@@ -345,44 +339,41 @@
         <button class="tab-btn" onclick="switchTab('database')">📚 База Данных лотов</button>
     </div>
 
-    <!-- Общие настройки путей к файлам для простого деплоя на гитхаб -->
     <div class="source-config">
         <h3>🗄️ Настройка репозитория данных</h3>
         <p style="font-size: 0.9rem; margin-bottom: 15px; color: var(--text-muted);">
-            Укажите относительные пути к вашим текстовым файлам (базам данных лотов), загруженным в тот же репозиторий GitHub. 
-            По умолчанию используются стандартные названия оригинальной Гачи Хаоса.
+            Пути автоматически синхронизированы со структурой вашего репозитория golden_gacha.
         </p>
         <div class="config-grid">
             <div class="form-group">
-                <label>Способности (Abilities.txt)</label>
-                <input type="text" id="path-abilities" value="Abilities.txt">
-                <span id="status-abilities" class="status-indicator status-loading">Ожидание загрузки</span>
+                <label>Способности</label>
+                <input type="text" id="path-abilities" value="ability.txt">
+                <span id="status-abilities" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="form-group">
-                <label>Предметы (Items.txt)</label>
-                <input type="text" id="path-items" value="Items.txt">
-                <span id="status-items" class="status-indicator status-loading">Ожидание загрузки</span>
+                <label>Предметы</label>
+                <input type="text" id="path-items" value="item.txt">
+                <span id="status-items" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="form-group">
-                <label>Черты (Traits.txt)</label>
-                <input type="text" id="path-traits" value="Traits.txt">
-                <span id="status-traits" class="status-indicator status-loading">Ожидание загрузки</span>
+                <label>Черты</label>
+                <input type="text" id="path-traits" value="trait.txt">
+                <span id="status-traits" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="form-group">
-                <label>Навыки (Skills.txt)</label>
-                <input type="text" id="path-skills" value="Skills.txt">
-                <span id="status-skills" class="status-indicator status-loading">Ожидание загрузки</span>
+                <label>Навыки</label>
+                <input type="text" id="path-skills" value="skill.txt">
+                <span id="status-skills" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="form-group">
-                <label>Фамильяры (Familiars.txt)</label>
-                <input type="text" id="path-familiars" value="Familiars.txt">
-                <span id="status-familiars" class="status-indicator status-loading">Ожидание загрузки</span>
+                <label>Фамильяры</label>
+                <input type="text" id="path-familiars" value="familiar.txt">
+                <span id="status-familiars" class="status-indicator status-loading">Ожидание...</span>
             </div>
         </div>
         <button class="btn-action" onclick="loadAllDatabases()">🔄 Синхронизировать / Перезагрузить файлы</button>
     </div>
 
-    <!-- ВКЛАДКА: ГАЧА -->
     <div id="tab-gacha" class="tab-content active">
         <div class="gacha-panel">
             <div class="gacha-controls">
@@ -419,7 +410,6 @@
         </div>
     </div>
 
-    <!-- ВКЛАДКА: БАЗА ДАННЫХ -->
     <div id="tab-database" class="tab-content">
         <div class="db-filters">
             <div class="form-group">
@@ -466,14 +456,11 @@
             Найдено лотов: <span id="db-counter" style="color: var(--text-main); font-weight: bold;">0</span>
         </div>
 
-        <div class="db-grid" id="db-results-grid">
-            <!-- Сюда динамически генерируются карточки из локального кэша текстовых баз -->
-        </div>
+        <div class="db-grid" id="db-results-grid"></div>
     </div>
 </div>
 
 <script>
-    // Глобальное хранилище данных структуры Гачи Хаоса
     const gachaDatabase = {
         abilities: [],
         items: [],
@@ -490,7 +477,6 @@
         familiars: { name: 'Фамильяр', icon: '🐉' }
     };
 
-    // Переключение вкладок (Tabs)
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -503,7 +489,6 @@
         }
     }
 
-    // Определяем параметры редкости на основе числового рейтинга Гачи Хаоса
     function getRarityMeta(rating) {
         const rate = parseFloat(rating);
         if (rate >= 0.1 && rate <= 0.9) return { label: 'Мусор', color: '#64748b', glow: 'transparent', darkTxt: true };
@@ -518,27 +503,20 @@
         return { label: 'Неизвестно', color: '#2e344e', glow: 'transparent', darkTxt: false };
     }
 
-    // Парсер оригинального синтаксиса Гачи Хаоса:
-    // Формат: (Номер способности).(Название способности),(Рейтинг)
-    // #(Описание, может занимать несколько строк)
     function parseChaosFile(text) {
         const items = [];
         if (!text) return items;
 
-        // Разделяем по символу решетки, чтобы выделить блоки с описанием, сохраняя структуру строк
-        const rawBlocks = text.split(/(?=
-\d+\.)|(?=^\d+\.)/m);
+        const rawBlocks = text.split(/(?=\n\d+\.)|(?=^\d+\.)/m);
         
         for (let block of rawBlocks) {
             block = block.trim();
             if (!block) continue;
 
-            // Ищем строку заголовка и строку описания
             const hashIndex = block.indexOf('#');
             let headerLine = hashIndex !== -1 ? block.substring(0, hashIndex).trim() : block;
             let description = hashIndex !== -1 ? block.substring(hashIndex + 1).trim() : "";
 
-            // Разбираем заголовок: (Номер).(Название),(Рейтинг)
             const dotIndex = headerLine.indexOf('.');
             const commaIndex = headerLine.lastIndexOf(',');
 
@@ -560,31 +538,29 @@
         return items;
     }
 
-    // Асинхронное чтение файла с обработкой статусов
     async function loadDatabaseFile(catKey, filename) {
         const statusEl = document.getElementById(`status-${catKey}`);
         statusEl.className = 'status-indicator status-loading';
         statusEl.textContent = 'Загрузка...';
 
         try {
-            // Читаем файл относительно текущего домена (работает на GitHub Pages из коробки)
-            const response = await fetch(filename, { cache: "no-store" });
-            if (!response.ok) throw new Error(`Статус ответа ${response.status}`);
+            // Добавлено игнорирование жесткого кэша гитхаба при синхронизации
+            const response = await fetch(`${filename}?t=${Date.now()}`, { cache: "no-store" });
+            if (!response.ok) throw new Error(`Status ${response.status}`);
             
             const text = await response.text();
             gachaDatabase[catKey] = parseChaosFile(text);
             
             statusEl.className = 'status-indicator status-success';
-            statusEl.textContent = `Успешно (${gachaDatabase[catKey].length} лотов)`;
+            statusEl.textContent = `ОК (${gachaDatabase[catKey].length})`;
         } catch (error) {
-            console.error(`Ошибка обработки категории ${catKey} (${filename}):`, error);
+            console.error(error);
             statusEl.className = 'status-indicator status-error';
-            statusEl.textContent = 'Файл не найден / Ошибка';
-            gachaDatabase[catKey] = []; // Очищаем в случае краша
+            statusEl.textContent = 'Ошибка 404';
+            gachaDatabase[catKey] = [];
         }
     }
 
-    // Пакетная инициализация всех баз данных лотов
     async function loadAllDatabases() {
         await Promise.all([
             loadDatabaseFile('abilities', document.getElementById('path-abilities').value),
@@ -593,13 +569,11 @@
             loadDatabaseFile('skills', document.getElementById('path-skills').value),
             loadDatabaseFile('familiars', document.getElementById('path-familiars').value)
         ]);
-        // Обновляем текущую вкладку базы данных, если пользователь находится на ней
         if (document.getElementById('tab-database').classList.contains('active')) {
             applyFilters();
         }
     }
 
-    // ЛОГИКА ГАЧА-РОЛЛА (КРУТКИ)
     function performRoll() {
         const chosenCategory = document.getElementById('roll-category').value;
         const minRate = parseFloat(document.getElementById('roll-min').value) || 0.1;
@@ -607,9 +581,7 @@
 
         let pool = [];
 
-        // Собираем пулы на основе выбранных условий
         if (chosenCategory === 'random') {
-            // Объединяем абсолютно все загруженные лоты
             Object.keys(gachaDatabase).forEach(cat => {
                 gachaDatabase[cat].forEach(item => {
                     pool.push({ ...item, categoryKey: cat });
@@ -623,26 +595,22 @@
             }
         }
 
-        // Фильтруем пул по заданному диапазону редкости/рейтинга
         const filteredPool = pool.filter(item => item.rating >= minRate && item.rating <= maxRate);
         const displayZone = document.getElementById('roll-display-zone');
 
         if (filteredPool.length === 0) {
             displayZone.innerHTML = `
                 <div class="status-indicator status-error" style="font-size: 1.1rem; padding: 15px;">
-                    ❌ Нет доступных лотов для крутки!<br>
-                    Проверьте, загружены ли базы данных, или расширьте диапазон настроек редкости билета.
+                    ❌ Нет доступных лотов!<br>Сверьте пути файлов базы или измените диапазон редкости билета.
                 </div>
             `;
             return;
         }
 
-        // Выбираем случайный элемент из пула (Равномерное распределение Хаоса)
         const rolledItem = filteredPool[Math.floor(Math.random() * filteredPool.length)];
         const meta = getRarityMeta(rolledItem.rating);
         const catMeta = categoriesMeta[rolledItem.categoryKey];
 
-        // Рендерим анимированную карточку результата
         displayZone.innerHTML = `
             <div class="lot-card" style="--rarity-color: ${meta.color}; --rarity-glow: ${meta.glow};">
                 <div class="lot-category">${catMeta.icon} ${catMeta.name} • ID ${rolledItem.id}</div>
@@ -655,7 +623,6 @@
         `;
     }
 
-    // ФИЛЬТРАЦИЯ И СОРТИРОВКА БАЗЫ ДАННЫХ
     function applyFilters() {
         const query = document.getElementById('search-query').value.toLowerCase().trim();
         const catFilter = document.getElementById('filter-category').value;
@@ -664,7 +631,6 @@
 
         let combinedData = [];
 
-        // Агрегируем данные для отображения в таблице/сетке
         Object.keys(gachaDatabase).forEach(cat => {
             if (catFilter === 'all' || catFilter === cat) {
                 gachaDatabase[cat].forEach(item => {
@@ -673,7 +639,6 @@
             }
         });
 
-        // Фильтрация по поисковому запросу слов (название + описание лота)
         if (query) {
             combinedData = combinedData.filter(item => 
                 item.name.toLowerCase().includes(query) || 
@@ -681,7 +646,6 @@
             );
         }
 
-        // Фильтрация по грейдам редкости Гачи Хаоса
         if (rarityFilter !== 'all') {
             combinedData = combinedData.filter(item => {
                 const r = item.rating;
@@ -698,7 +662,6 @@
             });
         }
 
-        // Сортировка выходного массива
         if (sortBy === 'num-asc') {
             combinedData.sort((a, b) => a.id - b.id);
         } else if (sortBy === 'rate-desc') {
@@ -707,15 +670,13 @@
             combinedData.sort((a, b) => a.rating - b.rating);
         }
 
-        // Выводим количество найденных элементов
         document.getElementById('db-counter').textContent = combinedData.length;
 
-        // Генерация карточек интерфейса
         const grid = document.getElementById('db-results-grid');
         grid.innerHTML = '';
 
         if (combinedData.length === 0) {
-            grid.innerHTML = '<div class="placeholder-text" style="grid-column: 1/-1; text-align: center; padding: 4px 0px;">Лоты не найдены. Синхронизируйте файлы или измените поисковый запрос.</div>';
+            grid.innerHTML = '<div class="placeholder-text" style="grid-column: 1/-1; text-align: center; padding: 20px 0;">Лоты не найдены. Обновите базы или измените условия поиска.</div>';
             return;
         }
 
@@ -744,7 +705,6 @@
         });
     }
 
-    // Автоматическая подгрузка баз при первом запуске страницы
     window.addEventListener('DOMContentLoaded', () => {
         loadAllDatabases();
     });
