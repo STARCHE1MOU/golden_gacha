@@ -14,316 +14,73 @@
             --accent: #6366f1;
             --border: #2e344e;
             
-            /* Цвета редкостей */
+            /* Цвета новых рангов редкости лотов */
             --r-trash: #64748b;
-            --r-bronze: #cd7f32;
-            --r-silver: #c0c0c0;
-            --r-gold: #ffd700;
-            --r-platinum: #e5e4e2;
-            --r-diamond: #b9f2ff;
-            --r-legendary: #ff4500;
-            --r-mythical: #da70d6;
-            --r-divine: #00ffff;
+            --r-common: #94a3b8;
+            --r-uncommon: #22c55e;
+            --r-rare: #3b82f6;
+            --r-elite: #a855f7;
+            --r-epic: #ec4899;
+            --r-legendary: #ef4444;
+            --r-mythical: #f97316;
+            --r-divine: #eab308;
+            --r-transcend: #06b6d4;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding: 20px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        header h1 { color: var(--accent); font-size: 2.3rem; text-transform: uppercase; letter-spacing: 2px; }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 20px;
-        }
+        .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .tab-btn { background-color: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: all 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background-color: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .source-config { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
+        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 15px 0; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        input, select { background-color: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 6px; font-size: 0.95rem; outline: none; }
+        input:focus, select:focus { border-color: var(--accent); }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
+        .btn-action { background-color: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        .btn-action:hover { opacity: 0.9; }
 
-        header h1 {
-            color: var(--accent);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+        .gacha-panel { display: grid; grid-template-columns: 1fr 2fr; gap: 25px; }
+        @media (max-width: 768px) { .gacha-panel { grid-template-columns: 1fr; } }
+        .gacha-controls { background-color: var(--bg-card); border: 1px solid var(--border); padding: 25px; border-radius: 12px; height: fit-content; }
 
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+        .roll-display { background-color: var(--bg-card); border: 1px solid var(--border); padding: 30px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; }
+        
+        .lot-card { background: linear-gradient(145deg, #1e2235, #151824); border: 2px solid var(--rarity-color); border-radius: 12px; padding: 25px; width: 100%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .lot-category { text-transform: uppercase; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; }
+        .lot-title { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
+        .lot-rarity-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; background-color: var(--rarity-color); color: #fff; margin-bottom: 15px; }
+        .lot-rarity-badge.dark-txt { color: #000; }
+        .lot-desc { background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 4px solid var(--rarity-color); text-align: left; white-space: pre-wrap; font-size: 1rem; }
 
-        .tab-btn {
-            background-color: var(--bg-card);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 12px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
+        .db-filters { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; }
+        @media (max-width: 900px) { .db-filters { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 600px) { .db-filters { grid-template-columns: 1fr; } }
+        
+        .db-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .db-card { background-color: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--rarity-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+        .db-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+        .db-card-title { font-weight: bold; font-size: 1.1rem; }
+        .db-card-num { font-size: 0.8rem; color: var(--text-muted); background: var(--bg-input); padding: 2px 6px; border-radius: 4px; }
+        .db-card-desc { font-size: 0.9rem; color: #cbd5e1; background: rgba(0,0,0,0.15); padding: 10px; border-radius: 6px; flex-grow: 1; margin-top: 8px; white-space: pre-wrap; }
 
-        .tab-btn.active, .tab-btn:hover {
-            background-color: var(--accent);
-            color: white;
-            border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .source-config {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-        }
-
-        .source-config h3 {
-            margin-bottom: 15px;
-            color: var(--accent);
-        }
-
-        .config-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .form-group label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        input, select {
-            background-color: var(--bg-input);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--accent);
-        }
-
-        .btn-action {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .btn-action:hover {
-            opacity: 0.9;
-        }
-
-        .gacha-panel {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 768px) {
-            .gacha-panel { grid-template-columns: 1fr; }
-        }
-
-        .gacha-controls {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 25px;
-            border-radius: 12px;
-            height: fit-content;
-        }
-
-        .roll-display {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 30px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-            text-align: center;
-            position: relative;
-        }
-
-        .lot-card {
-            background: linear-gradient(145deg, #1e2235, #151824);
-            border: 2px solid var(--rarity-color, var(--border));
-            border-radius: 12px;
-            padding: 25px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px var(--rarity-glow, transparent);
-            transition: transform 0.3s ease;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .lot-category {
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-        }
-
-        .lot-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        .lot-rarity-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            background-color: var(--rarity-color);
-            color: #000;
-            margin-bottom: 15px;
-        }
-        .lot-rarity-badge.dark-txt { color: #fff; }
-
-        .lot-desc {
-            background-color: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--rarity-color);
-            text-align: left;
-            white-space: pre-wrap;
-            font-size: 1rem;
-        }
-
-        .db-filters {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 15px;
-        }
-
-        @media (max-width: 900px) {
-            .db-filters { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 600px) {
-            .db-filters { grid-template-columns: 1fr; }
-        }
-
-        .db-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .db-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-top: 4px solid var(--rarity-color);
-            border-radius: 8px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .db-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-            gap: 10px;
-        }
-
-        .db-card-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .db-card-num {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            background: var(--bg-input);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .db-card-desc {
-            font-size: 0.9rem;
-            color: #cbd5e1;
-            background: rgba(0,0,0,0.15);
-            padding: 10px;
-            border-radius: 6px;
-            flex-grow: 1;
-            margin-top: 8px;
-            white-space: pre-wrap;
-        }
-
-        .status-indicator {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin-top: 5px;
-        }
+        .status-indicator { padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; display: inline-block; margin-top: 5px; }
         .status-success { background-color: #065f46; color: #34d399; }
         .status-error { background-color: #991b1b; color: #f87171; }
         .status-loading { background-color: #854d0e; color: #fbbf24; }
-
-        .placeholder-text {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-        }
+        .placeholder-text { color: var(--text-muted); font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -340,72 +97,53 @@
     </div>
 
     <div class="source-config">
-        <h3>🗄️ Настройка репозитория данных</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 15px; color: var(--text-muted);">
-            Пути автоматически синхронизированы со структурой вашего репозитория golden_gacha.
-        </p>
+        <h3>🗄️ Синхронизация файлов базы</h3>
         <div class="config-grid">
-            <div class="form-group">
-                <label>Способности</label>
-                <input type="text" id="path-abilities" value="ability.txt">
-                <span id="status-abilities" class="status-indicator status-loading">Ожидание...</span>
-            </div>
-            <div class="form-group">
-                <label>Предметы</label>
-                <input type="text" id="path-items" value="item.txt">
-                <span id="status-items" class="status-indicator status-loading">Ожидание...</span>
-            </div>
-            <div class="form-group">
-                <label>Черты</label>
-                <input type="text" id="path-traits" value="trait.txt">
-                <span id="status-traits" class="status-indicator status-loading">Ожидание...</span>
-            </div>
-            <div class="form-group">
-                <label>Навыки</label>
-                <input type="text" id="path-skills" value="skill.txt">
-                <span id="status-skills" class="status-indicator status-loading">Ожидание...</span>
-            </div>
-            <div class="form-group">
-                <label>Фамильяры</label>
-                <input type="text" id="path-familiars" value="familiar.txt">
-                <span id="status-familiars" class="status-indicator status-loading">Ожидание...</span>
-            </div>
+            <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"><span id="status-abilities" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"><span id="status-items" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"><span id="status-traits" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"><span id="status-skills" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"><span id="status-familiars" class="status-indicator status-loading">Ожидание...</span></div>
         </div>
-        <button class="btn-action" onclick="loadAllDatabases()">🔄 Синхронизировать / Перезагрузить файлы</button>
+        <button class="btn-action" onclick="loadAllDatabases()">🔄 Синхронизировать файлы</button>
     </div>
 
     <div id="tab-gacha" class="tab-content active">
         <div class="gacha-panel">
             <div class="gacha-controls">
-                <h3 style="margin-bottom: 15px;">Настройки Билета</h3>
+                <h3 style="margin-bottom: 15px;">Настройки Ролла</h3>
                 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Категория ролла</label>
+                    <label>1. Выберите категорию лотов</label>
                     <select id="roll-category">
-                        <option value="random">🎲 Случайная категория (Random)</option>
-                        <option value="abilities">🔮 Способности (Abilities)</option>
-                        <option value="items">⚔️ Предметы (Items)</option>
-                        <option value="traits">🧬 Черты (Traits)</option>
-                        <option value="skills">📖 Навыки (Skills)</option>
-                        <option value="familiars">🐉 Фамильяры (Familiars)</option>
+                        <option value="random">🎲 Случайная (Random)</option>
+                        <option value="abilities">🔮 Способности (Ability)</option>
+                        <option value="items">⚔️ Предметы (Item)</option>
+                        <option value="traits">🧬 Черты (Trait)</option>
+                        <option value="skills">📖 Навыки (Skill)</option>
+                        <option value="familiars">🐉 Фамильяры (Familiar)</option>
                     </select>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Минимальная редкость (Рейтинг)</label>
-                    <input type="number" id="roll-min" value="0.1" step="0.1" min="0.1" max="9.9">
-                </div>
-
                 <div class="form-group" style="margin-bottom: 25px;">
-                    <label>Максимальная редкость (Рейтинг)</label>
-                    <input type="number" id="roll-max" value="9.9" step="0.1" min="0.1" max="9.9">
+                    <label>2. Выберите используемый билет</label>
+                    <select id="roll-ticket">
+                        <option value="bronze">🟤 Бронзовый билет [0.1 - 3.3]</option>
+                        <option value="silver">⚪ Серебряный билет [0.5 - 4.3]</option>
+                        <option value="gold">🟡 Золотой билет [1.5 - 5.3]</option>
+                        <option value="platinum">🔵 Платиновый билет [2.5 - 6.3]</option>
+                        <option value="diamond">💎 Бриллиантовый билет [3.5 - 7.3]</option>
+                        <option value="legendary">🔴 Легендарный билет [4.5 - 8.3]</option>
+                        <option value="mythical">🟣 Мифический билет [5.5 - 9.3]</option>
+                        <option value="divine">👑 Божественный билет [6.5 - 10.0]</option>
+                    </select>
                 </div>
 
-                <button class="btn-action" id="btn-roll" style="width: 100%; font-size: 1.2rem; padding: 15px;" onclick="performRoll()">🎯 СОВЕРШИТЬ КРУТКУ</button>
+                <button class="btn-action" id="btn-roll" style="width: 100%; font-size: 1.2rem; padding: 15px;" onclick="performRoll()">🎯 ИСПЫТАТЬ ХАОС</button>
             </div>
 
             <div class="roll-display" id="roll-display-zone">
-                <div class="placeholder-text" id="roll-placeholder">Нажмите кнопку крутки, чтобы испытать Хаос...</div>
+                <div class="placeholder-text">Выберите параметры и активируйте билет...</div>
             </div>
         </div>
     </div>
@@ -413,11 +151,11 @@
     <div id="tab-database" class="tab-content">
         <div class="db-filters">
             <div class="form-group">
-                <label>Поиск по названию или описанию</label>
-                <input type="text" id="search-query" placeholder="Введите ключевые слова..." oninput="applyFilters()">
+                <label>Поиск по тексту</label>
+                <input type="text" id="search-query" placeholder="Название или описание..." oninput="applyFilters()">
             </div>
             <div class="form-group">
-                <label>Категория лотов</label>
+                <label>Категория</label>
                 <select id="filter-category" onchange="applyFilters()">
                     <option value="all">Все категории</option>
                     <option value="abilities">🔮 Способности</option>
@@ -428,22 +166,23 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Грейд редкости</label>
+                <label>Ранг редкости лота</label>
                 <select id="filter-rarity-class" onchange="applyFilters()">
-                    <option value="all">Любой грейд</option>
+                    <option value="all">Все ранги</option>
                     <option value="trash">Мусор (0.1 - 0.9)</option>
-                    <option value="bronze">Bronze (1.0 - 1.9)</option>
-                    <option value="silver">Silver (2.0 - 2.9)</option>
-                    <option value="gold">Gold (3.0 - 3.9)</option>
-                    <option value="platinum">Platinum (4.0 - 4.9)</option>
-                    <option value="diamond">Diamond (5.0 - 5.9)</option>
-                    <option value="legendary">Legendary (6.0 - 6.9)</option>
-                    <option value="mythical">Mythical (7.0 - 7.9)</option>
-                    <option value="divine">Divine (8.0 - 9.9)</option>
+                    <option value="common">Обычный (1.0 - 1.9)</option>
+                    <option value="uncommon">Необычный (2.0 - 2.9)</option>
+                    <option value="rare">Редкий (3.0 - 3.9)</option>
+                    <option value="elite">Элитный (4.0 - 4.9)</option>
+                    <option value="epic">Эпический (5.0 - 5.9)</option>
+                    <option value="legendary">Легендарный (6.0 - 6.9)</option>
+                    <option value="mythical">Мифический (7.0 - 7.9)</option>
+                    <option value="divine">Божественный (8.0 - 8.9)</option>
+                    <option value="transcend">Трансцендентный (9.0 - 9.9)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Сортировка рейтинга</label>
+                <label>Сортировка</label>
                 <select id="filter-sort" onchange="applyFilters()">
                     <option value="num-asc">По ID (Возрастание)</option>
                     <option value="rate-desc">Рейтинг: Выше → Ниже</option>
@@ -461,13 +200,7 @@
 </div>
 
 <script>
-    const gachaDatabase = {
-        abilities: [],
-        items: [],
-        traits: [],
-        skills: [],
-        familiars: []
-    };
+    const gachaDatabase = { abilities: [], items: [], traits: [], skills: [], familiars: [] };
 
     const categoriesMeta = {
         abilities: { name: 'Способность', icon: '🔮' },
@@ -477,61 +210,60 @@
         familiars: { name: 'Фамильяр', icon: '🐉' }
     };
 
+    // Массив диапазонов для билетов
+    const ticketRanges = {
+        bronze: { min: 0.1, max: 3.3 },
+        silver: { min: 0.5, max: 4.3 },
+        gold: { min: 1.5, max: 5.3 },
+        platinum: { min: 2.5, max: 6.3 },
+        diamond: { min: 3.5, max: 7.3 },
+        legendary: { min: 4.5, max: 8.3 },
+        mythical: { min: 5.5, max: 9.3 },
+        divine: { min: 6.5, max: 10.0 }
+    };
+
+    // Новое распределение рангов редкости лотов на основе числового рейтинга
+    function getRarityMeta(rating) {
+        const r = parseFloat(rating);
+        if (r >= 0.1 && r <= 0.9) return { label: 'Мусор', color: '#64748b', darkTxt: false };
+        if (r >= 1.0 && r <= 1.9) return { label: 'Обычный', color: '#94a3b8', darkTxt: true };
+        if (r >= 2.0 && r <= 2.9) return { label: 'Необычный', color: '#22c55e', darkTxt: true };
+        if (r >= 3.0 && r <= 3.9) return { label: 'Редкий', color: '#3b82f6', darkTxt: false };
+        if (r >= 4.0 && r <= 4.9) return { label: 'Элитный', color: '#a855f7', darkTxt: false };
+        if (r >= 5.0 && r <= 5.9) return { label: 'Эпический', color: '#ec4899', darkTxt: false };
+        if (r >= 6.0 && r <= 6.9) return { label: 'Легендарный', color: '#ef4444', darkTxt: false };
+        if (r >= 7.0 && r <= 7.9) return { label: 'Мифический', color: '#f97316', darkTxt: false };
+        if (r >= 8.0 && r <= 8.9) return { label: 'Божественный', color: '#eab308', darkTxt: true };
+        if (r >= 9.0 && r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', darkTxt: true };
+        return { label: 'Неизвестно', color: '#2e344e', darkTxt: false };
+    }
+
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        
         event.currentTarget.classList.add('active');
         document.getElementById(`tab-${tabId}`).classList.add('active');
-        
-        if(tabId === 'database') {
-            applyFilters();
-        }
-    }
-
-    function getRarityMeta(rating) {
-        const rate = parseFloat(rating);
-        if (rate >= 0.1 && rate <= 0.9) return { label: 'Мусор', color: '#64748b', glow: 'transparent', darkTxt: true };
-        if (rate >= 1.0 && rate <= 1.9) return { label: 'Bronze', color: '#cd7f32', glow: 'rgba(205,127,50,0.2)', darkTxt: true };
-        if (rate >= 2.0 && rate <= 2.9) return { label: 'Silver', color: '#cbd5e1', glow: 'rgba(203,213,225,0.2)', darkTxt: true };
-        if (rate >= 3.0 && rate <= 3.9) return { label: 'Gold', color: '#ffd700', glow: 'rgba(255,215,0,0.3)', darkTxt: true };
-        if (rate >= 4.0 && rate <= 4.9) return { label: 'Platinum', color: '#e2e8f0', glow: 'rgba(226,232,240,0.3)', darkTxt: true };
-        if (rate >= 5.0 && rate <= 5.9) return { label: 'Diamond', color: '#b9f2ff', glow: 'rgba(185,242,255,0.4)', darkTxt: true };
-        if (rate >= 6.0 && rate <= 6.9) return { label: 'Legendary', color: '#ff4500', glow: 'rgba(255,69,0,0.5)', darkTxt: false };
-        if (rate >= 7.0 && rate <= 7.9) return { label: 'Mythical', color: '#da70d6', glow: 'rgba(218,112,214,0.6)', darkTxt: false };
-        if (rate >= 8.0 && rate <= 9.9) return { label: 'Divine', color: '#00ffff', glow: 'rgba(0,255,255,0.8)', darkTxt: true };
-        return { label: 'Неизвестно', color: '#2e344e', glow: 'transparent', darkTxt: false };
+        if(tabId === 'database') applyFilters();
     }
 
     function parseChaosFile(text) {
         const items = [];
         if (!text) return items;
-
         const rawBlocks = text.split(/(?=\n\d+\.)|(?=^\d+\.)/m);
-        
         for (let block of rawBlocks) {
             block = block.trim();
             if (!block) continue;
-
             const hashIndex = block.indexOf('#');
             let headerLine = hashIndex !== -1 ? block.substring(0, hashIndex).trim() : block;
             let description = hashIndex !== -1 ? block.substring(hashIndex + 1).trim() : "";
-
             const dotIndex = headerLine.indexOf('.');
             const commaIndex = headerLine.lastIndexOf(',');
-
             if (dotIndex !== -1 && commaIndex !== -1 && commaIndex > dotIndex) {
                 const id = headerLine.substring(0, dotIndex).trim();
                 const name = headerLine.substring(dotIndex + 1, commaIndex).trim();
                 const rating = headerLine.substring(commaIndex + 1).trim();
-
                 if (id && name && !isNaN(parseFloat(rating))) {
-                    items.push({
-                        id: parseInt(id) || id,
-                        name: name,
-                        rating: parseFloat(rating),
-                        description: description
-                    });
+                    items.push({ id: parseInt(id) || id, name: name, rating: parseFloat(rating), description: description });
                 }
             }
         }
@@ -542,19 +274,14 @@
         const statusEl = document.getElementById(`status-${catKey}`);
         statusEl.className = 'status-indicator status-loading';
         statusEl.textContent = 'Загрузка...';
-
         try {
-            // Добавлено игнорирование жесткого кэша гитхаба при синхронизации
             const response = await fetch(`${filename}?t=${Date.now()}`, { cache: "no-store" });
-            if (!response.ok) throw new Error(`Status ${response.status}`);
-            
+            if (!response.ok) throw new Error();
             const text = await response.text();
             gachaDatabase[catKey] = parseChaosFile(text);
-            
             statusEl.className = 'status-indicator status-success';
             statusEl.textContent = `ОК (${gachaDatabase[catKey].length})`;
-        } catch (error) {
-            console.error(error);
+        } catch (e) {
             statusEl.className = 'status-indicator status-error';
             statusEl.textContent = 'Ошибка 404';
             gachaDatabase[catKey] = [];
@@ -569,29 +296,26 @@
             loadDatabaseFile('skills', document.getElementById('path-skills').value),
             loadDatabaseFile('familiars', document.getElementById('path-familiars').value)
         ]);
-        if (document.getElementById('tab-database').classList.contains('active')) {
-            applyFilters();
-        }
+        if (document.getElementById('tab-database').classList.contains('active')) applyFilters();
     }
 
+    // ЛОГИКА КРУТКИ С УЧЕТОМ ДИАПАЗОНА БИЛЕТОВ
     function performRoll() {
         const chosenCategory = document.getElementById('roll-category').value;
-        const minRate = parseFloat(document.getElementById('roll-min').value) || 0.1;
-        const maxRate = parseFloat(document.getElementById('roll-max').value) || 9.9;
+        const chosenTicket = document.getElementById('roll-ticket').value;
+        
+        // Получаем рамки из настроек билета
+        const minRate = ticketRanges[chosenTicket].min;
+        const maxRate = ticketRanges[chosenTicket].max;
 
         let pool = [];
-
         if (chosenCategory === 'random') {
             Object.keys(gachaDatabase).forEach(cat => {
-                gachaDatabase[cat].forEach(item => {
-                    pool.push({ ...item, categoryKey: cat });
-                });
+                gachaDatabase[cat].forEach(item => { pool.push({ ...item, categoryKey: cat }); });
             });
         } else {
             if (gachaDatabase[chosenCategory]) {
-                gachaDatabase[chosenCategory].forEach(item => {
-                    pool.push({ ...item, categoryKey: chosenCategory });
-                });
+                gachaDatabase[chosenCategory].forEach(item => { pool.push({ ...item, categoryKey: chosenCategory }); });
             }
         }
 
@@ -601,9 +325,8 @@
         if (filteredPool.length === 0) {
             displayZone.innerHTML = `
                 <div class="status-indicator status-error" style="font-size: 1.1rem; padding: 15px;">
-                    ❌ Нет доступных лотов!<br>Сверьте пути файлов базы или измените диапазон редкости билета.
-                </div>
-            `;
+                    ❌ Нет доступных лотов в диапазоне выбранного бита!<br>Убедитесь, что базы загружены корректно.
+                </div>`;
             return;
         }
 
@@ -612,15 +335,14 @@
         const catMeta = categoriesMeta[rolledItem.categoryKey];
 
         displayZone.innerHTML = `
-            <div class="lot-card" style="--rarity-color: ${meta.color}; --rarity-glow: ${meta.glow};">
-                <div class="lot-category">${catMeta.icon} ${catMeta.name} • ID ${rolledItem.id}</div>
+            <div class="lot-card" style="--rarity-color: ${meta.color}; border-color: ${meta.color};">
+                <div class="lot-category">${catMeta.icon} ${catMeta.name} • #${rolledItem.id}</div>
                 <div class="lot-title">${rolledItem.name}</div>
                 <div>
-                    <span class="lot-rarity-badge ${meta.darkTxt ? '' : 'dark-txt'}">${meta.label} (${rolledItem.rating.toFixed(1)})</span>
+                    <span class="lot-rarity-badge ${meta.darkTxt ? 'dark-txt' : ''}">${meta.label} (${rolledItem.rating.toFixed(1)})</span>
                 </div>
                 <div class="lot-desc">${rolledItem.description || 'Описание отсутствует.'}</div>
-            </div>
-        `;
+            </div>`;
     }
 
     function applyFilters() {
@@ -630,19 +352,15 @@
         const sortBy = document.getElementById('filter-sort').value;
 
         let combinedData = [];
-
         Object.keys(gachaDatabase).forEach(cat => {
             if (catFilter === 'all' || catFilter === cat) {
-                gachaDatabase[cat].forEach(item => {
-                    combinedData.push({ ...item, categoryKey: cat });
-                });
+                gachaDatabase[cat].forEach(item => { combinedData.push({ ...item, categoryKey: cat }); });
             }
         });
 
         if (query) {
             combinedData = combinedData.filter(item => 
-                item.name.toLowerCase().includes(query) || 
-                (item.description && item.description.toLowerCase().includes(query))
+                item.name.toLowerCase().includes(query) || (item.description && item.description.toLowerCase().includes(query))
             );
         }
 
@@ -650,65 +368,55 @@
             combinedData = combinedData.filter(item => {
                 const r = item.rating;
                 if (rarityFilter === 'trash') return r >= 0.1 && r <= 0.9;
-                if (rarityFilter === 'bronze') return r >= 1.0 && r <= 1.9;
-                if (rarityFilter === 'silver') return r >= 2.0 && r <= 2.9;
-                if (rarityFilter === 'gold') return r >= 3.0 && r <= 3.9;
-                if (rarityFilter === 'platinum') return r >= 4.0 && r <= 4.9;
-                if (rarityFilter === 'diamond') return r >= 5.0 && r <= 5.9;
+                if (rarityFilter === 'common') return r >= 1.0 && r <= 1.9;
+                if (rarityFilter === 'uncommon') return r >= 2.0 && r <= 2.9;
+                if (rarityFilter === 'rare') return r >= 3.0 && r <= 3.9;
+                if (rarityFilter === 'elite') return r >= 4.0 && r <= 4.9;
+                if (rarityFilter === 'epic') return r >= 5.0 && r <= 5.9;
                 if (rarityFilter === 'legendary') return r >= 6.0 && r <= 6.9;
                 if (rarityFilter === 'mythical') return r >= 7.0 && r <= 7.9;
-                if (rarityFilter === 'divine') return r >= 8.0 && r <= 9.9;
+                if (rarityFilter === 'divine') return r >= 8.0 && r <= 8.9;
+                if (rarityFilter === 'transcend') return r >= 9.0 && r <= 10.0;
                 return true;
             });
         }
 
-        if (sortBy === 'num-asc') {
-            combinedData.sort((a, b) => a.id - b.id);
-        } else if (sortBy === 'rate-desc') {
-            combinedData.sort((a, b) => b.rating - a.rating);
-        } else if (sortBy === 'rate-asc') {
-            combinedData.sort((a, b) => a.rating - b.rating);
-        }
+        if (sortBy === 'num-asc') combinedData.sort((a, b) => a.id - b.id);
+        else if (sortBy === 'rate-desc') combinedData.sort((a, b) => b.rating - a.rating);
+        else if (sortBy === 'rate-asc') combinedData.sort((a, b) => a.rating - b.rating);
 
         document.getElementById('db-counter').textContent = combinedData.length;
-
         const grid = document.getElementById('db-results-grid');
         grid.innerHTML = '';
 
         if (combinedData.length === 0) {
-            grid.innerHTML = '<div class="placeholder-text" style="grid-column: 1/-1; text-align: center; padding: 20px 0;">Лоты не найдены. Обновите базы или измените условия поиска.</div>';
+            grid.innerHTML = '<div class="placeholder-text" style="grid-column: 1/-1; text-align: center; padding: 20px 0;">Лоты не найдены.</div>';
             return;
         }
 
         combinedData.forEach(item => {
             const meta = getRarityMeta(item.rating);
             const catMeta = categoriesMeta[item.categoryKey];
-            
             const card = document.createElement('div');
             card.className = 'db-card';
             card.style.setProperty('--rarity-color', meta.color);
-
             card.innerHTML = `
                 <div>
                     <div class="db-card-header">
                         <span class="db-card-title">${item.name}</span>
                         <span class="db-card-num">#${item.id}</span>
                     </div>
-                    <div style="font-size: 0.8rem; margin-bottom: 5px;">
+                    <div style="font-size: 0.85rem; margin-bottom: 5px;">
                         <span>${catMeta.icon} ${catMeta.name}</span> | 
                         <span style="color: ${meta.color}; font-weight: bold;">${meta.label} (${item.rating.toFixed(1)})</span>
                     </div>
                     <div class="db-card-desc">${item.description || 'Описание лота отсутствует.'}</div>
-                </div>
-            `;
+                </div>`;
             grid.appendChild(card);
         });
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        loadAllDatabases();
-    });
+    window.addEventListener('DOMContentLoaded', () => { loadAllDatabases(); });
 </script>
-
 </body>
 </html>
