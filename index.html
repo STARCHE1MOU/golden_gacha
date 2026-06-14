@@ -40,8 +40,17 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .source-config { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
-        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 15px 0; }
+        /* Блок синхронизации */
+        .source-config { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; transition: all 0.3s ease; }
+        .config-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+        .config-header h3 { font-size: 1.17rem; }
+        .btn-toggle-config { background: none; border: none; color: var(--accent); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 10px; border-radius: 4px; transition: background-color 0.2s; }
+        .btn-toggle-config:hover { background-color: var(--bg-input); }
+        
+        .config-content { margin-top: 15px; }
+        .config-content.hidden { display: none; }
+
+        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
         input, select { background-color: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 6px; font-size: 0.95rem; outline: none; }
@@ -49,22 +58,31 @@
 
         .btn-action { background-color: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
         .btn-action:hover { opacity: 0.9; }
+        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .gacha-panel { display: grid; grid-template-columns: 1fr 2fr; gap: 25px; }
-        @media (max-width: 768px) { .gacha-panel { grid-template-columns: 1fr; } }
-        .gacha-controls { background-color: var(--bg-card); border: 1px solid var(--border); padding: 25px; border-radius: 12px; height: fit-content; }
+        /* Трехколоночная панель Гачи */
+        .gacha-panel { display: grid; grid-template-columns: 320px 1fr 300px; gap: 20px; }
+        @media (max-width: 1100px) { .gacha-panel { grid-template-columns: 1fr 1fr; } .gacha-history-panel { grid-column: 1 / -1; } }
+        @media (max-width: 768px) { .gacha-panel { grid-template-columns: 1fr; } .gacha-history-panel { grid-column: auto; } }
+        
+        .gacha-controls { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; height: fit-content; }
 
-        /* Зона отображения теперь поддерживает скролл при мульти-крутках */
+        .roll-main-zone { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .roll-display { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 15px; align-items: center; justify-content: flex-start; min-height: 400px; max-height: 750px; overflow-y: auto; width: 100%; }
         
-        /* Карточка лота с кнопкой копирования */
+        /* Панель истории */
+        .gacha-history-panel { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; max-height: 750px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .history-list { overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
+        .history-item { background-color: var(--bg-input); border-left: 3px solid var(--rarity-color); padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; display: flex; flex-direction: column; }
+        .history-item-title { font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
         .lot-card { background: linear-gradient(145deg, #1e2235, #151824); border: 2px solid var(--rarity-color); border-radius: 12px; padding: 20px; width: 100%; max-width: 550px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); position: relative; animation: popIn 0.3s ease-out; }
         @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
         .lot-header-wrapper { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 5px; }
         .lot-category { text-transform: uppercase; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; color: var(--text-muted); }
         
-        /* Кнопка копирования */
         .btn-copy { background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
         .btn-copy:hover { border-color: var(--accent); color: var(--text-main); }
         .btn-copy.copied { background: #065f46; border-color: #34d399; color: #34d399; }
@@ -85,6 +103,12 @@
         .db-card-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; margin-bottom: 5px; }
         .db-card-num { font-size: 0.8rem; color: var(--text-muted); background: var(--bg-input); padding: 2px 6px; border-radius: 4px; }
         .db-card-desc { font-size: 0.9rem; color: #cbd5e1; background: rgba(0,0,0,0.15); padding: 10px; border-radius: 6px; flex-grow: 1; margin-top: 8px; white-space: pre-wrap; }
+
+        .pagination-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 30px; padding: 15px; background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+        .page-info { font-size: 0.95rem; color: var(--text-muted); }
+        .btn-page { background-color: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .btn-page:hover:not(:disabled) { border-color: var(--accent); background-color: var(--bg-card); }
+        .btn-page:disabled { opacity: 0.3; cursor: not-allowed; }
 
         .status-indicator { padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; display: inline-block; margin-top: 5px; }
         .status-success { background-color: #065f46; color: #34d399; }
@@ -107,15 +131,20 @@
     </div>
 
     <div class="source-config">
-        <h3>🗄️ Синхронизация файлов базы</h3>
-        <div class="config-grid">
-            <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"><span id="status-abilities" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"><span id="status-items" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"><span id="status-traits" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"><span id="status-skills" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"><span id="status-familiars" class="status-indicator status-loading">Ожидание...</span></div>
+        <div class="config-header" onclick="toggleConfigBlock()">
+            <h3>🗄️ Синхронизация файлов базы</h3>
+            <button class="btn-toggle-config" id="btn-toggle-config">[ Скрыть ]</button>
         </div>
-        <button class="btn-action" onclick="loadAllDatabases()">🔄 Синхронизировать файлы</button>
+        <div class="config-content" id="config-content-zone">
+            <div class="config-grid">
+                <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"><span id="status-abilities" class="status-indicator status-loading">Ожидание...</span></div>
+                <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"><span id="status-items" class="status-indicator status-loading">Ожидание...</span></div>
+                <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"><span id="status-traits" class="status-indicator status-loading">Ожидание...</span></div>
+                <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"><span id="status-skills" class="status-indicator status-loading">Ожидание...</span></div>
+                <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"><span id="status-familiars" class="status-indicator status-loading">Ожидание...</span></div>
+            </div>
+            <button class="btn-action" onclick="loadAllDatabases()">🔄 Синхронизировать файлы</button>
+        </div>
     </div>
 
     <div id="tab-gacha" class="tab-content active">
@@ -169,8 +198,23 @@
                 <button class="btn-action" id="btn-roll" style="width: 100%; font-size: 1.2rem; padding: 15px;" onclick="performRoll()">🎯 ИСПЫТАТЬ ХАОС</button>
             </div>
 
-            <div class="roll-display" id="roll-display-zone">
-                <div class="placeholder-text">Выберите параметры и активируйте билет...</div>
+            <div class="roll-main-zone">
+                <div style="display: flex; justify-content: flex-end; display: none;" id="multi-copy-bar">
+                    <button class="btn-copy" id="btn-copy-all" style="padding: 6px 14px;" onclick="copyAllCurrentRolls()">📋 Скопировать весь мультиролл</button>
+                </div>
+                <div class="roll-display" id="roll-display-zone">
+                    <div class="placeholder-text">Выберите параметры и активируйте билет...</div>
+                </div>
+            </div>
+
+            <div class="gacha-history-panel">
+                <div class="history-header">
+                    <h4 style="font-size: 1rem;">📜 История (Сессия)</h4>
+                    <button class="btn-copy" style="padding: 2px 8px; font-size: 0.75rem;" onclick="clearHistory()">Очистить</button>
+                </div>
+                <div class="history-list" id="gacha-history-list">
+                    <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; margin: auto;">История пуста</div>
+                </div>
             </div>
         </div>
     </div>
@@ -179,11 +223,11 @@
         <div class="db-filters">
             <div class="form-group">
                 <label>Поиск по тексту</label>
-                <input type="text" id="search-query" placeholder="Название или описание..." oninput="applyFilters()">
+                <input type="text" id="search-query" placeholder="Название или описание..." oninput="resetPageAndApply()">
             </div>
             <div class="form-group">
                 <label>Категория</label>
-                <select id="filter-category" onchange="applyFilters()">
+                <select id="filter-category" onchange="resetPageAndApply()">
                     <option value="all">Все категории</option>
                     <option value="abilities">🔮 Способности</option>
                     <option value="items">⚔️ Предметы</option>
@@ -194,7 +238,7 @@
             </div>
             <div class="form-group">
                 <label>Ранг редкости</label>
-                <select id="filter-rarity-class" onchange="applyFilters()">
+                <select id="filter-rarity-class" onchange="resetPageAndApply()">
                     <option value="all">Все ранги</option>
                     <option value="trash">Мусор (0.1 - 0.9)</option>
                     <option value="common">Обычный (1.0 - 1.9)</option>
@@ -210,7 +254,7 @@
             </div>
             <div class="form-group">
                 <label>Сортировка</label>
-                <select id="filter-sort" onchange="applyFilters()">
+                <select id="filter-sort" onchange="resetPageAndApply()">
                     <option value="num-asc">По ID (Возрастание)</option>
                     <option value="rate-desc">Рейтинг: Выше → Ниже</option>
                     <option value="rate-asc">Рейтинг: Ниже → Выше</option>
@@ -218,7 +262,7 @@
             </div>
             <div class="form-group">
                 <label>Показывать лотов</label>
-                <select id="filter-limit" onchange="applyFilters()">
+                <select id="filter-limit" onchange="resetPageAndApply()">
                     <option value="10">10 лотов</option>
                     <option value="20">20 лотов</option>
                     <option value="50" selected>50 лотов</option>
@@ -234,11 +278,19 @@
         </div>
 
         <div class="db-grid" id="db-results-grid"></div>
+
+        <div class="pagination-controls" id="db-pagination" style="display: none;">
+            <button class="btn-page" id="btn-page-prev" onclick="changePage(-1)">← Назад</button>
+            <span class="page-info" id="db-page-info">Страница 1 из 1</span>
+            <button class="btn-page" id="btn-page-next" onclick="changePage(1)">Вперед →</button>
+        </div>
     </div>
 </div>
 
 <script>
     const gachaDatabase = { abilities: [], items: [], traits: [], skills: [], familiars: [] };
+    let currentRollResults = []; 
+    let dbCurrentPage = 1;       
 
     const categoriesMeta = {
         abilities: { name: 'Способность', icon: '🔮' },
@@ -275,10 +327,22 @@
         return { label: 'Неизвестно', color: '#2e344e', darkTxt: false };
     }
 
-    // Функция №1: Единый глобальный метод для копирования лота в буфер обмена
+    // Новая функция переключения видимости блока синхронизации
+    function toggleConfigBlock() {
+        const contentZone = document.getElementById('config-content-zone');
+        const toggleBtn = document.getElementById('btn-toggle-config');
+        
+        if (contentZone.classList.contains('hidden')) {
+            contentZone.classList.remove('hidden');
+            toggleBtn.textContent = '[ Скрыть ]';
+        } else {
+            contentZone.classList.add('hidden');
+            toggleBtn.textContent = '[ Показать ]';
+        }
+    }
+
     function copyToClipboard(button, name, id, category, rating, rarityLabel, desc) {
         const textToCopy = `[${category}] #${id} ${name}\nРанг: ${rarityLabel} (${rating})\nОписание: ${desc || 'Отсутствует'}`;
-        
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalText = button.textContent;
             button.textContent = '✓ Скопировано';
@@ -287,9 +351,56 @@
                 button.textContent = originalText;
                 button.classList.remove('copied');
             }, 1500);
-        }).catch(err => {
-            console.error('Не удалось скопировать текст: ', err);
-        });
+        }).catch(err => console.error(err));
+    }
+
+    function copyAllCurrentRolls() {
+        if (!currentRollResults.length) return;
+        const button = document.getElementById('btn-copy-all');
+        
+        const fullText = currentRollResults.map((item, idx) => {
+            const meta = getRarityMeta(item.rating);
+            const catMeta = categoriesMeta[item.categoryKey];
+            return `--- Лот #${idx + 1} ---\n[${catMeta.name}] #${item.id} ${item.name}\nРанг: ${meta.label} (${item.rating.toFixed(1)})\nОписание: ${item.description || 'Отсутствует'}`;
+        }).join('\n\n');
+
+        navigator.clipboard.writeText(fullText).then(() => {
+            const originalText = button.textContent;
+            button.textContent = '✓ Весь список скопирован!';
+            button.classList.add('copied');
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('copied');
+            }, 2000);
+        }).catch(err => console.error(err));
+    }
+
+    function addToHistory(item) {
+        const historyList = document.getElementById('gacha-history-list');
+        if (historyList.querySelector('.placeholder-text') || historyList.textContent.includes('История пуста')) {
+            historyList.innerHTML = '';
+        }
+
+        const meta = getRarityMeta(item.rating);
+        const catMeta = categoriesMeta[item.categoryKey];
+
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.style.setProperty('--rarity-color', meta.color);
+        historyItem.innerHTML = `
+            <div class="history-item-title" title="${item.name}">${catMeta.icon} ${item.name}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+                <span>#${item.id} (${meta.label})</span>
+                <span style="color: ${meta.color}; font-weight: bold;">${item.rating.toFixed(1)}</span>
+            </div>
+        `;
+        historyList.insertBefore(historyItem, historyList.firstChild);
+    }
+
+    function clearHistory() {
+        document.getElementById('gacha-history-list').innerHTML = `
+            <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; margin: auto;">История пуста</div>
+        `;
     }
 
     function switchTab(tabId) {
@@ -353,7 +464,6 @@
         if (document.getElementById('tab-database').classList.contains('active')) applyFilters();
     }
 
-    // Изменение логики крутки: поддержка генерации списков лотов (от 1 до 10 штук за клик)
     function performRoll() {
         const chosenCategory = document.getElementById('roll-category').value;
         const chosenTicket = document.getElementById('roll-ticket').value;
@@ -375,24 +485,27 @@
 
         const filteredPool = pool.filter(item => item.rating >= minRate && item.rating <= maxRate);
         const displayZone = document.getElementById('roll-display-zone');
+        const multiCopyBar = document.getElementById('multi-copy-bar');
 
         if (filteredPool.length === 0) {
             displayZone.innerHTML = `
                 <div class="status-indicator status-error" style="font-size: 1.1rem; padding: 15px; margin: auto;">
                     ❌ Нет доступных лотов в диапазоне выбранного билета!<br>Убедитесь, что файлы баз загружены корректно.
                 </div>`;
+            multiCopyBar.style.display = 'none';
             return;
         }
 
-        displayZone.innerHTML = ''; // Сбрасываем старый экран выпадания
+        displayZone.innerHTML = ''; 
+        currentRollResults = []; 
 
-        // Алгоритм вытягивания N случайных элементов
         for (let i = 0; i < rollCount; i++) {
             const rolledItem = filteredPool[Math.floor(Math.random() * filteredPool.length)];
+            currentRollResults.push(rolledItem); 
+            addToHistory(rolledItem);            
+
             const meta = getRarityMeta(rolledItem.rating);
             const catMeta = categoriesMeta[rolledItem.categoryKey];
-            
-            // Экранируем символы описания для корректной передачи в функцию копирования
             const safeDesc = (rolledItem.description || '').replace(/`/g, '\\`').replace(/'/g, "\\'").replace(/"/g, '\\"');
 
             const lotHtml = `
@@ -410,6 +523,18 @@
                 
             displayZone.insertAdjacentHTML('beforeend', lotHtml);
         }
+
+        multiCopyBar.style.display = rollCount > 1 ? 'flex' : 'none';
+    }
+
+    function resetPageAndApply() {
+        dbCurrentPage = 1;
+        applyFilters();
+    }
+
+    function changePage(direction) {
+        dbCurrentPage += direction;
+        applyFilters();
     }
 
     function applyFilters() {
@@ -458,17 +583,31 @@
 
         let displayData = combinedData;
         const limitNoteEl = document.getElementById('db-limit-note');
+        const paginationEl = document.getElementById('db-pagination');
         
         if (limitVal !== 'all') {
             const limit = parseInt(limitVal);
+            const totalPages = Math.ceil(totalFound / limit) || 1;
+            
+            if (dbCurrentPage > totalPages) dbCurrentPage = totalPages;
+            if (dbCurrentPage < 1) dbCurrentPage = 1;
+
+            const startIndex = (dbCurrentPage - 1) * limit;
+            displayData = combinedData.slice(startIndex, startIndex + limit);
+
             if (totalFound > limit) {
-                displayData = combinedData.slice(0, limit);
-                limitNoteEl.textContent = `(Показаны первые ${limit} результатов)`;
+                limitNoteEl.textContent = `(Показано лотов: с ${startIndex + 1} по ${Math.min(startIndex + limit, totalFound)})`;
+                paginationEl.style.display = 'flex';
+                document.getElementById('db-page-info').textContent = `Страница ${dbCurrentPage} из ${totalPages}`;
+                document.getElementById('btn-page-prev').disabled = dbCurrentPage === 1;
+                document.getElementById('btn-page-next').disabled = dbCurrentPage === totalPages;
             } else {
                 limitNoteEl.textContent = '';
+                paginationEl.style.display = 'none';
             }
         } else {
             limitNoteEl.textContent = '';
+            paginationEl.style.display = 'none';
         }
 
         const grid = document.getElementById('db-results-grid');
