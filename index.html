@@ -74,7 +74,10 @@
         .gacha-history-panel { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; max-height: 750px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .history-list { overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
-        .history-item { background-color: var(--bg-input); border-left: 3px solid var(--rarity-color); padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; display: flex; flex-direction: column; }
+        
+        /* Кликабельный элемент истории */
+        .history-item { background-color: var(--bg-input); border-left: 3px solid var(--rarity-color); padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, background-color 0.2s; }
+        .history-item:hover { background-color: var(--border); transform: translateX(3px); }
         .history-item-title { font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .lot-card { background: linear-gradient(145deg, #1e2235, #151824); border: 2px solid var(--rarity-color); border-radius: 12px; padding: 20px; width: 100%; max-width: 550px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); position: relative; animation: popIn 0.3s ease-out; }
@@ -327,7 +330,6 @@
         return { label: 'Неизвестно', color: '#2e344e', darkTxt: false };
     }
 
-    // Новая функция переключения видимости блока синхронизации
     function toggleConfigBlock() {
         const contentZone = document.getElementById('config-content-zone');
         const toggleBtn = document.getElementById('btn-toggle-config');
@@ -375,6 +377,32 @@
         }).catch(err => console.error(err));
     }
 
+    // Рендеринг одной большой карточки лота в главную зону отображения
+    function displaySingleLotCard(item) {
+        const displayZone = document.getElementById('roll-display-zone');
+        document.getElementById('multi-copy-bar').style.display = 'none'; // Скрываем мульти-копирование
+        displayZone.innerHTML = '';
+
+        const meta = getRarityMeta(item.rating);
+        const catMeta = categoriesMeta[item.categoryKey];
+        const safeDesc = (item.description || '').replace(/`/g, '\\`').replace(/'/g, "\\'").replace(/"/g, '\\"');
+
+        const lotHtml = `
+            <div class="lot-card" style="--rarity-color: ${meta.color}; border-color: ${meta.color}; margin: auto;">
+                <div class="lot-header-wrapper">
+                    <div class="lot-category">${catMeta.icon} ${catMeta.name} • #${item.id}</div>
+                    <button class="btn-copy" onclick="copyToClipboard(this, '${item.name}', '${item.id}', '${catMeta.name}', '${item.rating.toFixed(1)}', '${meta.label}', \`${safeDesc}\`)">📋 Копировать</button>
+                </div>
+                <div class="lot-title">${item.name}</div>
+                <div>
+                    <span class="lot-rarity-badge ${meta.darkTxt ? 'dark-txt' : ''}">${meta.label} (${item.rating.toFixed(1)})</span>
+                </div>
+                <div class="lot-desc">${item.description || 'Описание отсутствует.'}</div>
+            </div>`;
+            
+        displayZone.insertAdjacentHTML('beforeend', lotHtml);
+    }
+
     function addToHistory(item) {
         const historyList = document.getElementById('gacha-history-list');
         if (historyList.querySelector('.placeholder-text') || historyList.textContent.includes('История пуста')) {
@@ -387,6 +415,11 @@
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
         historyItem.style.setProperty('--rarity-color', meta.color);
+        
+        // Предохраняем кавычки в JSON-строке для передачи в атрибут onclick
+        const escapedItemJson = JSON.stringify(item).replace(/'/g, "&apos;").replace(/"/g, '&quot;');
+        historyItem.setAttribute('onclick', `displaySingleLotCard(${escapedItemJson})`);
+
         historyItem.innerHTML = `
             <div class="history-item-title" title="${item.name}">${catMeta.icon} ${item.name}</div>
             <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
