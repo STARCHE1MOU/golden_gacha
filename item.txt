@@ -1396,89 +1396,89 @@ Minecraft - A bucket filled with 1 liter of milk. If the milk inside the bucket 
 #Bleach - Gonryomaru is a Zanpakuto, a spiritual armament in the form of a Rapier. The strength of this armament scales with the power of its user. With its Bankai unlocked, it has reached its most powerful state. The Bankai of this Zanpakuto allows it to control the weather and call down powerful strikes of lightning as well as wreath their sword with violent lightning. It also greatly increases the potency of electricity-based abilities channeled through it. (A/N: Does not give spiritual energy, cannot be evolved)
 689.Asauchi,2.8
 #Bleach - Asauchi is a Zanpakuto, a spiritual armament in the form of a weapon that befits its user. The strength of this armament scales with the power of its user. Asauchi is a dormant, unnamed Zanpakuto that grows along with the user. If the user is able to unlock the Shikai of the blade, it will attain its own unique ability according to the nature of its user, equal to or weaker in power than a rare rank ability. And if they are able to unlock its Bankai, that ability will be upgraded to equal an Epic rank ability.
-670.Space Stone,7.8
+690.Space Stone,7.8
 #Marvel - One of the infinity stones possessing the power to change the very universe. The Space Stone allows the user to manipulate space, open portals, siphon energy from space itself and many other abilities one can utilise with the ability to control space. But a strong user is needed to bring out its power without devastating consequences.
-670.Dojo Key,3.4
+691.Dojo Key,3.4
 An ornate key that, when turned in a sufficiently large space, creates a portal leading into a pocket dimension that is 1 km x 1 km x 1 km in size that contains a large dojo building inside with a moderate garden area. The inside of the Dojo contains all the expected amenities, training dummies, sparring weapons, running water, training uniforms, towels, etc., Everything that originally belonged to the Dojo will be restocked within 24 hours, with the broken parts disposed of, and any destruction that happened inside the Dojo will be repaired at the same time. Nothing that originates from the dojo can be taken out of it. The gate that leads outside the dimension is always open and leads to where the entrance was last opened.
-671.Flynn's Ring,2.2
+692.Flynn's Ring,2.2
 #Dark Souls - Ring of the Fabled Thief, Flynn. When worn, this ring slightly increases the wearer's physical strength proportional to how little they are carrying. 
-672.Witch Ring,3.7
+693.Witch Ring,3.7
 #Dark Souls - Rings bestowed by the Witch of Izalith and her daughter to the successors of the art of pyromancy, the ring thrums with a strange warmth. Increases the potency of fire-based abilities and spells while decreasing their costs when equipped.
-673.Father Garcia's Trenchcoat,1.2
+694.Father Garcia's Trenchcoat,1.2
 #Faith the Unholy Trinity - "True faith looks forward, not back." An iconic black trench coat worn by Father Garcia, it is fairly durable and has the property of warding off curses and negative energy from the wearer.
-674.Father Garcia's Shotgun,1.4
+695.Father Garcia's Shotgun,1.4
 #Faith the Unholy Trinity - "You shall drink the wrath of the Almighty." A shotgun wielded by Father Garcia to fight off against demons and evil spirits. The bullets fired from this gun can affect intangible entities and is more effective against Unholy entities.
-675.Big Hat Logan's Big Hat,1.2
+696.Big Hat Logan's Big Hat,1.2
 #Dark Souls - The titular big hat of Big Hat Logan, a legendary sorcerer, wearing this uncomfortably large hat on your head makes it slightly easier to study magic.
-676.Bold & Brash,0.3
+697.Bold & Brash,0.3
 #Spongebob - A masterpiece of art created by the acclaimed artist from Bikini Bottom, Squidward Quincy Tentacles. To ensure the safety of the canvas, it is refreshed to perfect condition every 24 hours.
-677.Monster Fucker Permit,4.2
+698.Monster Fucker Permit,4.2
 #"Officially Sanctioned by the Goat herself." This permit, whenever pointed at a monster or a creature, will turn them into a more humanoid form of an attractive member of the gender the user is attracted to and grant them baseline intelligence if they do not possess it. In addition, authority figures will acknowledge the permit as a legitimate sanctioned permit that shows you are qualified to deal with monster girls and cases involving them.
-678.Berserker Armor,2.2
+699.Berserker Armor,2.2
 #Berserk - A magical armor created by a Dwarven Blacksmith. This armor is exceptionally durable and shapes itself to fit the wearer perfectly. The berserker armor has the ability to enhance its users' performance by suppressing their pain aversion or mental limiters, allowing them to push their bodies to the utmost limit. The armor will also actively impale the wearer's body in the case that they suffer damage to pin their body back together. The armor will also magically repair itself over time. But it has the drawback of amplifying the user's negative emotions as well, requiring careful moderation of one's emotions to use effectively.
-679.The Cursed Ticket,2.0
+700.The Cursed Ticket,2.0
 #"Fancy your chances?" A ticket that, when torn, spins the Curse Roulette for the user, and automatically applies the result and the ticket they would have gotten to the recipient.
-680.Metal Gear,0.3
+701.Metal Gear,0.3
 #A rather ordinary, if not extraordinarily solid, gear made of iron.
-681.Taimanin Changing Booth,2.2
+702.Taimanin Changing Booth,2.2
 #Taimanin - A changing booth that allows anyone to enter and receive their very own Taimanin Suit tailored specifically for them and their repertoire of abilities. These suits are always skintight but incredibly lightweight and easy to move around in while still being bulletproof and exceptionally durable, and also very receptive to reinforcement-type abilities and spells. Only one outfit can be created per person, and going inside the booth again will repair it.
-682.Claidheamh Mor,1.9
+703.Claidheamh Mor,1.9
 #Team Fortess 2 - "Don't even try to pronounce it" This sword is a very durable and sharp zweihander with a unique enchantment on it, allowing it to take a portion of whoever it has beheaded's energy and use it to refuel the user's energy.
-683.One Thousand Bottles of Baby Oil,1.1
+704.One Thousand Bottles of Baby Oil,1.1
 #Confiscated from a certain mansion. One thousand unbranded bottles of standard baby oil.
-684.Soylent Green,0.5
+705.Soylent Green,0.5
 #Soylent Green - A tin of Soylent Green, it is not appetizing, but it is nutritious enough to not let you starve; the taste generally varies from person to person. Restock Timer: 1 Hour
-685.Prismatic Cloak,4.0
+706.Prismatic Cloak,4.0
 #A white cloak that, when exposed to natural sunlight, renders the user invisible by bending light around them. This cloak also has the property of reflecting all light-based attacks below Epic rank.
-686.Truants Stopwatch,4.7
+707.Truants Stopwatch,4.7
 #A silver stopwatch that, when started, speeds up the perception of the person who started it. The longer the stopwatch stays active, the more the energy it drains from the user exponentially increases.
-687.Heavenly Tribulation Ticket,3.8
+708.Heavenly Tribulation Ticket,3.8
 #"Pissing off the Heavens has never been easier." When this ticket is ripped, it will summon a Heavenly Tribulation, where energized lightning with power equal to an Epic rank attack will strike down on you from the sky, aiming to kill you. But if you manage to withstand the lightning and use it to temper your body, your physical abilities will improve considerably.
-688.Gravitational Beam Emitter,5.9
+709.Gravitational Beam Emitter,5.9
 #(Tech)Blame - A super high-tech handheld pistol-shaped device that has the ability to shoot Condensed Graviton Energy Beams that rip apart anything in their way, with several levels of output ranging from anti-personnel to anti-spacecraft. But instead of having conventional ammunition, this weapon draws energy from its user to function. Beware of the intense recoil.
-689.The City,9.6
+710.The City,9.6
 #(Tech)Blame - The city is a fairly large megastructure that started as a regular Dyson sphere that kept expanding. The City is made up of several segments, such as hyper-compressed dense layers that act as defense and computational devices, factories, cities, and terminals. The City contains millions of impossibly advanced technologies, and their blueprints contained within itself. You get a key that can open a portal to any part of the City, and you can freely command the City with absolute authority. Due to size constraints, the City itself is contained in its pocket universe but can open portals into your current plane of reality.
-690.Hell Hammer,4.1
+711.Hell Hammer,4.1
 #An infernal hammer created out of steel tempered with hellflames. In addition to being incredibly durable and strong, this hammer creates explosions of hellflame whenever it impacts a target in proportion to the physical force of the impact itself.
-691.Exorcists Mace,3.4
+712.Exorcists Mace,3.4
 #A blessed mace made of sanctified steel. In addition to being made of incredibly durable materials and being a very formidable bludgeon, this mace is suffused with Holy Light. It is exceptionally effective against Unholy entities.
-692.Clergy Ring,2.5
+713.Clergy Ring,2.5
 #A ring blessed by angels, this ring gains one charge every 8 hours and can store up to 3 Charges. Allowing its wearer to activate one of 3 effects.  1: Smite - Charges the user's fists or held weapon with holy energy, empowering their next strike. 2: Blessing - Increases one chosen physical stat of the target for 5 minutes. 3: Purify - Purifies a target, curing them of afflictions with the strength of the purification scaling with the user's energy levels.
-693.Thalasin,2.0
+714.Thalasin,2.0
 #Thalasin - A box of prescription Thalasin. One pack of Thalasin contains 8 of each pill that chemically induces the associated emotion regardless of the ingester's biology. Commonly included emotions include: Anger, Sadness, Happiness, Fear, Relief, Hope, Frustration, Pride, Lust, etc. Restock Timer: 24 Hours
-694.Evil Ring,0.2
+715.Evil Ring,0.2
 #A rather mundane iron ring that is exceptionally evil and malicious. But as it is only an iron without any ability to affect anything or communicate, it is without any means to conduct its malice.
-695.Heavy Rock,0.5
+716.Heavy Rock,0.5
 #An otherwise ordinary and unremarkable head-sized rock that is always ever so slightly heavier than the maximum weight of whoever tries to lift it can lift.
-696.Farmland Key,5.2
+717.Farmland Key,5.2
 #An ornate key that, when turned in a sufficiently large space, creates a portal leading into a pocket dimension that is 10 km x 10 km x 10 km in size, that consists entirely of already tilled farmland and a refilling pond of water alongside a small farmhouse in the middle. The dirt inside the dimension is always fertile and nutritious and is capable of growing any crop, magical or mundane, that is planted. The farm is managed by Scarecrow golems with the capacity to look after whatever you plant without tiring. The water and dirt that came with the dimension cannot be taken out of it. The gate that leads outside the dimension is always open and leads to where the entrance was last opened.
-697.Element Zero,4.8
+718.Element Zero,4.8
 #Mass Effect - A sealed, insulated crate containing 5 Tons of Element Zero, otherwise referred to as "Eezo", a special kind of super-rare material that, when electrically stimulated, creates a field that alters the virtual mass of objects nearby, either decreasing or increasing it through what is called the "Mass Effect". Restock Timer: 48 Hours
-698.Ahzidial,4.2
+719.Ahzidial,4.2
 #Skyrim - A dragon priest mask, crafted out of Ebony and enchanted with great power. This mask, when worn, grants the user resistance towards Fire and heat while increasing their Fire affinity, increasing the potency of their Fire-based abilities and spells.
-699.Zahkriisos,4.1
+720.Zahkriisos,4.1
 #Skyrim - A dragon priest mask, crafted out of Ebony and enchanted with great power. This mask, when worn, grants the user resistance towards Lightning and Wind while increasing their Lightning affinity, increasing the potency of their Lightning-based abilities and spells.
-700.Dukaan,4.0
+721.Dukaan,4.0
 #Skyrim - A dragon priest mask, crafted out of Ebony and enchanted with great power. This mask, when worn, grants the user resistance towards Ice and Cold while increasing their Ice affinity, increasing the potency of their Ice-based abilities and spells.
-701.Otar,4.1
+722.Otar,4.1
 #Skyrim - A dragon priest mask, crafted out of Malachite and enchanted with great power. This mask, when worn, grants the user considerably resistance towards Ice, Cold, Heat, Fire and Lightning elements. 
-702.Stormbreaker,7.2
+723.Stormbreaker,7.2
 #MCU - A mastercraft weapon made of Uru, made to complement Thor's powers. This axe-hammer. This weapon has the ability to be commanded by the user telekinetically and grants them flight alongside immense physical abilities and regeneration. The main power of Stormbreaker is to command lightning and storms, either unleashing lightning in incredible waves or calling down lightning from the sky. Also massively enhances all Sky and Lightning-based abilities when used as a focus.(Not connected to Bitfrost) 
-703.The Trumpet of Apocalypse,7.7
+724.The Trumpet of Apocalypse,7.7
 #"Judgement" The Trumpet of the Apocalypse, when blown, summons a [Heavenly Gate(Mythical)] that fuels itself and unleashes a massive army of angels, such as Dominions, Principalities, Thrones, and 4 Seraphim before disappearing. The army summoned by this item will last indefinitely and count as independent entities while still staying under your command.
-704.Can of Whoopass,3.0
+725.Can of Whoopass,3.0
 #A regular-looking tin can with a label stating explicitly what it does. When this can is opened, 6 familiars from the Gold Familiar Gacha will be summoned to beat the person who opened the can to death. The familiars will never stop trying to beat the target to death with intense focus until the target dies, at which point they will disappear.
-705.Hepheastus' Forge Key,4.7
+726.Hepheastus' Forge Key,4.7
 #An ornate key that, when turned in a sufficiently large space, creates a portal leading into a pocket dimension that is 100mx100m in size. Inside this dimension is a fully stocked forge with unbreakable tools and a furnace that can heat up higher than the sun's core without turning the room into a deathtrap. It is a forge that is worthy of a god. Nothing that was originally inside the forge can be taken out of it. The gate that leads outside the dimension is always open and leads to where the entrance was last opened.
-706.Shrimp Fried Rice,0.2
+727.Shrimp Fried Rice,0.2
 #A plate of excellently fried rice cooked by the greatest Shrimp chef in his native universe. He did not graduate from culinary school for people to doubt his ability to cook rice.
-707.Safeguard Ring,3.6
+728.Safeguard Ring,3.6
 #"Safety is paramount." This ring, when worn by a person, will protect them; if it detects considerable danger to the person, it will cover them in a Rare Rank Barrier and will teleport them to the safest location within a 25000-meter radius. This ring breaks after use. Restock Timer: 168 hours
-708.Kitchen Gun,0.8
+729.Kitchen Gun,0.8
 #It's the kitchen gun! Just aim it at dirty appliances, countertops, and even furniture, and pull the trigger. The gun will shoot and clean the target. Who cares about how it works? It's a kitchen gun. 
-709.Loud Ring of Invisibility,0.5
+730.Loud Ring of Invisibility,0.5
 #A wooden ring that, when worn, renders the wearer invisible by bending light around them, but the ring will continuously scream and yell things such as "THEY ARE HERE!" and "LOOK OVER HERE!" in order to get the wearer noticed.
-710.Clergy Robes,1.4
+731.Clergy Robes,1.4
 #The white and black robes belonging to clergy, a sign of faith and devotion, when this garb is worn, it grants a minor resistance to darkness, curses, and negative energy. The fabric itself is also very tough.
-711.One Day Blinding Stew,0.5
+732.One Day Blinding Stew,0.5
 #A good and reasonable punishment for those who misbehave. This is an unusually hot and spicy but still nutritious stew that renders whoever drinks it blind for 24 hours. Restock Timer: 12 Hours
