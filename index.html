@@ -1024,9 +1024,7 @@
     function formatLotForCopy(item) {
         const meta = getRarityMeta(item.rating);
         const catMeta = categoriesMeta[item.categoryKey];
-        return `[${catMeta.name}] #${item.id} ${item.name}
-Ранг: ${meta.label} (${item.rating.toFixed(1)})
-Описание: ${item.description || 'Отсутствует'}`;
+        return `[${catMeta.name}] #${item.id} ${item.name}\nРанг: ${meta.label} (${item.rating.toFixed(1)})\nОписание: ${item.description || 'Отсутствует'}`;
     }
 
     function copyTextWithFeedback(button, text, defaultLabel, successLabel) {
@@ -1157,8 +1155,7 @@
     function parseChaosFile(text) {
         const items = [];
         if (!text) return items;
-        const rawBlocks = text.split(/(?=
-\d+\.)|(?=^\d+\.)/m);
+        const rawBlocks = text.split(/(?=\n\d+\.)|(?=^\d+\.)/m);
         for (let block of rawBlocks) {
             block = block.trim();
             if (!block) continue;
@@ -1501,11 +1498,8 @@
         document.getElementById('btn-copy-all').addEventListener('click', () => {
             if (!currentRollResults.length) return;
             const text = currentRollResults
-                .map((item, idx) => `--- Лот #${idx + 1} ---
-${formatLotForCopy(item)}`)
-                .join('
-
-');
+                .map((item, idx) => `--- Лот #${idx + 1} ---\n${formatLotForCopy(item)}`)
+                .join('\n\n');
             copyTextWithFeedback(
                 document.getElementById('btn-copy-all'),
                 text,
