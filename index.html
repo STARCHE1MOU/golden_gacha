@@ -6,14 +6,18 @@
     <title>Chaos Gacha: Blue Edition</title>
     <style>
         :root {
-            --bg-main: #0f111a;
-            --bg-card: #151824;
-            --bg-input: #1e2235;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent: #6366f1;
-            --border: #2e344e;
-            
+            --bg-main: #0b0e14;
+            --bg-surface: #121722;
+            --bg-elevated: #19202e;
+            --bg-input: #161c28;
+            --text-main: #f1f5f9;
+            --text-muted: #8b9bb4;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-soft: rgba(59, 130, 246, 0.14);
+            --border: rgba(148, 163, 184, 0.14);
+            --border-strong: rgba(148, 163, 184, 0.28);
+
             --r-trash: #64748b;
             --r-common: #94a3b8;
             --r-uncommon: #22c55e;
@@ -26,271 +30,946 @@
             --r-transcend: #06b6d4;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); padding: 20px; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        
-        header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-        header h1 { color: var(--accent); font-size: 2.3rem; text-transform: uppercase; letter-spacing: 2px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
-        .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .tab-btn { background-color: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: all 0.3s; }
-        .tab-btn.active, .tab-btn:hover { background-color: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.55;
+            padding: 28px 20px 64px;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        /* Блок синхронизации */
-        .source-config { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; transition: all 0.3s ease; display: none; }
-        .config-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
-        .config-header h3 { font-size: 1.17rem; }
-        .btn-toggle-config { background: none; border: none; color: var(--accent); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 10px; border-radius: 4px; transition: background-color 0.2s; }
-        .btn-toggle-config:hover { background-color: var(--bg-input); }
-        
-        .config-content { margin-top: 15px; }
-        .config-content.hidden { display: none; }
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
 
-        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
-        .form-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
-        input, select { background-color: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 6px; font-size: 0.95rem; outline: none; }
-        input:focus, select:focus { border-color: var(--accent); }
+        /* Верхняя шапка и навигация */
+        .topbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 22px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--border);
+        }
 
-        .btn-action { background-color: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
-        .btn-action:hover { opacity: 0.9; }
-        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
+        .brand h1 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-        /* Трехколоночная панель Гачи */
-        .gacha-panel { display: grid; grid-template-columns: 320px 1fr 300px; gap: 20px; }
-        @media (max-width: 1100px) { .gacha-panel { grid-template-columns: 1fr 1fr; } .gacha-history-panel { grid-column: 1 / -1; } }
-        @media (max-width: 768px) { .gacha-panel { grid-template-columns: 1fr; } .gacha-history-panel { grid-column: auto; } }
-        
-        .gacha-controls { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; height: fit-content; }
+        .brand-badge {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: var(--accent-soft);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
 
-        .roll-main-zone { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        .roll-display { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 15px; align-items: center; justify-content: flex-start; min-height: 400px; max-height: 750px; overflow-y: auto; width: 100%; }
-        
-        /* Панель истории */
-        .gacha-history-panel { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; max-height: 750px; }
-        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .history-list { overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
-        .history-item { background-color: var(--bg-input); border-left: 3px solid var(--rarity-color); padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; display: flex; flex-direction: column; }
-        .history-item-title { font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .brand p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
 
-        .lot-card { background: linear-gradient(145deg, #1e2235, #151824); border: 2px solid var(--rarity-color); border-radius: 12px; padding: 20px; width: 100%; max-width: 550px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); position: relative; animation: popIn 0.3s ease-out; }
-        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        
-        .lot-header-wrapper { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 5px; }
-        .lot-category { text-transform: uppercase; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; color: var(--text-muted); }
-        
-        .btn-copy { background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
-        .btn-copy:hover { border-color: var(--accent); color: var(--text-main); }
-        .btn-copy.copied { background: #065f46; border-color: #34d399; color: #34d399; }
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-        .lot-title { font-size: 1.6rem; font-weight: bold; margin-bottom: 8px; color: #fff; line-height: 1.3; }
-        .lot-rarity-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background-color: var(--rarity-color); color: #fff; margin-bottom: 12px; }
-        .lot-rarity-badge.dark-txt { color: #000; }
-        .lot-desc { background-color: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border-left: 4px solid var(--rarity-color); text-align: left; white-space: pre-wrap; font-size: 0.95rem; }
+        .tabs {
+            display: inline-flex;
+            background: var(--bg-surface);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            gap: 4px;
+        }
 
-        .db-filters { background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 25px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; }
-        @media (max-width: 1000px) { .db-filters { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 600px) { .db-filters { grid-template-columns: 1fr; } }
-        
-        .db-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .db-card { background-color: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--rarity-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .db-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
-        .db-card-title { font-weight: bold; font-size: 1.1rem; padding-right: 5px; }
-        .db-card-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; margin-bottom: 5px; }
-        .db-card-num { font-size: 0.8rem; color: var(--text-muted); background: var(--bg-input); padding: 2px 6px; border-radius: 4px; }
-        .db-card-desc { font-size: 0.9rem; color: #cbd5e1; background: rgba(0,0,0,0.15); padding: 10px; border-radius: 6px; flex-grow: 1; margin-top: 8px; white-space: pre-wrap; }
+        .tab-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 9px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.92rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
 
-        .pagination-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 30px; padding: 15px; background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
-        .page-info { font-size: 0.95rem; color: var(--text-muted); }
-        .btn-page { background-color: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-        .btn-page:hover:not(:disabled) { border-color: var(--accent); background-color: var(--bg-card); }
-        .btn-page:disabled { opacity: 0.3; cursor: not-allowed; }
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.04);
+        }
 
-        .status-indicator { padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; display: inline-block; margin-top: 5px; }
-        .status-success { background-color: #065f46; color: #34d399; }
-        .status-error { background-color: #991b1b; color: #f87171; }
-        .status-loading { background-color: #854d0e; color: #fbbf24; }
-        .placeholder-text { color: var(--text-muted); font-size: 1.2rem; margin: auto; }
+        .tab-btn.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
+        }
+
+        .btn-ghost {
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 9px 14px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-main);
+            border-color: var(--border-strong);
+            background: var(--bg-elevated);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Выдвижная панель источников */
+        .drawer-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+        }
+
+        .drawer-panel.hidden {
+            display: none;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .drawer-header h3 {
+            font-size: 0.98rem;
+            font-weight: 600;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        /* Поля и кнопки */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
+
+        .btn-copy {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+        }
+
+        .btn-copy.copied {
+            background: rgba(16, 185, 129, 0.16);
+            border-color: #10b981;
+            color: #34d399;
+        }
+
+        /* Компактная верхняя панель управления гачей */
+        .gacha-bar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 22px;
+            display: grid;
+            grid-template-columns: 1.2fr 1.5fr 0.8fr auto auto;
+            gap: 14px;
+            align-items: end;
+        }
+
+        @media (max-width: 1024px) {
+            .gacha-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+            .gacha-bar .roll-submit-wrap {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .gacha-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkbox-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.86rem;
+            color: var(--text-main);
+            cursor: pointer;
+            user-select: none;
+            height: 41px;
+        }
+
+        .checkbox-pill input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        /* Сцена результатов ролла */
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            min-height: 32px;
+        }
+
+        .stage-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .roll-stage {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .roll-stage.has-items {
+            justify-content: flex-start;
+        }
+
+        .roll-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+
+        .roll-grid.single-mode {
+            grid-template-columns: minmax(0, 620px);
+            justify-content: center;
+        }
+
+        @media (max-width: 600px) {
+            .roll-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .lot-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--rarity-color);
+            border-radius: 12px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+            animation: cardReveal 0.25s ease-out;
+        }
+
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lot-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lot-category {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .lot-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.35;
+        }
+
+        .lot-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lot-rarity-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background-color: var(--rarity-color);
+            color: #fff;
+        }
+
+        .lot-rarity-badge.dark-txt {
+            color: #0b0e14;
+        }
+
+        .lot-desc {
+            background: rgba(11, 14, 20, 0.45);
+            padding: 12px 14px;
+            border-radius: 8px;
+            border-left: 3px solid var(--rarity-color);
+            font-size: 0.92rem;
+            color: #dbe4f0;
+            white-space: pre-wrap;
+            flex-grow: 1;
+        }
+
+        /* Компактная лента истории под сценой */
+        .history-section {
+            margin-top: 24px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .history-header h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .history-strip {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .history-strip::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .history-strip::-webkit-scrollbar-thumb {
+            background: var(--border-strong);
+            border-radius: 999px;
+        }
+
+        .history-chip {
+            flex: 0 0 auto;
+            min-width: 190px;
+            max-width: 240px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--rarity-color);
+            border-radius: 8px;
+            padding: 9px 12px;
+        }
+
+        .history-chip-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-chip-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* База данных */
+        .db-toolbar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.8fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        @media (max-width: 1080px) {
+            .db-toolbar {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .db-toolbar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .db-meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .view-switcher {
+            display: inline-flex;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 3px;
+            gap: 3px;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 5px 11px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .view-btn.active {
+            background: var(--bg-elevated);
+            color: var(--text-main);
+        }
+
+        .db-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 16px;
+        }
+
+        .db-grid.list-view {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .db-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--rarity-color);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .db-grid.list-view .db-card {
+            border-top: 1px solid var(--border);
+            border-left: 4px solid var(--rarity-color);
+            padding: 12px 16px;
+        }
+
+        .db-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .db-card-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #fff;
+        }
+
+        .db-card-num {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background: var(--bg-elevated);
+            padding: 2px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .db-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            gap: 8px;
+        }
+
+        .db-card-desc {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            background: rgba(11, 14, 20, 0.35);
+            padding: 10px 12px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            flex-grow: 1;
+        }
+
+        /* Вкладка предложения лота */
+        .submit-card {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .submit-card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+        }
+
+        .submit-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .submit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .preview-box {
+            margin-top: 16px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            color: #93c5fd;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .page-info {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .btn-page {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .btn-page:hover:not(:disabled) {
+            border-color: var(--accent);
+        }
+
+        .btn-page:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .status-indicator {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            display: inline-block;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .status-success { background: rgba(16, 185, 129, 0.16); color: #34d399; }
+        .status-error { background: rgba(239, 68, 68, 0.16); color: #f87171; }
+        .status-loading { background: rgba(245, 158, 11, 0.16); color: #fbbf24; }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+            text-align: center;
+            margin: auto;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>Chaos Gacha: Blue Edition</h1>
-        <p>Боги Хаоса благословили тебя!</p>
+    <header class="topbar">
+        <div class="brand">
+            <h1>Chaos Gacha <span class="brand-badge">Blue Edition</span></h1>
+            <p>Боги Хаоса благословили тебя!</p>
+        </div>
+
+        <div class="topbar-actions">
+            <nav class="tabs" role="tablist">
+                <button type="button" class="tab-btn active" data-tab="gacha">Симулятор</button>
+                <button type="button" class="tab-btn" data-tab="database">База данных</button>
+                <button type="button" class="tab-btn" data-tab="submit">+ Предложить лот</button>
+            </nav>
+            <button type="button" class="btn-ghost" id="btn-toggle-sources">Источники баз</button>
+        </div>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('gacha')">🎰 Симулятор Гачи</button>
-        <button class="tab-btn" onclick="switchTab('database')">📚 База Данных</button>
-    </div>
-
-    <div class="source-config" style="display: none !important;">
-        <div class="config-header" onclick="toggleConfigBlock()">
-            <h3>🗄️ Синхронизация файлов базы</h3>
-            <button class="btn-toggle-config" id="btn-toggle-config">[ Скрыть ]</button>
+    <section class="drawer-panel hidden" id="sources-drawer">
+        <div class="drawer-header">
+            <h3>Файлы баз данных (.txt)</h3>
+            <button type="button" class="btn-primary" id="btn-reload-db" style="padding: 8px 14px; font-size: 0.85rem;">Обновить базы</button>
         </div>
-        <div class="config-content" id="config-content-zone">
-            <div class="config-grid">
-                <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"><span id="status-abilities" class="status-indicator status-loading">Ожидание...</span></div>
-                <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"><span id="status-items" class="status-indicator status-loading">Ожидание...</span></div>
-                <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"><span id="status-traits" class="status-indicator status-loading">Ожидание...</span></div>
-                <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"><span id="status-skills" class="status-indicator status-loading">Ожидание...</span></div>
-                <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"><span id="status-familiars" class="status-indicator status-loading">Ожидание...</span></div>
-            </div>
-            <button class="btn-action" onclick="loadAllDatabases()">🔄 Синхронизировать файлы</button>
+        <div class="config-grid">
+            <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"><span id="status-abilities" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"><span id="status-items" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"><span id="status-traits" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"><span id="status-skills" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"><span id="status-familiars" class="status-indicator status-loading">Ожидание...</span></div>
         </div>
-    </div>
+    </section>
 
-    <div id="tab-gacha" class="tab-content active">
-        <div class="gacha-panel">
-            <div class="gacha-controls">
-                <h3 style="margin-bottom: 15px;">Настройки Ролла</h3>
-                
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>1. Выберите категорию</label>
-                    <select id="roll-category">
-                        <option value="random">🎲 Случайная (Random)</option>
-                        <option value="abilities">🔮 Способности (Ability)</option>
-                        <option value="items">⚔️ Предметы (Item)</option>
-                        <option value="traits">🧬 Черты (Trait)</option>
-                        <option value="skills">📖 Навыки (Skill)</option>
-                        <option value="familiars">🐉 Фамильяры (Familiar)</option>
-                    </select>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>2. Выберите используемый билет</label>
-                    <select id="roll-ticket">
-                        <option value="all_random" selected>🎲 Билет "Рандом" [0.1 - 10.0]</option>
-                        <option value="bronze">🟤 Бронзовый билет [0.1 - 3.3]</option>
-                        <option value="silver">⚪ Серебряный билет [0.5 - 4.3]</option>
-                        <option value="gold">🟡 Золотой билет [1.5 - 5.3]</option>
-                        <option value="platinum">🔵 Платиновый билет [2.5 - 6.3]</option>
-                        <option value="diamond">💎 Бриллиантовый билет [3.5 - 7.3]</option>
-                        <option value="legendary">🔴 Легендарный билет [4.5 - 8.3]</option>
-                        <option value="mythical">🟣 Мифический билет [5.5 - 9.3]</option>
-                        <option value="divine">👑 Божественный билет [6.5 - 10.0]</option>
-                    </select>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 25px;">
-                    <label>3. Количество круток</label>
-                    <select id="roll-count">
-                        <option value="1" selected>1 крутка</option>
-                        <option value="2">2 крутки</option>
-                        <option value="3">3 крутки</option>
-                        <option value="4">4 крутки</option>
-                        <option value="5">5 круток</option>
-                        <option value="6">6 круток</option>
-                        <option value="7">7 круток</option>
-                        <option value="8">8 круток</option>
-                        <option value="9">9 круток</option>
-                        <option value="10">10 круток</option>
-                    </select>
-                </div>
-
-                <button class="btn-action" id="btn-roll" style="width: 100%; font-size: 1.2rem; padding: 15px;" onclick="performRoll()">🎯 ИСПЫТАТЬ ХАОС</button>
-            </div>
-
-            <div class="roll-main-zone">
-                <div style="display: flex; justify-content: flex-end; display: none;" id="multi-copy-bar">
-                    <button class="btn-copy" id="btn-copy-all" style="padding: 6px 14px;" onclick="copyAllCurrentRolls()">📋 Скопировать весь мультиролл</button>
-                </div>
-                <div class="roll-display" id="roll-display-zone">
-                    <div class="placeholder-text">Выберите параметры и активируйте билет...</div>
-                </div>
-            </div>
-
-            <div class="gacha-history-panel">
-                <div class="history-header">
-                    <h4 style="font-size: 1rem;">📜 История (Сессия)</h4>
-                    <button class="btn-copy" style="padding: 2px 8px; font-size: 0.75rem;" onclick="clearHistory()">Очистить</button>
-                </div>
-                <div class="history-list" id="gacha-history-list">
-                    <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; margin: auto;">История пуста</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="tab-database" class="tab-content">
-        <div class="db-filters">
+    <!-- ВКЛАДКА 1: СИМУЛЯТОР ГАЧИ -->
+    <main id="tab-gacha" class="tab-content active">
+        <section class="gacha-bar">
             <div class="form-group">
-                <label>Поиск по тексту</label>
-                <input type="text" id="search-query" placeholder="Название или описание..." oninput="resetPageAndApply()">
+                <label>Категория</label>
+                <select id="roll-category">
+                    <option value="random">Случайная (Random)</option>
+                    <option value="abilities">Способности (Ability)</option>
+                    <option value="items">Предметы (Item)</option>
+                    <option value="traits">Черты (Trait)</option>
+                    <option value="skills">Навыки (Skill)</option>
+                    <option value="familiars">Фамильяры (Familiar)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Билет</label>
+                <select id="roll-ticket">
+                    <option value="all_random" selected>Рандом [0.1 – 10.0]</option>
+                    <option value="bronze">Бронзовый [0.1 – 3.3]</option>
+                    <option value="silver">Серебряный [0.5 – 4.3]</option>
+                    <option value="gold">Золотой [1.5 – 5.3]</option>
+                    <option value="platinum">Платиновый [2.5 – 6.3]</option>
+                    <option value="diamond">Бриллиантовый [3.5 – 7.3]</option>
+                    <option value="legendary">Легендарный [4.5 – 8.3]</option>
+                    <option value="mythical">Мифический [5.5 – 9.3]</option>
+                    <option value="divine">Божественный [6.5 – 10.0]</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Круток</label>
+                <select id="roll-count">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <label class="checkbox-pill" title="Исключить повторы внутри одного мультиролла">
+                <input type="checkbox" id="roll-unique" checked>
+                <span>Без дублей</span>
+            </label>
+
+            <div class="roll-submit-wrap">
+                <button type="button" class="btn-primary" id="btn-roll" style="width: 100%; height: 41px;">Испытать Хаос</button>
+            </div>
+        </section>
+
+        <div class="stage-header">
+            <span class="stage-title" id="stage-summary">Результат ролла</span>
+            <button type="button" class="btn-copy" id="btn-copy-all" style="display: none;">Скопировать весь мультиролл</button>
+        </div>
+
+        <section class="roll-stage" id="roll-stage">
+            <div class="placeholder-text">Выберите параметры сверху и нажмите «Испытать Хаос»</div>
+        </section>
+
+        <section class="history-section">
+            <div class="history-header">
+                <h3>История роллов (<span id="history-count">0</span>)</h3>
+                <button type="button" class="btn-copy" id="btn-clear-history">Очистить</button>
+            </div>
+            <div class="history-strip" id="gacha-history-list">
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Пока пусто</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ВКЛАДКА 2: БАЗА ДАННЫХ -->
+    <section id="tab-database" class="tab-content">
+        <div class="db-toolbar">
+            <div class="form-group">
+                <label>Поиск</label>
+                <input type="text" id="search-query" placeholder="Название или описание...">
             </div>
             <div class="form-group">
                 <label>Категория</label>
-                <select id="filter-category" onchange="resetPageAndApply()">
+                <select id="filter-category">
                     <option value="all">Все категории</option>
-                    <option value="abilities">🔮 Способности</option>
-                    <option value="items">⚔️ Предметы</option>
-                    <option value="traits">🧬 Черты</option>
-                    <option value="skills">📖 Навыки</option>
-                    <option value="familiars">🐉 Фамильяры</option>
+                    <option value="abilities">Способности</option>
+                    <option value="items">Предметы</option>
+                    <option value="traits">Черты</option>
+                    <option value="skills">Навыки</option>
+                    <option value="familiars">Фамильяры</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Ранг редкости</label>
-                <select id="filter-rarity-class" onchange="resetPageAndApply()">
+                <select id="filter-rarity-class">
                     <option value="all">Все ранги</option>
-                    <option value="trash">Мусор (0.1 - 0.9)</option>
-                    <option value="common">Обычный (1.0 - 1.9)</option>
-                    <option value="uncommon">Необычный (2.0 - 2.9)</option>
-                    <option value="rare">Редкий (3.0 - 3.9)</option>
-                    <option value="elite">Элитный (4.0 - 4.9)</option>
-                    <option value="epic">Эпический (5.0 - 5.9)</option>
-                    <option value="legendary">Легендарный (6.0 - 6.9)</option>
-                    <option value="mythical">Мифический (7.0 - 7.9)</option>
-                    <option value="divine">Божественный (8.0 - 8.9)</option>
-                    <option value="transcend">Трансцендентный (9.0 - 10.0)</option>
+                    <option value="trash">Мусор (0.1–0.9)</option>
+                    <option value="common">Обычный (1.0–1.9)</option>
+                    <option value="uncommon">Необычный (2.0–2.9)</option>
+                    <option value="rare">Редкий (3.0–3.9)</option>
+                    <option value="elite">Элитный (4.0–4.9)</option>
+                    <option value="epic">Эпический (5.0–5.9)</option>
+                    <option value="legendary">Легендарный (6.0–6.9)</option>
+                    <option value="mythical">Мифический (7.0–7.9)</option>
+                    <option value="divine">Божественный (8.0–8.9)</option>
+                    <option value="transcend">Трансцендентный (9.0–10.0)</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Сортировка</label>
-                <select id="filter-sort" onchange="resetPageAndApply()">
-                    <option value="num-asc">По ID (Возрастание)</option>
-                    <option value="rate-desc">Рейтинг: Выше → Ниже</option>
-                    <option value="rate-asc">Рейтинг: Ниже → Выше</option>
+                <select id="filter-sort">
+                    <option value="num-asc">По ID (1 → 9)</option>
+                    <option value="rate-desc">Рейтинг (Высокий)</option>
+                    <option value="rate-asc">Рейтинг (Низкий)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Показывать лотов</label>
-                <select id="filter-limit" onchange="resetPageAndApply()">
-                    <option value="10">10 лотов</option>
-                    <option value="20">20 лотов</option>
-                    <option value="50" selected>50 лотов</option>
-                    <option value="100">100 лотов</option>
-                    <option value="all">Все сразу</option>
+                <label>На странице</label>
+                <select id="filter-limit">
+                    <option value="12">12</option>
+                    <option value="24">24</option>
+                    <option value="48" selected>48</option>
+                    <option value="100">100</option>
+                    <option value="all">Все</option>
                 </select>
             </div>
+            <button type="button" class="btn-ghost" id="btn-reset-filters" style="height: 41px;">Сбросить</button>
         </div>
 
-        <div style="margin-bottom: 15px; font-size: 0.95rem; color: var(--text-muted);">
-            Найдено соответствующих лотов: <span id="db-counter" style="color: var(--text-main); font-weight: bold;">0</span>
-            <span id="db-limit-note" style="margin-left: 10px; font-style: italic; color: var(--accent);"></span>
+        <div class="db-meta-bar">
+            <div>
+                Найдено: <strong id="db-counter" style="color: var(--text-main);">0</strong>
+                <span id="db-limit-note" style="margin-left: 8px; color: #60a5fa;"></span>
+            </div>
+            <div class="view-switcher">
+                <button type="button" class="view-btn active" data-view="grid">Карточки</button>
+                <button type="button" class="view-btn" data-view="list">Список</button>
+            </div>
         </div>
 
         <div class="db-grid" id="db-results-grid"></div>
 
         <div class="pagination-controls" id="db-pagination" style="display: none;">
-            <button class="btn-page" id="btn-page-prev" onclick="changePage(-1)">← Назад</button>
+            <button type="button" class="btn-page" id="btn-page-prev">← Назад</button>
             <span class="page-info" id="db-page-info">Страница 1 из 1</span>
-            <button class="btn-page" id="btn-page-next" onclick="changePage(1)">Вперед →</button>
+            <button type="button" class="btn-page" id="btn-page-next">Вперёд →</button>
         </div>
-    </div>
+    </section>
+
+    <!-- ВКЛАДКА 3: ПРЕДЛОЖИТЬ СВОЙ ЛОТ -->
+    <section id="tab-submit" class="tab-content">
+        <div class="submit-card">
+            <h2>Предложить новый лот</h2>
+            <p>Заполните поля — ниже автоматически сформируется строка для базы данных. Скачайте готовый .txt или скопируйте строку и отправьте автору.</p>
+
+            <div class="submit-grid">
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="custom-lot-category">
+                        <option value="abilities">Способности (ability.txt)</option>
+                        <option value="items">Предметы (item.txt)</option>
+                        <option value="traits">Черты (trait.txt)</option>
+                        <option value="skills">Навыки (skill.txt)</option>
+                        <option value="familiars">Фамильяры (familiar.txt)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ID (автоподстановка)</label>
+                    <input type="number" id="custom-lot-id" min="1" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Рейтинг (0.1 – 10.0)</label>
+                    <input type="number" id="custom-lot-rating" min="0.1" max="10.0" step="0.1" value="3.0">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 14px;">
+                <label>Название лота</label>
+                <input type="text" id="custom-lot-name" placeholder="Например: Клинок Блуждающей Тени">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Описание</label>
+                <textarea id="custom-lot-desc" rows="4" placeholder="Опишите свойства, механику или лор лота..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn-primary" id="btn-download-lot">Скачать .txt файл</button>
+                <button type="button" class="btn-copy" id="btn-copy-custom-lot" style="padding: 11px 16px;">Скопировать строку</button>
+            </div>
+
+            <div class="preview-box" id="custom-lot-preview">1. Название лота, 3.0 #Описание</div>
+        </div>
+    </section>
 </div>
 
 <script>
+    const HISTORY_STORAGE_KEY = 'chaos_gacha_history_v1';
     const gachaDatabase = { abilities: [], items: [], traits: [], skills: [], familiars: [] };
-    let currentRollResults = []; 
-    let dbCurrentPage = 1;       
+    let currentRollResults = [];
+    let rollHistory = [];
+    let dbCurrentPage = 1;
+    let dbViewMode = 'grid';
 
     const categoriesMeta = {
         abilities: { name: 'Способность', icon: '🔮' },
@@ -324,93 +1003,140 @@
         if (r >= 7.0 && r <= 7.9) return { label: 'Мифический', color: '#f97316', darkTxt: false };
         if (r >= 8.0 && r <= 8.9) return { label: 'Божественный', color: '#eab308', darkTxt: true };
         if (r >= 9.0 && r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', darkTxt: true };
-        return { label: 'Неизвестно', color: '#2e344e', darkTxt: false };
+        return { label: 'Неизвестно', color: '#334155', darkTxt: false };
     }
 
-    // Новая функция переключения видимости блока синхронизации
-    function toggleConfigBlock() {
-        const contentZone = document.getElementById('config-content-zone');
-        const toggleBtn = document.getElementById('btn-toggle-config');
-        
-        if (contentZone.classList.contains('hidden')) {
-            contentZone.classList.remove('hidden');
-            toggleBtn.textContent = '[ Скрыть ]';
-        } else {
-            contentZone.classList.add('hidden');
-            toggleBtn.textContent = '[ Показать ]';
-        }
+    function formatLotForCopy(item) {
+        const meta = getRarityMeta(item.rating);
+        const catMeta = categoriesMeta[item.categoryKey];
+        return `[${catMeta.name}] #${item.id} ${item.name}\nРанг: ${meta.label} (${item.rating.toFixed(1)})\nОписание: ${item.description || 'Отсутствует'}`;
     }
 
-    function copyToClipboard(button, name, id, category, rating, rarityLabel, desc) {
-        const textToCopy = `[${category}] #${id} ${name}\nРанг: ${rarityLabel} (${rating})\nОписание: ${desc || 'Отсутствует'}`;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            const originalText = button.textContent;
-            button.textContent = '✓ Скопировано';
+    function copyTextWithFeedback(button, text, defaultLabel, successLabel) {
+        navigator.clipboard.writeText(text).then(() => {
+            button.textContent = successLabel;
             button.classList.add('copied');
             setTimeout(() => {
-                button.textContent = originalText;
+                button.textContent = defaultLabel;
                 button.classList.remove('copied');
             }, 1500);
         }).catch(err => console.error(err));
     }
 
-    function copyAllCurrentRolls() {
-        if (!currentRollResults.length) return;
-        const button = document.getElementById('btn-copy-all');
-        
-        const fullText = currentRollResults.map((item, idx) => {
-            const meta = getRarityMeta(item.rating);
-            const catMeta = categoriesMeta[item.categoryKey];
-            return `--- Лот #${idx + 1} ---\n[${catMeta.name}] #${item.id} ${item.name}\nРанг: ${meta.label} (${item.rating.toFixed(1)})\nОписание: ${item.description || 'Отсутствует'}`;
-        }).join('\n\n');
+    /* История роллов с сохранением в localStorage */
+    function loadHistoryFromStorage() {
+        try {
+            const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
+            rollHistory = raw ? JSON.parse(raw) : [];
+        } catch (e) {
+            rollHistory = [];
+        }
+        renderHistory();
+    }
 
-        navigator.clipboard.writeText(fullText).then(() => {
-            const originalText = button.textContent;
-            button.textContent = '✓ Весь список скопирован!';
-            button.classList.add('copied');
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('copied');
-            }, 2000);
-        }).catch(err => console.error(err));
+    function saveHistoryToStorage() {
+        try {
+            localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(rollHistory.slice(0, 100)));
+        } catch (e) {}
     }
 
     function addToHistory(item) {
+        rollHistory.unshift(item);
+        if (rollHistory.length > 100) rollHistory.pop();
+        saveHistoryToStorage();
+        renderHistory();
+    }
+
+    function renderHistory() {
         const historyList = document.getElementById('gacha-history-list');
-        if (historyList.querySelector('.placeholder-text') || historyList.textContent.includes('История пуста')) {
-            historyList.innerHTML = '';
+        document.getElementById('history-count').textContent = rollHistory.length;
+        historyList.innerHTML = '';
+
+        if (rollHistory.length === 0) {
+            const empty = document.createElement('div');
+            empty.style.cssText = 'color: var(--text-muted); font-size: 0.85rem;';
+            empty.textContent = 'Пока пусто';
+            historyList.appendChild(empty);
+            return;
         }
 
+        rollHistory.forEach(item => {
+            const meta = getRarityMeta(item.rating);
+            const catMeta = categoriesMeta[item.categoryKey] || { name: 'Лот', icon: '•' };
+
+            const chip = document.createElement('div');
+            chip.className = 'history-chip';
+            chip.style.setProperty('--rarity-color', meta.color);
+
+            const title = document.createElement('div');
+            title.className = 'history-chip-title';
+            title.title = item.name;
+            title.textContent = `${catMeta.icon} ${item.name}`;
+
+            const sub = document.createElement('div');
+            sub.className = 'history-chip-meta';
+
+            const left = document.createElement('span');
+            left.textContent = `#${item.id} · ${meta.label}`;
+
+            const right = document.createElement('span');
+            right.style.color = meta.color;
+            right.style.fontWeight = '700';
+            right.textContent = Number(item.rating).toFixed(1);
+
+            sub.append(left, right);
+            chip.append(title, sub);
+            historyList.appendChild(chip);
+        });
+    }
+
+    /* Безопасное создание карточки лота через DOM API */
+    function createRollCardElement(item) {
         const meta = getRarityMeta(item.rating);
         const catMeta = categoriesMeta[item.categoryKey];
 
-        const historyItem = document.createElement('div');
-        historyItem.className = 'history-item';
-        historyItem.style.setProperty('--rarity-color', meta.color);
-        historyItem.innerHTML = `
-            <div class="history-item-title" title="${item.name}">${catMeta.icon} ${item.name}</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-                <span>#${item.id} (${meta.label})</span>
-                <span style="color: ${meta.color}; font-weight: bold;">${item.rating.toFixed(1)}</span>
-            </div>
-        `;
-        historyList.insertBefore(historyItem, historyList.firstChild);
+        const card = document.createElement('article');
+        card.className = 'lot-card';
+        card.style.setProperty('--rarity-color', meta.color);
+
+        const top = document.createElement('div');
+        top.className = 'lot-top';
+
+        const cat = document.createElement('div');
+        cat.className = 'lot-category';
+        cat.textContent = `${catMeta.icon} ${catMeta.name} · #${item.id}`;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.type = 'button';
+        copyBtn.className = 'btn-copy';
+        copyBtn.textContent = 'Копировать';
+        copyBtn.addEventListener('click', () => {
+            copyTextWithFeedback(copyBtn, formatLotForCopy(item), 'Копировать', '✓ Скопировано');
+        });
+
+        top.append(cat, copyBtn);
+
+        const title = document.createElement('div');
+        title.className = 'lot-title';
+        title.textContent = item.name;
+
+        const badgeRow = document.createElement('div');
+        badgeRow.className = 'lot-badge-row';
+
+        const badge = document.createElement('span');
+        badge.className = `lot-rarity-badge ${meta.darkTxt ? 'dark-txt' : ''}`;
+        badge.textContent = `${meta.label} (${item.rating.toFixed(1)})`;
+        badgeRow.appendChild(badge);
+
+        const desc = document.createElement('div');
+        desc.className = 'lot-desc';
+        desc.textContent = item.description || 'Описание отсутствует.';
+
+        card.append(top, title, badgeRow, desc);
+        return card;
     }
 
-    function clearHistory() {
-        document.getElementById('gacha-history-list').innerHTML = `
-            <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; margin: auto;">История пуста</div>
-        `;
-    }
-
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        document.getElementById(`tab-${tabId}`).classList.add('active');
-        if(tabId === 'database') applyFilters();
-    }
-
+    /* Парсер .txt баз */
     function parseChaosFile(text) {
         const items = [];
         if (!text) return items;
@@ -420,7 +1146,7 @@
             if (!block) continue;
             const hashIndex = block.indexOf('#');
             let headerLine = hashIndex !== -1 ? block.substring(0, hashIndex).trim() : block;
-            let description = hashIndex !== -1 ? block.substring(hashIndex + 1).trim() : "";
+            let description = hashIndex !== -1 ? block.substring(hashIndex + 1).trim() : '';
             const dotIndex = headerLine.indexOf('.');
             const commaIndex = headerLine.lastIndexOf(',');
             if (dotIndex !== -1 && commaIndex !== -1 && commaIndex > dotIndex) {
@@ -428,7 +1154,12 @@
                 const name = headerLine.substring(dotIndex + 1, commaIndex).trim();
                 const rating = headerLine.substring(commaIndex + 1).trim();
                 if (id && name && !isNaN(parseFloat(rating))) {
-                    items.push({ id: parseInt(id) || id, name: name, rating: parseFloat(rating), description: description });
+                    items.push({
+                        id: parseInt(id, 10) || id,
+                        name,
+                        rating: parseFloat(rating),
+                        description
+                    });
                 }
             }
         }
@@ -440,7 +1171,7 @@
         statusEl.className = 'status-indicator status-loading';
         statusEl.textContent = 'Загрузка...';
         try {
-            const response = await fetch(`${filename}?t=${Date.now()}`, { cache: "no-store" });
+            const response = await fetch(`${filename}?t=${Date.now()}`, { cache: 'no-store' });
             if (!response.ok) throw new Error();
             const text = await response.text();
             gachaDatabase[catKey] = parseChaosFile(text);
@@ -461,79 +1192,81 @@
             loadDatabaseFile('skills', document.getElementById('path-skills').value),
             loadDatabaseFile('familiars', document.getElementById('path-familiars').value)
         ]);
-        if (document.getElementById('tab-database').classList.contains('active')) applyFilters();
+        syncSuggestedLotId();
+        if (document.getElementById('tab-database').classList.contains('active')) {
+            applyFilters();
+        }
     }
 
+    /* Ролл гачи */
     function performRoll() {
         const chosenCategory = document.getElementById('roll-category').value;
         const chosenTicket = document.getElementById('roll-ticket').value;
-        const rollCount = parseInt(document.getElementById('roll-count').value) || 1;
-        
-        const minRate = ticketRanges[chosenTicket].min;
-        const maxRate = ticketRanges[chosenTicket].max;
+        const rollCount = parseInt(document.getElementById('roll-count').value, 10) || 1;
+        const noDuplicates = document.getElementById('roll-unique').checked;
+
+        const { min: minRate, max: maxRate } = ticketRanges[chosenTicket];
 
         let pool = [];
         if (chosenCategory === 'random') {
             Object.keys(gachaDatabase).forEach(cat => {
-                gachaDatabase[cat].forEach(item => { pool.push({ ...item, categoryKey: cat }); });
+                gachaDatabase[cat].forEach(item => pool.push({ ...item, categoryKey: cat }));
             });
-        } else {
-            if (gachaDatabase[chosenCategory]) {
-                gachaDatabase[chosenCategory].forEach(item => { pool.push({ ...item, categoryKey: chosenCategory }); });
-            }
+        } else if (gachaDatabase[chosenCategory]) {
+            gachaDatabase[chosenCategory].forEach(item => pool.push({ ...item, categoryKey: chosenCategory }));
         }
 
         const filteredPool = pool.filter(item => item.rating >= minRate && item.rating <= maxRate);
-        const displayZone = document.getElementById('roll-display-zone');
-        const multiCopyBar = document.getElementById('multi-copy-bar');
+        const stage = document.getElementById('roll-stage');
+        const copyAllBtn = document.getElementById('btn-copy-all');
+        const stageSummary = document.getElementById('stage-summary');
+
+        stage.innerHTML = '';
 
         if (filteredPool.length === 0) {
-            displayZone.innerHTML = `
-                <div class="status-indicator status-error" style="font-size: 1.1rem; padding: 15px; margin: auto;">
-                    ❌ Нет доступных лотов в диапазоне выбранного билета!<br>Убедитесь, что файлы баз загружены корректно.
-                </div>`;
-            multiCopyBar.style.display = 'none';
+            stage.classList.remove('has-items');
+            const err = document.createElement('div');
+            err.className = 'placeholder-text';
+            err.style.color = '#f87171';
+            err.textContent = 'Нет доступных лотов в диапазоне выбранного билета. Проверьте загрузку баз.';
+            stage.appendChild(err);
+            copyAllBtn.style.display = 'none';
+            stageSummary.textContent = 'Результат ролла';
             return;
         }
 
-        displayZone.innerHTML = ''; 
-        currentRollResults = []; 
+        stage.classList.add('has-items');
+        const grid = document.createElement('div');
+        grid.className = `roll-grid ${rollCount === 1 ? 'single-mode' : ''}`;
+
+        currentRollResults = [];
+        let availablePool = [...filteredPool];
 
         for (let i = 0; i < rollCount; i++) {
-            const rolledItem = filteredPool[Math.floor(Math.random() * filteredPool.length)];
-            currentRollResults.push(rolledItem); 
-            addToHistory(rolledItem);            
+            if (availablePool.length === 0) {
+                if (noDuplicates) break;
+                availablePool = [...filteredPool];
+            }
+            const randIdx = Math.floor(Math.random() * availablePool.length);
+            const rolledItem = availablePool[randIdx];
 
-            const meta = getRarityMeta(rolledItem.rating);
-            const catMeta = categoriesMeta[rolledItem.categoryKey];
-            const safeDesc = (rolledItem.description || '').replace(/`/g, '\\`').replace(/'/g, "\\'").replace(/"/g, '\\"');
+            if (noDuplicates) {
+                availablePool.splice(randIdx, 1);
+            }
 
-            const lotHtml = `
-                <div class="lot-card" style="--rarity-color: ${meta.color}; border-color: ${meta.color};">
-                    <div class="lot-header-wrapper">
-                        <div class="lot-category">${catMeta.icon} ${catMeta.name} • #${rolledItem.id}</div>
-                        <button class="btn-copy" onclick="copyToClipboard(this, '${rolledItem.name}', '${rolledItem.id}', '${catMeta.name}', '${rolledItem.rating.toFixed(1)}', '${meta.label}', \`${safeDesc}\`)">📋 Копировать</button>
-                    </div>
-                    <div class="lot-title">${rolledItem.name}</div>
-                    <div>
-                        <span class="lot-rarity-badge ${meta.darkTxt ? 'dark-txt' : ''}">${meta.label} (${rolledItem.rating.toFixed(1)})</span>
-                    </div>
-                    <div class="lot-desc">${rolledItem.description || 'Описание отсутствует.'}</div>
-                </div>`;
-                
-            displayZone.insertAdjacentHTML('beforeend', lotHtml);
+            currentRollResults.push(rolledItem);
+            addToHistory(rolledItem);
+            grid.appendChild(createRollCardElement(rolledItem));
         }
 
-        multiCopyBar.style.display = rollCount > 1 ? 'flex' : 'none';
+        stage.appendChild(grid);
+        stageSummary.textContent = `Выпало лотов: ${currentRollResults.length}`;
+        copyAllBtn.style.display = currentRollResults.length > 1 ? 'inline-block' : 'none';
     }
 
+    /* База данных */
     function resetPageAndApply() {
         dbCurrentPage = 1;
-        applyFilters();
-    }
-
-    function changePage(direction) {
-        dbCurrentPage += direction;
         applyFilters();
     }
 
@@ -547,13 +1280,14 @@
         let combinedData = [];
         Object.keys(gachaDatabase).forEach(cat => {
             if (catFilter === 'all' || catFilter === cat) {
-                gachaDatabase[cat].forEach(item => { combinedData.push({ ...item, categoryKey: cat }); });
+                gachaDatabase[cat].forEach(item => combinedData.push({ ...item, categoryKey: cat }));
             }
         });
 
         if (query) {
-            combinedData = combinedData.filter(item => 
-                item.name.toLowerCase().includes(query) || (item.description && item.description.toLowerCase().includes(query))
+            combinedData = combinedData.filter(item =>
+                item.name.toLowerCase().includes(query) ||
+                (item.description && item.description.toLowerCase().includes(query))
             );
         }
 
@@ -584,11 +1318,10 @@
         let displayData = combinedData;
         const limitNoteEl = document.getElementById('db-limit-note');
         const paginationEl = document.getElementById('db-pagination');
-        
+
         if (limitVal !== 'all') {
-            const limit = parseInt(limitVal);
+            const limit = parseInt(limitVal, 10);
             const totalPages = Math.ceil(totalFound / limit) || 1;
-            
             if (dbCurrentPage > totalPages) dbCurrentPage = totalPages;
             if (dbCurrentPage < 1) dbCurrentPage = 1;
 
@@ -596,7 +1329,7 @@
             displayData = combinedData.slice(startIndex, startIndex + limit);
 
             if (totalFound > limit) {
-                limitNoteEl.textContent = `(Показано лотов: с ${startIndex + 1} по ${Math.min(startIndex + limit, totalFound)})`;
+                limitNoteEl.textContent = `(показаны ${startIndex + 1}–${Math.min(startIndex + limit, totalFound)})`;
                 paginationEl.style.display = 'flex';
                 document.getElementById('db-page-info').textContent = `Страница ${dbCurrentPage} из ${totalPages}`;
                 document.getElementById('btn-page-prev').disabled = dbCurrentPage === 1;
@@ -611,41 +1344,207 @@
         }
 
         const grid = document.getElementById('db-results-grid');
+        grid.className = `db-grid ${dbViewMode === 'list' ? 'list-view' : ''}`;
         grid.innerHTML = '';
 
         if (displayData.length === 0) {
-            grid.innerHTML = '<div class="placeholder-text" style="grid-column: 1/-1; text-align: center; padding: 20px 0;">Лоты не найдены.</div>';
+            const empty = document.createElement('div');
+            empty.className = 'placeholder-text';
+            empty.style.cssText = 'grid-column: 1 / -1; padding: 32px 0;';
+            empty.textContent = 'Лоты по заданным фильтрам не найдены.';
+            grid.appendChild(empty);
             return;
         }
 
         displayData.forEach(item => {
             const meta = getRarityMeta(item.rating);
             const catMeta = categoriesMeta[item.categoryKey];
-            const safeDesc = (item.description || '').replace(/`/g, '\\`').replace(/'/g, "\\'").replace(/"/g, '\\"');
-            
-            const card = document.createElement('div');
+
+            const card = document.createElement('article');
             card.className = 'db-card';
             card.style.setProperty('--rarity-color', meta.color);
-            card.innerHTML = `
-                <div>
-                    <div class="db-card-header">
-                        <span class="db-card-title">${item.name}</span>
-                        <span class="db-card-num">#${item.id}</span>
-                    </div>
-                    <div class="db-card-meta">
-                        <div>
-                            <span>${catMeta.icon} ${catMeta.name}</span> | 
-                            <span style="color: ${meta.color}; font-weight: bold;">${meta.label} (${item.rating.toFixed(1)})</span>
-                        </div>
-                        <button class="btn-copy" onclick="copyToClipboard(this, '${item.name}', '${item.id}', '${catMeta.name}', '${item.rating.toFixed(1)}', '${meta.label}', \`${safeDesc}\`)">📋 Копировать</button>
-                    </div>
-                    <div class="db-card-desc">${item.description || 'Описание лота отсутствует.'}</div>
-                </div>`;
+
+            const header = document.createElement('div');
+            header.className = 'db-card-header';
+
+            const title = document.createElement('span');
+            title.className = 'db-card-title';
+            title.textContent = item.name;
+
+            const num = document.createElement('span');
+            num.className = 'db-card-num';
+            num.textContent = `#${item.id}`;
+
+            header.append(title, num);
+
+            const metaRow = document.createElement('div');
+            metaRow.className = 'db-card-meta';
+
+            const leftMeta = document.createElement('div');
+            const catSpan = document.createElement('span');
+            catSpan.textContent = `${catMeta.icon} ${catMeta.name} · `;
+            const rankSpan = document.createElement('span');
+            rankSpan.style.color = meta.color;
+            rankSpan.style.fontWeight = '700';
+            rankSpan.textContent = `${meta.label} (${item.rating.toFixed(1)})`;
+            leftMeta.append(catSpan, rankSpan);
+
+            const copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'btn-copy';
+            copyBtn.textContent = 'Копировать';
+            copyBtn.addEventListener('click', () => {
+                copyTextWithFeedback(copyBtn, formatLotForCopy(item), 'Копировать', '✓ Скопировано');
+            });
+
+            metaRow.append(leftMeta, copyBtn);
+
+            const desc = document.createElement('div');
+            desc.className = 'db-card-desc';
+            desc.textContent = item.description || 'Описание лота отсутствует.';
+
+            card.append(header, metaRow, desc);
             grid.appendChild(card);
         });
     }
 
-    window.addEventListener('DOMContentLoaded', () => { loadAllDatabases(); });
+    /* Конструктор пользовательского лота */
+    function syncSuggestedLotId() {
+        const cat = document.getElementById('custom-lot-category').value;
+        const list = gachaDatabase[cat] || [];
+        const maxId = list.reduce((max, item) => {
+            const num = parseInt(item.id, 10);
+            return !isNaN(num) && num > max ? num : max;
+        }, 0);
+        document.getElementById('custom-lot-id').value = maxId + 1;
+        updateCustomLotPreview();
+    }
+
+    function buildCustomLotString() {
+        const id = document.getElementById('custom-lot-id').value.trim() || '1';
+        const name = document.getElementById('custom-lot-name').value.trim() || 'Название лота';
+        const ratingNum = parseFloat(document.getElementById('custom-lot-rating').value);
+        const rating = !isNaN(ratingNum) ? Math.min(10, Math.max(0.1, ratingNum)).toFixed(1) : '1.0';
+        const desc = document.getElementById('custom-lot-desc').value.trim() || 'Описание';
+        return `${id}. ${name}, ${rating} #${desc}`;
+    }
+
+    function updateCustomLotPreview() {
+        document.getElementById('custom-lot-preview').textContent = buildCustomLotString();
+    }
+
+    function downloadCustomLotTxt() {
+        const rawName = document.getElementById('custom-lot-name').value.trim();
+        const rawRating = parseFloat(document.getElementById('custom-lot-rating').value);
+        if (!rawName || isNaN(rawRating) || rawRating < 0.1 || rawRating > 10.0) {
+            alert('Укажите название лота и рейтинг от 0.1 до 10.0.');
+            return;
+        }
+        const cat = document.getElementById('custom-lot-category').value;
+        const id = document.getElementById('custom-lot-id').value.trim() || 'new';
+        const line = buildCustomLotString();
+
+        const blob = new Blob([line + '\n'], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `lot_${cat}_${id}_${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+
+    /* Инициализация событий */
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+                if (tabId === 'database') applyFilters();
+            });
+        });
+
+        document.getElementById('btn-toggle-sources').addEventListener('click', () => {
+            document.getElementById('sources-drawer').classList.toggle('hidden');
+        });
+
+        document.getElementById('btn-reload-db').addEventListener('click', loadAllDatabases);
+        document.getElementById('btn-roll').addEventListener('click', performRoll);
+
+        document.getElementById('btn-copy-all').addEventListener('click', () => {
+            if (!currentRollResults.length) return;
+            const text = currentRollResults
+                .map((item, idx) => `--- Лот #${idx + 1} ---\n${formatLotForCopy(item)}`)
+                .join('\n\n');
+            copyTextWithFeedback(
+                document.getElementById('btn-copy-all'),
+                text,
+                'Скопировать весь мультиролл',
+                '✓ Весь список скопирован'
+            );
+        });
+
+        document.getElementById('btn-clear-history').addEventListener('click', () => {
+            rollHistory = [];
+            saveHistoryToStorage();
+            renderHistory();
+        });
+
+        ['search-query', 'filter-category', 'filter-rarity-class', 'filter-sort', 'filter-limit'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener(id === 'search-query' ? 'input' : 'change', resetPageAndApply);
+        });
+
+        document.getElementById('btn-reset-filters').addEventListener('click', () => {
+            document.getElementById('search-query').value = '';
+            document.getElementById('filter-category').value = 'all';
+            document.getElementById('filter-rarity-class').value = 'all';
+            document.getElementById('filter-sort').value = 'num-asc';
+            document.getElementById('filter-limit').value = '48';
+            resetPageAndApply();
+        });
+
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                dbViewMode = btn.dataset.view;
+                applyFilters();
+            });
+        });
+
+        document.getElementById('btn-page-prev').addEventListener('click', () => {
+            dbCurrentPage--;
+            applyFilters();
+        });
+
+        document.getElementById('btn-page-next').addEventListener('click', () => {
+            dbCurrentPage++;
+            applyFilters();
+        });
+
+        document.getElementById('custom-lot-category').addEventListener('change', syncSuggestedLotId);
+        ['custom-lot-id', 'custom-lot-rating', 'custom-lot-name', 'custom-lot-desc'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateCustomLotPreview);
+        });
+
+        document.getElementById('btn-download-lot').addEventListener('click', downloadCustomLotTxt);
+        document.getElementById('btn-copy-custom-lot').addEventListener('click', () => {
+            copyTextWithFeedback(
+                document.getElementById('btn-copy-custom-lot'),
+                buildCustomLotString(),
+                'Скопировать строку',
+                '✓ Скопировано'
+            );
+        });
+
+        loadHistoryFromStorage();
+        loadAllDatabases();
+    });
 </script>
 </body>
 </html>
