@@ -234,6 +234,11 @@
             font-weight: 600;
             font-size: 0.95rem;
             transition: background 0.2s, transform 0.1s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-primary:hover {
@@ -678,6 +683,12 @@
             word-break: break-word;
         }
 
+        .submit-hint {
+            margin-top: 12px;
+            font-size: 0.84rem;
+            color: var(--text-muted);
+        }
+
         .pagination-controls {
             display: flex;
             justify-content: center;
@@ -920,7 +931,7 @@
     <section id="tab-submit" class="tab-content">
         <div class="submit-card">
             <h2>Предложить новый лот</h2>
-            <p>Заполните поля — ниже автоматически сформируется строка для базы данных. Скачайте готовый .txt или скопируйте строку и отправьте автору.</p>
+            <p>Заполните поля — ниже автоматически сформируется строка для базы данных. Нажмите «Скопировать и открыть Google Форму», чтобы отправить лот в таблицу.</p>
 
             <div class="submit-grid">
                 <div class="form-group">
@@ -954,16 +965,20 @@
             </div>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button type="button" class="btn-primary" id="btn-download-lot">Скачать .txt файл</button>
-                <button type="button" class="btn-copy" id="btn-copy-custom-lot" style="padding: 11px 16px;">Скопировать строку</button>
+                <button type="button" class="btn-primary" id="btn-open-google-form">Скопировать и открыть Google Форму ↗</button>
+                <button type="button" class="btn-copy" id="btn-copy-custom-lot" style="padding: 11px 16px;">Только скопировать строку</button>
             </div>
 
-            <div class="preview-box" id="custom-lot-preview">1. Название лота, 3.0 #Описание</div>
+            <div class="preview-box" id="custom-lot-preview">[ability.txt] 1. Название лота, 3.0 #Описание</div>
+            <div class="submit-hint" id="submit-status-hint">Готовая строка автоматически скопируется в буфер обмена перед открытием формы — останется просто вставить её в поле ответа.</div>
         </div>
     </section>
 </div>
 
 <script>
+    /* Укажите сюда ссылку на вашу Google Форму (или предзаполненную ссылку с {ENTRY}) */
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/ВАШ_ID_ФОРМЫ/viewform';
+
     const HISTORY_STORAGE_KEY = 'chaos_gacha_history_v1';
     const gachaDatabase = { abilities: [], items: [], traits: [], skills: [], familiars: [] };
     let currentRollResults = [];
@@ -972,11 +987,11 @@
     let dbViewMode = 'grid';
 
     const categoriesMeta = {
-        abilities: { name: 'Способность', icon: '🔮' },
-        items: { name: 'Предмет', icon: '⚔️' },
-        traits: { name: 'Черта', icon: '🧬' },
-        skills: { name: 'Навык', icon: '📖' },
-        familiars: { name: 'Фамильяр', icon: '🐉' }
+        abilities: { name: 'Способность', icon: '🔮', file: 'ability.txt' },
+        items: { name: 'Предмет', icon: '⚔️', file: 'item.txt' },
+        traits: { name: 'Черта', icon: '🧬', file: 'trait.txt' },
+        skills: { name: 'Навык', icon: '📖', file: 'skill.txt' },
+        familiars: { name: 'Фамильяр', icon: '🐉', file: 'familiar.txt' }
     };
 
     const ticketRanges = {
@@ -1009,7 +1024,9 @@
     function formatLotForCopy(item) {
         const meta = getRarityMeta(item.rating);
         const catMeta = categoriesMeta[item.categoryKey];
-        return `[${catMeta.name}] #${item.id} ${item.name}\nРанг: ${meta.label} (${item.rating.toFixed(1)})\nОписание: ${item.description || 'Отсутствует'}`;
+        return `[${catMeta.name}] #${item.id} ${item.name}
+Ранг: ${meta.label} (${item.rating.toFixed(1)})
+Описание: ${item.description || 'Отсутствует'}`;
     }
 
     function copyTextWithFeedback(button, text, defaultLabel, successLabel) {
@@ -1140,7 +1157,8 @@
     function parseChaosFile(text) {
         const items = [];
         if (!text) return items;
-        const rawBlocks = text.split(/(?=\n\d+\.)|(?=^\d+\.)/m);
+        const rawBlocks = text.split(/(?=
+\d+\.)|(?=^\d+\.)/m);
         for (let block of rawBlocks) {
             block = block.trim();
             if (!block) continue;
@@ -1408,7 +1426,7 @@
         });
     }
 
-    /* Конструктор пользовательского лота */
+    /* Конструктор пользовательского лота и отправка через Google Форму */
     function syncSuggestedLotId() {
         const cat = document.getElementById('custom-lot-category').value;
         const list = gachaDatabase[cat] || [];
@@ -1421,38 +1439,43 @@
     }
 
     function buildCustomLotString() {
+        const cat = document.getElementById('custom-lot-category').value;
+        const targetFile = categoriesMeta[cat] ? categoriesMeta[cat].file : 'base.txt';
         const id = document.getElementById('custom-lot-id').value.trim() || '1';
         const name = document.getElementById('custom-lot-name').value.trim() || 'Название лота';
         const ratingNum = parseFloat(document.getElementById('custom-lot-rating').value);
         const rating = !isNaN(ratingNum) ? Math.min(10, Math.max(0.1, ratingNum)).toFixed(1) : '1.0';
         const desc = document.getElementById('custom-lot-desc').value.trim() || 'Описание';
-        return `${id}. ${name}, ${rating} #${desc}`;
+        return `[${targetFile}] ${id}. ${name}, ${rating} #${desc}`;
     }
 
     function updateCustomLotPreview() {
         document.getElementById('custom-lot-preview').textContent = buildCustomLotString();
     }
 
-    function downloadCustomLotTxt() {
+    function openGoogleFormWithLot() {
         const rawName = document.getElementById('custom-lot-name').value.trim();
         const rawRating = parseFloat(document.getElementById('custom-lot-rating').value);
         if (!rawName || isNaN(rawRating) || rawRating < 0.1 || rawRating > 10.0) {
             alert('Укажите название лота и рейтинг от 0.1 до 10.0.');
             return;
         }
-        const cat = document.getElementById('custom-lot-category').value;
-        const id = document.getElementById('custom-lot-id').value.trim() || 'new';
-        const line = buildCustomLotString();
 
-        const blob = new Blob([line + '\n'], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `lot_${cat}_${id}_${Date.now()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+        const lotLine = buildCustomLotString();
+        const hintEl = document.getElementById('submit-status-hint');
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(lotLine).then(() => {
+                hintEl.textContent = '✓ Строка скопирована! Вставьте её (Ctrl+V) в открывшуюся Google Форму.';
+                hintEl.style.color = '#34d399';
+            }).catch(() => {});
+        }
+
+        const targetUrl = GOOGLE_FORM_URL.includes('{ENTRY}')
+            ? GOOGLE_FORM_URL.replace('{ENTRY}', encodeURIComponent(lotLine))
+            : GOOGLE_FORM_URL;
+
+        window.open(targetUrl, '_blank', 'noopener,noreferrer');
     }
 
     /* Инициализация событий */
@@ -1478,8 +1501,11 @@
         document.getElementById('btn-copy-all').addEventListener('click', () => {
             if (!currentRollResults.length) return;
             const text = currentRollResults
-                .map((item, idx) => `--- Лот #${idx + 1} ---\n${formatLotForCopy(item)}`)
-                .join('\n\n');
+                .map((item, idx) => `--- Лот #${idx + 1} ---
+${formatLotForCopy(item)}`)
+                .join('
+
+');
             copyTextWithFeedback(
                 document.getElementById('btn-copy-all'),
                 text,
@@ -1532,12 +1558,12 @@
             document.getElementById(id).addEventListener('input', updateCustomLotPreview);
         });
 
-        document.getElementById('btn-download-lot').addEventListener('click', downloadCustomLotTxt);
+        document.getElementById('btn-open-google-form').addEventListener('click', openGoogleFormWithLot);
         document.getElementById('btn-copy-custom-lot').addEventListener('click', () => {
             copyTextWithFeedback(
                 document.getElementById('btn-copy-custom-lot'),
                 buildCustomLotString(),
-                'Скопировать строку',
+                'Только скопировать строку',
                 '✓ Скопировано'
             );
         });
