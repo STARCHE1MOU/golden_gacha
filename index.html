@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -21,27 +22,15 @@
             --accent-hover: #2563eb;
             --accent-cyan: #38bdf8;
             --accent-soft: rgba(59, 130, 246, 0.14);
-            --accent-glow: rgba(59, 130, 246, 0.32);
 
             --border: rgba(148, 163, 184, 0.13);
             --border-strong: rgba(148, 163, 184, 0.26);
             --inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.045);
 
-            --r-trash: #64748b;
-            --r-common: #94a3b8;
-            --r-uncommon: #22c55e;
-            --r-rare: #3b82f6;
-            --r-elite: #a855f7;
-            --r-epic: #ec4899;
-            --r-legendary: #ef4444;
-            --r-mythical: #f97316;
-            --r-divine: #eab308;
-            --r-transcend: #06b6d4;
-
-            --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
             --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.55);
+            --anim-mult: 1;
         }
 
         * {
@@ -80,13 +69,12 @@
             margin: 0 auto;
         }
 
-        /* Доступность фокуса */
         :focus-visible {
             outline: 2px solid var(--accent-cyan);
             outline-offset: 2px;
         }
 
-        /* Верхняя шапка */
+        /* Шапка */
         .topbar {
             display: flex;
             flex-wrap: wrap;
@@ -267,7 +255,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Выдвижная панель источников */
+        /* Источники баз */
         .drawer-panel {
             background: var(--bg-surface);
             border: 1px solid var(--border);
@@ -317,11 +305,16 @@
             gap: 8px;
         }
 
-        /* Поля, селекты и кнопки */
+        /* Контролы */
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
+            transition: opacity 0.2s ease;
+        }
+
+        .form-group.is-disabled {
+            opacity: 0.45;
         }
 
         .form-group label {
@@ -356,11 +349,15 @@
             background-size: 15px;
         }
 
+        select:disabled {
+            cursor: not-allowed;
+        }
+
         input::placeholder, textarea::placeholder {
             color: #55667f;
         }
 
-        input:hover, select:hover, textarea:hover {
+        input:hover:not(:disabled), select:hover:not(:disabled), textarea:hover:not(:disabled) {
             border-color: var(--border-strong);
         }
 
@@ -425,33 +422,76 @@
             color: #34d399;
         }
 
-        /* Панель управления гачей */
+        /* Панель гачи */
         .gacha-bar {
             background: var(--bg-surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 18px 20px;
+            padding: 18px 20px 15px;
             margin-bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: var(--inner-highlight), var(--shadow-card);
+        }
+
+        .gacha-row-top {
             display: grid;
             grid-template-columns: 1.25fr 1.6fr 0.75fr auto auto;
             gap: 14px;
             align-items: end;
-            box-shadow: var(--inner-highlight), var(--shadow-card);
+        }
+
+        .gacha-row-bottom {
+            display: grid;
+            grid-template-columns: minmax(200px, 1.3fr) minmax(170px, 1fr) 1.5fr;
+            gap: 14px;
+            align-items: end;
+            padding-top: 13px;
+            border-top: 1px solid var(--border);
         }
 
         @media (max-width: 1024px) {
-            .gacha-bar {
+            .gacha-row-top {
                 grid-template-columns: 1fr 1fr;
             }
-            .gacha-bar .roll-submit-wrap {
+            .gacha-row-top .roll-submit-wrap {
+                grid-column: 1 / -1;
+            }
+            .gacha-row-bottom {
+                grid-template-columns: 1fr 1fr;
+            }
+            .anim-status-pill {
                 grid-column: 1 / -1;
             }
         }
 
         @media (max-width: 600px) {
-            .gacha-bar {
+            .gacha-row-top,
+            .gacha-row-bottom {
                 grid-template-columns: 1fr;
             }
+        }
+
+        .anim-inline-group select {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            font-size: 0.86rem;
+        }
+
+        .anim-status-pill {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            min-height: 36px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .anim-status-pill.is-rolling {
+            color: var(--accent-cyan);
+            font-weight: 600;
         }
 
         .checkbox-pill {
@@ -485,7 +525,7 @@
             cursor: pointer;
         }
 
-        /* Сцена результатов ролла */
+        /* Сцена результатов */
         .stage-header {
             display: flex;
             justify-content: space-between;
@@ -503,8 +543,15 @@
             font-weight: 700;
         }
 
+        .stage-header-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .roll-stage {
             position: relative;
+            overflow: hidden;
             background:
                 radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08), transparent 65%),
                 var(--bg-surface);
@@ -520,6 +567,10 @@
 
         .roll-stage.has-items {
             justify-content: flex-start;
+        }
+
+        .roll-stage.is-animating {
+            cursor: pointer;
         }
 
         .empty-stage-box {
@@ -576,7 +627,7 @@
             }
         }
 
-        /* Карточка выпавшего лота */
+        /* Карточка лота */
         .lot-card {
             position: relative;
             overflow: hidden;
@@ -591,8 +642,12 @@
             flex-direction: column;
             gap: 12px;
             box-shadow: 0 10px 28px -8px rgba(0, 0, 0, 0.48), var(--inner-highlight);
-            animation: cardReveal 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+            animation: cardReveal calc(0.32s * var(--anim-mult)) cubic-bezier(0.2, 0.8, 0.2, 1) both;
             transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .lot-card.no-reveal-anim {
+            animation: none;
         }
 
         .lot-card:hover {
@@ -718,7 +773,349 @@
             line-height: 1.6;
         }
 
-        /* Лента истории */
+        /* Анимация 1: Печать Хаоса */
+        .portal-stage {
+            --portal-color: #3b82f6;
+            --portal-rgb: 59, 130, 246;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px 10px;
+            user-select: none;
+        }
+
+        .portal-core {
+            position: relative;
+            width: 156px;
+            height: 156px;
+            display: grid;
+            place-items: center;
+        }
+
+        .portal-ring-outer,
+        .portal-ring-inner,
+        .portal-orb {
+            position: absolute;
+            border-radius: 50%;
+            transition: border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+        }
+
+        .portal-ring-outer {
+            inset: 0;
+            border: 2px dashed rgba(var(--portal-rgb), 0.7);
+            box-shadow: 0 0 28px rgba(var(--portal-rgb), 0.25), inset 0 0 24px rgba(var(--portal-rgb), 0.15);
+            animation: portalSpin calc(3.2s * var(--anim-mult)) linear infinite;
+        }
+
+        .portal-ring-inner {
+            inset: 18px;
+            border: 2px solid rgba(var(--portal-rgb), 0.55);
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            animation: portalSpinRev calc(1.8s * var(--anim-mult)) linear infinite;
+        }
+
+        .portal-orb {
+            width: 68px;
+            height: 68px;
+            background: radial-gradient(circle at 35% 35%, #fff 0%, var(--portal-color) 45%, rgba(var(--portal-rgb), 0.15) 100%);
+            box-shadow: 0 0 42px var(--portal-color), 0 0 80px rgba(var(--portal-rgb), 0.45);
+            animation: portalPulse calc(0.95s * var(--anim-mult)) ease-in-out infinite alternate;
+        }
+
+        .portal-stage.is-surging .portal-core {
+            transform: scale(1.12);
+            transition: transform calc(0.45s * var(--anim-mult)) cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .portal-caption {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .portal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.03em;
+        }
+
+        .portal-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .portal-flash {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(var(--portal-rgb), 0.55), transparent 72%);
+            opacity: 0;
+            pointer-events: none;
+            animation: portalFlashBurst calc(0.45s * var(--anim-mult)) ease-out forwards;
+        }
+
+        @keyframes portalSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes portalSpinRev {
+            to { transform: rotate(-360deg); }
+        }
+
+        @keyframes portalPulse {
+            from { transform: scale(0.92); filter: brightness(0.95); }
+            to { transform: scale(1.1); filter: brightness(1.2); }
+        }
+
+        @keyframes portalFlashBurst {
+            0% { opacity: 0.95; }
+            100% { opacity: 0; }
+        }
+
+        /* Анимация 2: Переворот 3D-карт */
+        .flip-card-slot {
+            perspective: 1200px;
+            animation: cardReveal calc(0.28s * var(--anim-mult)) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .flip-card-inner {
+            display: grid;
+            transform-style: preserve-3d;
+            transition: transform calc(0.56s * var(--anim-mult)) cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .flip-card-slot.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-back,
+        .flip-card-front {
+            grid-area: 1 / 1;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .flip-card-front {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front .lot-card {
+            height: 100%;
+        }
+
+        .flip-card-slot.flipped .flip-card-back {
+            pointer-events: none;
+        }
+
+        .flip-card-back {
+            min-height: 220px;
+            border-radius: var(--radius-md);
+            background:
+                radial-gradient(circle at 50% 45%, rgba(var(--rarity-rgb), 0.18), transparent 65%),
+                repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.03) 0 10px, transparent 10px 20px),
+                var(--bg-surface-2);
+            border: 1px solid rgba(var(--rarity-rgb), 0.45);
+            box-shadow: 0 10px 28px -8px rgba(var(--rarity-rgb), 0.3), var(--inner-highlight);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .flip-back-emblem {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(var(--rarity-rgb), 0.65);
+            background: rgba(var(--rarity-rgb), 0.12);
+            display: grid;
+            place-items: center;
+            color: var(--rarity-text);
+            box-shadow: 0 0 24px rgba(var(--rarity-rgb), 0.35);
+        }
+
+        .flip-back-label {
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--rarity-text);
+        }
+
+        /* Анимация 3: Рулетка */
+        .roulette-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: auto 0;
+            user-select: none;
+        }
+
+        .roulette-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .roulette-viewport {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding: 18px 0;
+            background: var(--bg-input);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-md);
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.65);
+        }
+
+        .roulette-viewport::before,
+        .roulette-viewport::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 64px;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .roulette-viewport::before {
+            left: 0;
+            background: linear-gradient(90deg, var(--bg-input), transparent);
+        }
+
+        .roulette-viewport::after {
+            right: 0;
+            background: linear-gradient(-90deg, var(--bg-input), transparent);
+        }
+
+        .roulette-pointer {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, #38bdf8, #3b82f6, #38bdf8);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .roulette-pointer::before,
+        .roulette-pointer::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+        }
+
+        .roulette-pointer::before {
+            top: 0;
+            border-top: 9px solid #38bdf8;
+        }
+
+        .roulette-pointer::after {
+            bottom: 0;
+            border-bottom: 9px solid #38bdf8;
+        }
+
+        .roulette-track {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            will-change: transform;
+        }
+
+        .roulette-tile {
+            flex: 0 0 176px;
+            min-height: 112px;
+            background:
+                radial-gradient(ellipse 90% 50% at 50% 0%, rgba(var(--rarity-rgb), 0.16), transparent 72%),
+                var(--bg-surface-2);
+            border: 1px solid rgba(var(--rarity-rgb), 0.3);
+            border-top: 3px solid var(--rarity-color);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .roulette-tile.winner-landed {
+            border-color: var(--rarity-color);
+            box-shadow: 0 0 24px rgba(var(--rarity-rgb), 0.5);
+            transform: scale(1.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .roulette-tile-cat {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .roulette-tile-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .roulette-tile-rate {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--rarity-text);
+            font-variant-numeric: tabular-nums;
+        }
+
+        @media (max-width: 600px) {
+            .roulette-tile {
+                flex: 0 0 144px;
+                min-height: 100px;
+            }
+        }
+
+        /* Анимация 4: Дешифровка */
+        .lot-card.is-decrypting .lot-title,
+        .lot-card.is-decrypting .lot-id-tag,
+        .lot-card.is-decrypting .lot-rarity-badge,
+        .lot-card.is-decrypting .lot-desc {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+
+        .lot-card.is-decrypting {
+            border-color: rgba(56, 189, 248, 0.45);
+        }
+
+        .lot-card.is-decrypting .lot-desc {
+            color: #7dd3fc;
+        }
+
+        /* История */
         .history-section {
             margin-top: 22px;
             background: var(--bg-surface);
@@ -1150,7 +1547,6 @@
             line-height: 1.55;
         }
 
-        /* Компактная строчная раскладка для режима списка на десктопе */
         @media (min-width: 820px) {
             .db-grid.list-view .db-card {
                 border-top: 1px solid var(--border);
@@ -1210,12 +1606,7 @@
         }
 
         .submit-card-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 14px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
         .submit-card h2 {
@@ -1343,7 +1734,7 @@
             margin: auto;
         }
 
-        /* Лёгкие Toast-уведомления */
+        /* Toast */
         .toast {
             position: fixed;
             right: 20px;
@@ -1366,14 +1757,6 @@
         .toast.show {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
         }
     </style>
 </head>
@@ -1419,23 +1802,23 @@
         </div>
         <div class="config-grid">
             <div class="source-item">
-                <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"></div>
+                <div class="form-group"><label for="path-abilities">Способности</label><input type="text" id="path-abilities" value="ability.txt"></div>
                 <span id="status-abilities" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="source-item">
-                <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"></div>
+                <div class="form-group"><label for="path-items">Предметы</label><input type="text" id="path-items" value="item.txt"></div>
                 <span id="status-items" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="source-item">
-                <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"></div>
+                <div class="form-group"><label for="path-traits">Черты</label><input type="text" id="path-traits" value="trait.txt"></div>
                 <span id="status-traits" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="source-item">
-                <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"></div>
+                <div class="form-group"><label for="path-skills">Навыки</label><input type="text" id="path-skills" value="skill.txt"></div>
                 <span id="status-skills" class="status-indicator status-loading">Ожидание...</span>
             </div>
             <div class="source-item">
-                <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"></div>
+                <div class="form-group"><label for="path-familiars">Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"></div>
                 <span id="status-familiars" class="status-indicator status-loading">Ожидание...</span>
             </div>
         </div>
@@ -1444,62 +1827,93 @@
     <!-- ВКЛАДКА 1: СИМУЛЯТОР ГАЧИ -->
     <main id="tab-gacha" class="tab-content active">
         <section class="gacha-bar">
-            <div class="form-group">
-                <label for="roll-category">Категория</label>
-                <select id="roll-category">
-                    <option value="random">Случайная (Random)</option>
-                    <option value="abilities">Способности (Ability)</option>
-                    <option value="items">Предметы (Item)</option>
-                    <option value="traits">Черты (Trait)</option>
-                    <option value="skills">Навыки (Skill)</option>
-                    <option value="familiars">Фамильяры (Familiar)</option>
-                </select>
+            <div class="gacha-row-top">
+                <div class="form-group">
+                    <label for="roll-category">Категория</label>
+                    <select id="roll-category">
+                        <option value="random">Случайная (Random)</option>
+                        <option value="abilities">Способности (Ability)</option>
+                        <option value="items">Предметы (Item)</option>
+                        <option value="traits">Черты (Trait)</option>
+                        <option value="skills">Навыки (Skill)</option>
+                        <option value="familiars">Фамильяры (Familiar)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="roll-ticket">Билет</label>
+                    <select id="roll-ticket">
+                        <option value="all_random" selected>Рандом [0.1 – 10.0]</option>
+                        <option value="bronze">Бронзовый [0.1 – 3.3]</option>
+                        <option value="silver">Серебряный [0.5 – 4.3]</option>
+                        <option value="gold">Золотой [1.5 – 5.3]</option>
+                        <option value="platinum">Платиновый [2.5 – 6.3]</option>
+                        <option value="diamond">Бриллиантовый [3.5 – 7.3]</option>
+                        <option value="legendary">Легендарный [4.5 – 8.3]</option>
+                        <option value="mythical">Мифический [5.5 – 9.3]</option>
+                        <option value="divine">Божественный [6.5 – 10.0]</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="roll-count">Круток</label>
+                    <select id="roll-count">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+
+                <label class="checkbox-pill" title="Исключить повторы внутри одного мультиролла">
+                    <input type="checkbox" id="roll-unique" checked>
+                    <span>Без дублей</span>
+                </label>
+
+                <div class="roll-submit-wrap">
+                    <button type="button" class="btn-primary" id="btn-roll" style="width: 100%; height: 41px;">Испытать Хаос</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="roll-ticket">Билет</label>
-                <select id="roll-ticket">
-                    <option value="all_random" selected>Рандом [0.1 – 10.0]</option>
-                    <option value="bronze">Бронзовый [0.1 – 3.3]</option>
-                    <option value="silver">Серебряный [0.5 – 4.3]</option>
-                    <option value="gold">Золотой [1.5 – 5.3]</option>
-                    <option value="platinum">Платиновый [2.5 – 6.3]</option>
-                    <option value="diamond">Бриллиантовый [3.5 – 7.3]</option>
-                    <option value="legendary">Легендарный [4.5 – 8.3]</option>
-                    <option value="mythical">Мифический [5.5 – 9.3]</option>
-                    <option value="divine">Божественный [6.5 – 10.0]</option>
-                </select>
-            </div>
+            <div class="gacha-row-bottom">
+                <div class="form-group anim-inline-group">
+                    <label for="roll-anim-style">Анимация крутки</label>
+                    <select id="roll-anim-style">
+                        <option value="portal">Печать Хаоса</option>
+                        <option value="cards">Переворот карт (3D)</option>
+                        <option value="roulette">Рулетка</option>
+                        <option value="decrypt">Дешифровка</option>
+                        <option value="none">Без анимации (Мгновенно)</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="roll-count">Круток</label>
-                <select id="roll-count">
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
-            </div>
+                <div class="form-group anim-inline-group" id="anim-speed-group">
+                    <label for="roll-anim-speed">Скорость анимации</label>
+                    <select id="roll-anim-speed">
+                        <option value="0.5">0.5× (Медленно)</option>
+                        <option value="1" selected>1× (Обычно)</option>
+                        <option value="2">2× (Быстро)</option>
+                    </select>
+                </div>
 
-            <label class="checkbox-pill" title="Исключить повторы внутри одного мультиролла">
-                <input type="checkbox" id="roll-unique" checked>
-                <span>Без дублей</span>
-            </label>
-
-            <div class="roll-submit-wrap">
-                <button type="button" class="btn-primary" id="btn-roll" style="width: 100%; height: 41px;">Испытать Хаос</button>
+                <div class="anim-status-pill" id="anim-status-hint">
+                    Клик по сцене во время анимации — мгновенный пропуск
+                </div>
             </div>
         </section>
 
         <div class="stage-header">
             <span class="stage-title" id="stage-summary">Результат ролла</span>
-            <button type="button" class="btn-copy" id="btn-copy-all" style="display: none;">Скопировать весь мультиролл</button>
+            <div class="stage-header-actions">
+                <button type="button" class="btn-copy" id="btn-skip-anim" style="display: none;">Пропустить ⏭</button>
+                <button type="button" class="btn-copy" id="btn-copy-all" style="display: none;">Скопировать весь мультиролл</button>
+            </div>
         </div>
 
         <section class="roll-stage" id="roll-stage" aria-live="polite">
@@ -1510,7 +1924,7 @@
                     </svg>
                 </div>
                 <h3>Готов к призыву Хаоса</h3>
-                <p>Выберите категорию, билет и количество круток выше, затем нажмите «Испытать Хаос».</p>
+                <p>Выберите категорию, билет и стиль анимации выше, затем нажмите «Испытать Хаос».</p>
             </div>
         </section>
 
@@ -1642,10 +2056,8 @@
     <section id="tab-submit" class="tab-content">
         <div class="submit-card">
             <div class="submit-card-head">
-                <div>
-                    <h2>Предложить новый лот</h2>
-                    <p>Заполните поля — ниже автоматически сформируется строка в формате базы данных.</p>
-                </div>
+                <h2>Предложить новый лот</h2>
+                <p>Заполните поля — ниже автоматически сформируется строка в формате базы данных.</p>
             </div>
 
             <div class="submit-grid">
@@ -1696,10 +2108,10 @@
 <div class="toast" id="app-toast" role="status" aria-live="polite"></div>
 
 <script>
-    /* Укажите сюда ссылку на вашу Google Форму (или предзаполненную ссылку с {ENTRY}) */
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdCCQ8FWcT1jVjwmoE47bgisxq8NzD_UGZk8ZD-uuEEEi4GVQ/viewform?usp=publish-editor';
 
     const HISTORY_STORAGE_KEY = 'chaos_gacha_history_v1';
+    const ANIM_PREFS_STORAGE_KEY = 'chaos_gacha_anim_prefs_v1';
     const gachaDatabase = { abilities: [], items: [], traits: [], skills: [], familiars: [] };
     const sourceStatusState = { abilities: 'loading', items: 'loading', traits: 'loading', skills: 'loading', familiars: 'loading' };
 
@@ -1708,6 +2120,7 @@
     let dbCurrentPage = 1;
     let dbViewMode = 'grid';
     let toastTimer = null;
+    let activeRollSession = null;
 
     const categoriesMeta = {
         abilities: { name: 'Способность', icon: '🔮', file: 'ability.txt' },
@@ -1729,20 +2142,34 @@
         divine: { min: 6.5, max: 10.0 }
     };
 
+    const rarityRanges = {
+        all: [0.1, 10.0],
+        trash: [0.1, 0.9],
+        common: [1.0, 1.9],
+        uncommon: [2.0, 2.9],
+        rare: [3.0, 3.9],
+        elite: [4.0, 4.9],
+        epic: [5.0, 5.9],
+        legendary: [6.0, 6.9],
+        mythical: [7.0, 7.9],
+        divine: [8.0, 8.9],
+        transcend: [9.0, 10.0]
+    };
+
     function getRarityMeta(rating) {
         const r = parseFloat(rating);
-        if (isNaN(r) || r < 0.1) return { label: 'Неизвестно', color: '#475569', rgb: '71, 85, 105', textColor: '#cbd5e1', darkTxt: false };
-        if (r < 1.0) return { label: 'Мусор', color: '#64748b', rgb: '100, 116, 139', textColor: '#94a3b8', darkTxt: false };
-        if (r < 2.0) return { label: 'Обычный', color: '#94a3b8', rgb: '148, 163, 184', textColor: '#e2e8f0', darkTxt: true };
-        if (r < 3.0) return { label: 'Необычный', color: '#22c55e', rgb: '34, 197, 94', textColor: '#4ade80', darkTxt: true };
-        if (r < 4.0) return { label: 'Редкий', color: '#3b82f6', rgb: '59, 130, 246', textColor: '#60a5fa', darkTxt: false };
-        if (r < 5.0) return { label: 'Элитный', color: '#a855f7', rgb: '168, 85, 247', textColor: '#c084fc', darkTxt: false };
-        if (r < 6.0) return { label: 'Эпический', color: '#ec4899', rgb: '236, 72, 153', textColor: '#f472b6', darkTxt: false };
-        if (r < 7.0) return { label: 'Легендарный', color: '#ef4444', rgb: '239, 68, 68', textColor: '#f87171', darkTxt: false };
-        if (r < 8.0) return { label: 'Мифический', color: '#f97316', rgb: '249, 115, 22', textColor: '#fb923c', darkTxt: false };
-        if (r < 9.0) return { label: 'Божественный', color: '#eab308', rgb: '234, 179, 8', textColor: '#facc15', darkTxt: true };
-        if (r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', rgb: '6, 182, 212', textColor: '#22d3ee', darkTxt: true };
-        return { label: 'Неизвестно', color: '#475569', rgb: '71, 85, 105', textColor: '#cbd5e1', darkTxt: false };
+        if (isNaN(r) || r < 0.1) return { label: 'Неизвестно', color: '#475569', rgb: '71, 85, 105', textColor: '#cbd5e1' };
+        if (r < 1.0) return { label: 'Мусор', color: '#64748b', rgb: '100, 116, 139', textColor: '#94a3b8' };
+        if (r < 2.0) return { label: 'Обычный', color: '#94a3b8', rgb: '148, 163, 184', textColor: '#e2e8f0' };
+        if (r < 3.0) return { label: 'Необычный', color: '#22c55e', rgb: '34, 197, 94', textColor: '#4ade80' };
+        if (r < 4.0) return { label: 'Редкий', color: '#3b82f6', rgb: '59, 130, 246', textColor: '#60a5fa' };
+        if (r < 5.0) return { label: 'Элитный', color: '#a855f7', rgb: '168, 85, 247', textColor: '#c084fc' };
+        if (r < 6.0) return { label: 'Эпический', color: '#ec4899', rgb: '236, 72, 153', textColor: '#f472b6' };
+        if (r < 7.0) return { label: 'Легендарный', color: '#ef4444', rgb: '239, 68, 68', textColor: '#f87171' };
+        if (r < 8.0) return { label: 'Мифический', color: '#f97316', rgb: '249, 115, 22', textColor: '#fb923c' };
+        if (r < 9.0) return { label: 'Божественный', color: '#eab308', rgb: '234, 179, 8', textColor: '#facc15' };
+        if (r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', rgb: '6, 182, 212', textColor: '#22d3ee' };
+        return { label: 'Неизвестно', color: '#475569', rgb: '71, 85, 105', textColor: '#cbd5e1' };
     }
 
     function applyRarityCssVars(el, meta) {
@@ -1785,7 +2212,62 @@
         }).catch(err => console.error(err));
     }
 
-    /* История роллов с сохранением в localStorage */
+    /* Настройки анимаций */
+    function loadAnimPrefs() {
+        const styleEl = document.getElementById('roll-anim-style');
+        const speedEl = document.getElementById('roll-anim-speed');
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        let saved = null;
+        try {
+            const raw = localStorage.getItem(ANIM_PREFS_STORAGE_KEY);
+            saved = raw ? JSON.parse(raw) : null;
+        } catch (e) {}
+
+        if (saved && typeof saved === 'object') {
+            if (['portal', 'cards', 'roulette', 'decrypt', 'none'].includes(saved.style)) {
+                styleEl.value = saved.style;
+            }
+            if (['0.5', '1', '2'].includes(String(saved.speed))) {
+                speedEl.value = String(saved.speed);
+            }
+        } else if (prefersReduced) {
+            styleEl.value = 'none';
+        }
+
+        syncAnimControlsUI();
+    }
+
+    function saveAnimPrefs() {
+        try {
+            localStorage.setItem(ANIM_PREFS_STORAGE_KEY, JSON.stringify({
+                style: document.getElementById('roll-anim-style').value,
+                speed: document.getElementById('roll-anim-speed').value
+            }));
+        } catch (e) {}
+    }
+
+    function syncAnimControlsUI() {
+        const style = document.getElementById('roll-anim-style').value;
+        const speedEl = document.getElementById('roll-anim-speed');
+        const speedGroup = document.getElementById('anim-speed-group');
+        const speedVal = parseFloat(speedEl.value) || 1;
+        const isNone = style === 'none';
+
+        speedEl.disabled = isNone;
+        speedGroup.classList.toggle('is-disabled', isNone);
+        document.documentElement.style.setProperty('--anim-mult', String(1 / speedVal));
+
+        if (!activeRollSession) {
+            const hint = document.getElementById('anim-status-hint');
+            hint.classList.remove('is-rolling');
+            hint.textContent = isNone
+                ? 'Мгновенное отображение результатов без анимации'
+                : 'Клик по сцене во время анимации — мгновенный пропуск';
+        }
+    }
+
+    /* История */
     function loadHistoryFromStorage() {
         try {
             const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
@@ -1861,16 +2343,19 @@
         });
     }
 
-    /* Безопасное создание карточки лота через DOM API */
-    function createRollCardElement(item, index) {
+    /* Карточка лота */
+    function createRollCardElement(item, index, skipRevealAnim = false) {
         const meta = getRarityMeta(item.rating);
         const catMeta = categoriesMeta[item.categoryKey];
 
         const card = document.createElement('article');
         card.className = 'lot-card';
+        if (skipRevealAnim) card.classList.add('no-reveal-anim');
         if (item.rating >= 6.0) card.classList.add('tier-high');
         if (item.rating >= 8.0) card.classList.add('tier-ultra');
-        card.style.animationDelay = `${Math.min(index * 45, 360)}ms`;
+        if (!skipRevealAnim) {
+            card.style.animationDelay = `${Math.min(index * 45, 360)}ms`;
+        }
         applyRarityCssVars(card, meta);
 
         const top = document.createElement('div');
@@ -1926,7 +2411,7 @@
         return card;
     }
 
-    /* Парсер .txt баз */
+    /* Загрузка и парсинг .txt баз */
     function parseChaosFile(text) {
         const items = [];
         if (!text) return items;
@@ -1936,17 +2421,18 @@
             block = block.trim();
             if (!block) continue;
             const hashIndex = block.indexOf('#');
-            let headerLine = hashIndex !== -1 ? block.substring(0, hashIndex).trim() : block;
-            let description = hashIndex !== -1 ? block.substring(hashIndex + 1).trim() : '';
+            const headerLine = hashIndex !== -1 ? block.substring(0, hashIndex).trim() : block;
+            const description = hashIndex !== -1 ? block.substring(hashIndex + 1).trim() : '';
             const dotIndex = headerLine.indexOf('.');
             const commaIndex = headerLine.lastIndexOf(',');
             if (dotIndex !== -1 && commaIndex !== -1 && commaIndex > dotIndex) {
-                const id = headerLine.substring(0, dotIndex).trim();
+                const rawId = headerLine.substring(0, dotIndex).trim();
                 const name = headerLine.substring(dotIndex + 1, commaIndex).trim();
                 const rating = headerLine.substring(commaIndex + 1).trim();
-                if (id && name && !isNaN(parseFloat(rating))) {
+                const parsedId = parseInt(rawId, 10);
+                if (rawId && name && !isNaN(parseFloat(rating))) {
                     items.push({
-                        id: parseInt(id, 10) || id,
+                        id: isNaN(parsedId) ? rawId : parsedId,
                         name,
                         rating: parseFloat(rating),
                         description
@@ -2010,12 +2496,452 @@
         }
     }
 
-    /* Ролл гачи */
+    /* Анимации и ролл */
+    function createRollSession(rolledItems, speedMult) {
+        const timers = new Set();
+        const intervals = new Set();
+        const rafs = new Set();
+        const stage = document.getElementById('roll-stage');
+        const skipBtn = document.getElementById('btn-skip-anim');
+        const hintEl = document.getElementById('anim-status-hint');
+
+        let cancelled = false;
+        let finished = false;
+        let onSkipCallback = null;
+
+        const setRollingUI = active => {
+            stage.classList.toggle('is-animating', active);
+            skipBtn.style.display = active ? 'inline-flex' : 'none';
+            if (active) {
+                hintEl.classList.add('is-rolling');
+                hintEl.textContent = 'Идёт призыв · нажмите на сцену для пропуска';
+            } else {
+                syncAnimControlsUI();
+            }
+        };
+
+        const cleanupTimers = () => {
+            timers.forEach(id => clearTimeout(id));
+            timers.clear();
+            intervals.forEach(id => clearInterval(id));
+            intervals.clear();
+            rafs.forEach(id => cancelAnimationFrame(id));
+            rafs.clear();
+            stage.removeEventListener('click', handleStageClick);
+        };
+
+        const handleStageClick = () => {
+            if (!cancelled && !finished) session.skip();
+        };
+
+        const session = {
+            isActive: () => !cancelled && !finished,
+            wait: ms => new Promise(resolve => {
+                if (cancelled || finished) {
+                    resolve(false);
+                    return;
+                }
+                const id = setTimeout(() => {
+                    timers.delete(id);
+                    resolve(!cancelled && !finished);
+                }, Math.max(10, Math.round(ms * speedMult)));
+                timers.add(id);
+            }),
+            trackInterval: (fn, ms) => {
+                const id = setInterval(fn, ms);
+                intervals.add(id);
+                return id;
+            },
+            trackRaf: fn => {
+                const id = requestAnimationFrame(fn);
+                rafs.add(id);
+                return id;
+            },
+            setOnSkip: fn => {
+                onSkipCallback = fn;
+            },
+            complete: (renderCards = true) => {
+                if (cancelled || finished) return;
+                finished = true;
+                cleanupTimers();
+                activeRollSession = null;
+                setRollingUI(false);
+                finalizeRollDisplay(rolledItems, renderCards);
+            },
+            skip: () => {
+                if (cancelled || finished) return;
+                if (onSkipCallback) {
+                    const cb = onSkipCallback;
+                    onSkipCallback = null;
+                    cb();
+                } else {
+                    session.complete(true);
+                }
+            },
+            cancel: () => {
+                if (cancelled || finished) return;
+                cancelled = true;
+                cleanupTimers();
+                activeRollSession = null;
+                setRollingUI(false);
+            }
+        };
+
+        stage.addEventListener('click', handleStageClick);
+        setRollingUI(true);
+        return session;
+    }
+
+    function finalizeRollDisplay(rolledItems, renderCards = true) {
+        const stage = document.getElementById('roll-stage');
+        const copyAllBtn = document.getElementById('btn-copy-all');
+        const stageSummary = document.getElementById('stage-summary');
+
+        if (renderCards) {
+            stage.innerHTML = '';
+            stage.classList.add('has-items');
+            const grid = document.createElement('div');
+            grid.className = `roll-grid ${rolledItems.length === 1 ? 'single-mode' : ''}`;
+            rolledItems.forEach((item, idx) => {
+                grid.appendChild(createRollCardElement(item, idx));
+            });
+            stage.appendChild(grid);
+        }
+
+        currentRollResults = rolledItems;
+        pushHistoryBatch(rolledItems);
+        stageSummary.textContent = `Выпало лотов: ${rolledItems.length}`;
+        copyAllBtn.style.display = rolledItems.length > 1 ? 'inline-flex' : 'none';
+    }
+
+    function getHighestRarityItem(items) {
+        return items.reduce((best, cur) => (cur.rating > best.rating ? cur : best), items[0]);
+    }
+
+    async function runPortalAnimation(session, rolledItems, speedMult) {
+        const stage = document.getElementById('roll-stage');
+        const maxItem = getHighestRarityItem(rolledItems);
+        const maxMeta = getRarityMeta(maxItem.rating);
+
+        stage.classList.remove('has-items');
+        stage.innerHTML = '';
+
+        const portal = document.createElement('div');
+        portal.className = 'portal-stage';
+
+        const core = document.createElement('div');
+        core.className = 'portal-core';
+        core.innerHTML = '<div class="portal-ring-outer"></div><div class="portal-ring-inner"></div><div class="portal-orb"></div>';
+
+        const caption = document.createElement('div');
+        caption.className = 'portal-caption';
+        const title = document.createElement('div');
+        title.className = 'portal-title';
+        title.textContent = 'Призыв Хаоса...';
+        const sub = document.createElement('div');
+        sub.className = 'portal-sub';
+        sub.textContent = 'Концентрация потока';
+        caption.append(title, sub);
+
+        portal.append(core, caption);
+        stage.appendChild(portal);
+
+        if (!(await session.wait(420))) return;
+
+        portal.style.setProperty('--portal-color', maxMeta.color);
+        portal.style.setProperty('--portal-rgb', maxMeta.rgb);
+        portal.classList.add('is-surging');
+        title.textContent = `Резонанс: ${maxMeta.label}!`;
+        title.style.color = maxMeta.textColor;
+        sub.textContent = 'Раскрытие печати...';
+
+        if (!(await session.wait(560))) return;
+
+        session.complete(true);
+        const flash = document.createElement('div');
+        flash.className = 'portal-flash';
+        flash.style.setProperty('--portal-rgb', maxMeta.rgb);
+        stage.appendChild(flash);
+        setTimeout(() => flash.remove(), Math.round(520 * speedMult));
+    }
+
+    async function runCardsFlipAnimation(session, rolledItems) {
+        const stage = document.getElementById('roll-stage');
+        stage.classList.add('has-items');
+        stage.innerHTML = '';
+
+        const grid = document.createElement('div');
+        grid.className = `roll-grid ${rolledItems.length === 1 ? 'single-mode' : ''}`;
+        const slots = [];
+
+        rolledItems.forEach((item, idx) => {
+            const meta = getRarityMeta(item.rating);
+            const slot = document.createElement('div');
+            slot.className = 'flip-card-slot';
+            slot.style.animationDelay = `${Math.min(idx * 40, 280)}ms`;
+            applyRarityCssVars(slot, meta);
+
+            const inner = document.createElement('div');
+            inner.className = 'flip-card-inner';
+
+            const back = document.createElement('div');
+            back.className = 'flip-card-back';
+            back.innerHTML = `
+                <div class="flip-back-emblem" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L15.8 8.2L22 12L15.8 15.8L12 22L8.2 15.8L2 12L8.2 8.2Z"/>
+                    </svg>
+                </div>
+            `;
+            const backLabel = document.createElement('div');
+            backLabel.className = 'flip-back-label';
+            backLabel.textContent = meta.label;
+            back.appendChild(backLabel);
+
+            const front = document.createElement('div');
+            front.className = 'flip-card-front';
+            front.appendChild(createRollCardElement(item, idx, true));
+
+            inner.append(back, front);
+            slot.appendChild(inner);
+            grid.appendChild(slot);
+            slots.push(slot);
+        });
+
+        stage.appendChild(grid);
+
+        session.setOnSkip(() => {
+            slots.forEach(s => s.classList.add('flipped'));
+            session.complete(false);
+        });
+
+        if (!(await session.wait(360))) return;
+
+        const stagger = rolledItems.length === 1 ? 0 : Math.min(150, Math.round(900 / rolledItems.length));
+        for (let i = 0; i < slots.length; i++) {
+            if (!session.isActive()) return;
+            slots[i].classList.add('flipped');
+            if (i < slots.length - 1) {
+                if (!(await session.wait(stagger))) return;
+            }
+        }
+
+        if (!(await session.wait(420))) return;
+        session.complete(false);
+    }
+
+    async function runRouletteAnimation(session, rolledItems, pool, speedMult) {
+        const stage = document.getElementById('roll-stage');
+        const winnerItem = getHighestRarityItem(rolledItems);
+        const totalTiles = 35;
+        const winnerIndex = 28;
+
+        stage.classList.remove('has-items');
+        stage.innerHTML = '';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'roulette-wrapper';
+
+        const header = document.createElement('div');
+        header.className = 'roulette-header';
+        const leftText = document.createElement('span');
+        leftText.textContent = rolledItems.length > 1
+            ? `Прокрутка ленты · фокус на лучшем лоте из ${rolledItems.length}`
+            : 'Прокрутка ленты Хаоса...';
+        const rightText = document.createElement('span');
+        rightText.textContent = 'Клик — пропустить';
+        header.append(leftText, rightText);
+
+        const viewport = document.createElement('div');
+        viewport.className = 'roulette-viewport';
+
+        const pointer = document.createElement('div');
+        pointer.className = 'roulette-pointer';
+
+        const track = document.createElement('div');
+        track.className = 'roulette-track';
+
+        let winnerTileEl = null;
+
+        for (let i = 0; i < totalTiles; i++) {
+            const tileItem = i === winnerIndex
+                ? winnerItem
+                : pool[Math.floor(Math.random() * pool.length)];
+
+            const meta = getRarityMeta(tileItem.rating);
+            const catMeta = categoriesMeta[tileItem.categoryKey] || { name: 'Лот', icon: '•' };
+
+            const tile = document.createElement('div');
+            tile.className = 'roulette-tile';
+            applyRarityCssVars(tile, meta);
+
+            const tCat = document.createElement('div');
+            tCat.className = 'roulette-tile-cat';
+            tCat.textContent = `${catMeta.icon} ${catMeta.name}`;
+
+            const tName = document.createElement('div');
+            tName.className = 'roulette-tile-name';
+            tName.textContent = tileItem.name;
+
+            const tRate = document.createElement('div');
+            tRate.className = 'roulette-tile-rate';
+            tRate.textContent = `${meta.label} · ${tileItem.rating.toFixed(1)}`;
+
+            tile.append(tCat, tName, tRate);
+            track.appendChild(tile);
+
+            if (i === winnerIndex) {
+                winnerTileEl = tile;
+            }
+        }
+
+        viewport.append(pointer, track);
+        wrapper.append(header, viewport);
+        stage.appendChild(wrapper);
+
+        const spinDuration = Math.round(2500 * speedMult);
+
+        session.trackRaf(() => {
+            if (!session.isActive() || !winnerTileEl) return;
+            const jitter = (Math.random() - 0.5) * (winnerTileEl.offsetWidth * 0.48);
+            const targetX = -(winnerTileEl.offsetLeft + winnerTileEl.offsetWidth / 2 - viewport.clientWidth / 2 + jitter);
+            track.style.transform = 'translateX(0px)';
+            viewport.offsetWidth;
+            session.trackRaf(() => {
+                if (!session.isActive()) return;
+                track.style.transition = `transform ${spinDuration}ms cubic-bezier(0.08, 0.86, 0.14, 1)`;
+                track.style.transform = `translateX(${targetX}px)`;
+            });
+        });
+
+        if (!(await session.wait(2550))) return;
+
+        if (winnerTileEl) winnerTileEl.classList.add('winner-landed');
+        const winnerMeta = getRarityMeta(winnerItem.rating);
+        leftText.textContent = `Остановка: ${winnerItem.name} (${winnerMeta.label})`;
+        leftText.style.color = winnerMeta.textColor;
+        leftText.style.fontWeight = '700';
+
+        if (!(await session.wait(480))) return;
+        session.complete(true);
+    }
+
+    async function runDecryptAnimation(session, rolledItems, speedMult) {
+        const stage = document.getElementById('roll-stage');
+        stage.classList.add('has-items');
+        stage.innerHTML = '';
+
+        const grid = document.createElement('div');
+        grid.className = `roll-grid ${rolledItems.length === 1 ? 'single-mode' : ''}`;
+
+        const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*+<>?';
+        const scrambleText = (str, progress) => {
+            const len = str.length;
+            const lockedCount = Math.floor(len * progress);
+            let out = '';
+            for (let i = 0; i < len; i++) {
+                const ch = str[i];
+                if (ch === ' ' || ch === '\n' || i < lockedCount) {
+                    out += ch;
+                } else {
+                    out += glyphs[Math.floor(Math.random() * glyphs.length)];
+                }
+            }
+            return out;
+        };
+
+        const targets = [];
+
+        rolledItems.forEach((item, idx) => {
+            const card = createRollCardElement(item, idx, false);
+            card.classList.add('is-decrypting');
+
+            const titleEl = card.querySelector('.lot-title');
+            const badgeEl = card.querySelector('.lot-rarity-badge');
+            const idEl = card.querySelector('.lot-id-tag');
+            const descEl = card.querySelector('.lot-desc');
+
+            const origTitle = titleEl.textContent;
+            const origBadge = badgeEl.textContent;
+            const origId = idEl.textContent;
+            const origDesc = descEl.textContent;
+            const descPreviewLen = Math.min(origDesc.length, 88);
+
+            targets.push({
+                card,
+                titleEl, badgeEl, idEl, descEl,
+                origTitle, origBadge, origId, origDesc,
+                descPreviewLen,
+                locked: false
+            });
+
+            grid.appendChild(card);
+        });
+
+        stage.appendChild(grid);
+
+        const restoreAll = () => {
+            targets.forEach(t => {
+                t.card.classList.remove('is-decrypting');
+                t.titleEl.textContent = t.origTitle;
+                t.badgeEl.textContent = t.origBadge;
+                t.idEl.textContent = t.origId;
+                t.descEl.textContent = t.origDesc;
+            });
+        };
+
+        session.setOnSkip(() => {
+            restoreAll();
+            session.complete(false);
+        });
+
+        const totalDuration = Math.max(500, (900 + rolledItems.length * 110) * speedMult);
+        const startTime = performance.now();
+
+        session.trackInterval(() => {
+            if (!session.isActive()) return;
+            const elapsed = performance.now() - startTime;
+            const globalProgress = Math.min(1, elapsed / totalDuration);
+
+            targets.forEach((t, idx) => {
+                if (t.locked) return;
+                const cardStart = (idx / targets.length) * 0.45;
+                const cardProgress = Math.max(0, Math.min(1, (globalProgress - cardStart) / 0.55));
+
+                if (cardProgress >= 1) {
+                    t.locked = true;
+                    t.card.classList.remove('is-decrypting');
+                    t.titleEl.textContent = t.origTitle;
+                    t.badgeEl.textContent = t.origBadge;
+                    t.idEl.textContent = t.origId;
+                    t.descEl.textContent = t.origDesc;
+                } else {
+                    t.titleEl.textContent = scrambleText(t.origTitle, cardProgress);
+                    t.badgeEl.textContent = scrambleText(t.origBadge, cardProgress * 0.7);
+                    t.idEl.textContent = `#${Math.floor(10 + Math.random() * 989)}`;
+                    t.descEl.textContent = scrambleText(t.origDesc.slice(0, t.descPreviewLen), cardProgress * 0.4);
+                }
+            });
+
+            if (globalProgress >= 1) {
+                restoreAll();
+                session.complete(false);
+            }
+        }, 45);
+    }
+
     function performRoll() {
+        if (activeRollSession) {
+            activeRollSession.cancel();
+        }
+
         const chosenCategory = document.getElementById('roll-category').value;
         const chosenTicket = document.getElementById('roll-ticket').value;
         const rollCount = parseInt(document.getElementById('roll-count').value, 10) || 1;
         const noDuplicates = document.getElementById('roll-unique').checked;
+        const animStyle = document.getElementById('roll-anim-style').value;
+        const animSpeed = parseFloat(document.getElementById('roll-anim-speed').value) || 1;
+        const speedMult = 1 / animSpeed;
 
         const { min: minRate, max: maxRate } = ticketRanges[chosenTicket];
 
@@ -2033,9 +2959,8 @@
         const copyAllBtn = document.getElementById('btn-copy-all');
         const stageSummary = document.getElementById('stage-summary');
 
-        stage.innerHTML = '';
-
         if (filteredPool.length === 0) {
+            stage.innerHTML = '';
             stage.classList.remove('has-items');
             const err = document.createElement('div');
             err.className = 'placeholder-text';
@@ -2047,11 +2972,7 @@
             return;
         }
 
-        stage.classList.add('has-items');
-        const grid = document.createElement('div');
-        grid.className = `roll-grid ${rollCount === 1 ? 'single-mode' : ''}`;
-
-        currentRollResults = [];
+        const rolledItems = [];
         let availablePool = [...filteredPool];
 
         for (let i = 0; i < rollCount; i++) {
@@ -2065,32 +2986,34 @@
             if (noDuplicates) {
                 availablePool.splice(randIdx, 1);
             }
-
-            currentRollResults.push(rolledItem);
-            grid.appendChild(createRollCardElement(rolledItem, i));
+            rolledItems.push(rolledItem);
         }
 
-        pushHistoryBatch(currentRollResults);
-        stage.appendChild(grid);
-        stageSummary.textContent = `Выпало лотов: ${currentRollResults.length}`;
-        copyAllBtn.style.display = currentRollResults.length > 1 ? 'inline-flex' : 'none';
+        if (animStyle === 'none') {
+            finalizeRollDisplay(rolledItems, true);
+            return;
+        }
+
+        copyAllBtn.style.display = 'none';
+        stageSummary.textContent = 'Призыв Хаоса...';
+
+        const session = createRollSession(rolledItems, speedMult);
+        activeRollSession = session;
+
+        if (animStyle === 'portal') {
+            runPortalAnimation(session, rolledItems, speedMult);
+        } else if (animStyle === 'cards') {
+            runCardsFlipAnimation(session, rolledItems);
+        } else if (animStyle === 'roulette') {
+            runRouletteAnimation(session, rolledItems, filteredPool, speedMult);
+        } else if (animStyle === 'decrypt') {
+            runDecryptAnimation(session, rolledItems, speedMult);
+        } else {
+            session.complete(true);
+        }
     }
 
     /* База данных */
-    const rarityRanges = {
-        all: [0.1, 10.0],
-        trash: [0.1, 0.9],
-        common: [1.0, 1.9],
-        uncommon: [2.0, 2.9],
-        rare: [3.0, 3.9],
-        elite: [4.0, 4.9],
-        epic: [5.0, 5.9],
-        legendary: [6.0, 6.9],
-        mythical: [7.0, 7.9],
-        divine: [8.0, 8.9],
-        transcend: [9.0, 10.0]
-    };
-
     function roundRating(val) {
         return Math.round(val * 10) / 10;
     }
@@ -2312,7 +3235,7 @@
         });
     }
 
-    /* Конструктор пользовательского лота и отправка через Google Форму */
+    /* Предложение лота */
     function syncSuggestedLotId() {
         const cat = document.getElementById('custom-lot-category').value;
         const list = gachaDatabase[cat] || [];
@@ -2376,7 +3299,7 @@
         window.open(targetUrl, '_blank', 'noopener,noreferrer');
     }
 
-    /* Инициализация событий */
+    /* Инициализация */
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -2399,6 +3322,20 @@
 
         document.getElementById('btn-reload-db').addEventListener('click', loadAllDatabases);
         document.getElementById('btn-roll').addEventListener('click', performRoll);
+
+        document.getElementById('btn-skip-anim').addEventListener('click', () => {
+            if (activeRollSession) activeRollSession.skip();
+        });
+
+        document.getElementById('roll-anim-style').addEventListener('change', () => {
+            syncAnimControlsUI();
+            saveAnimPrefs();
+        });
+
+        document.getElementById('roll-anim-speed').addEventListener('change', () => {
+            syncAnimControlsUI();
+            saveAnimPrefs();
+        });
 
         document.getElementById('btn-copy-all').addEventListener('click', () => {
             if (!currentRollResults.length) return;
@@ -2564,6 +3501,7 @@
             );
         });
 
+        loadAnimPrefs();
         setRatingRange(0.1, 10.0, true);
         updateCustomLotPreview();
         loadHistoryFromStorage();
