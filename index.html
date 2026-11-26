@@ -519,22 +519,202 @@
             border-radius: 14px;
             padding: 18px 20px;
             margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .db-row-top {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 0.8fr auto;
+            grid-template-columns: 1.4fr 1.4fr 1fr 1fr;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .db-row-bottom {
+            display: grid;
+            grid-template-columns: 2fr 1.15fr 0.75fr auto;
             gap: 12px;
             align-items: end;
         }
 
         @media (max-width: 1080px) {
-            .db-toolbar {
+            .db-row-top,
+            .db-row-bottom {
                 grid-template-columns: 1fr 1fr;
+            }
+            .rating-range-group {
+                grid-column: 1 / -1;
             }
         }
 
         @media (max-width: 600px) {
-            .db-toolbar {
+            .db-row-top,
+            .db-row-bottom {
                 grid-template-columns: 1fr;
             }
+        }
+
+        .input-clear-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-clear-wrap input {
+            padding-right: 34px;
+        }
+
+        .btn-input-clear {
+            position: absolute;
+            right: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            line-height: 1;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .btn-input-clear.visible {
+            display: inline-flex;
+        }
+
+        .btn-input-clear:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Двойной ползунок рейтинга */
+        .rating-range-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rating-inputs {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rating-inputs input[type="number"] {
+            width: 58px;
+            padding: 3px 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+            border-radius: 6px;
+            -moz-appearance: textfield;
+        }
+
+        .rating-inputs input[type="number"]::-webkit-outer-spin-button,
+        .rating-inputs input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .rating-sep {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .range-slider-wrap {
+            position: relative;
+            height: 36px;
+            display: flex;
+            align-items: center;
+        }
+
+        .range-track-bg,
+        .range-track-fill {
+            position: absolute;
+            height: 6px;
+            border-radius: 999px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .range-track-bg {
+            left: 0;
+            right: 0;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+        }
+
+        .range-track-fill {
+            background: var(--accent);
+        }
+
+        .range-slider-wrap input[type="range"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            pointer-events: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .range-slider-wrap input[type="range"]:focus {
+            border: none;
+            box-shadow: none;
+        }
+
+        .range-slider-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: auto;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #f8fafc;
+            border: 2px solid var(--accent);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+            cursor: grab;
+            transition: transform 0.12s ease;
+        }
+
+        .range-slider-wrap input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.12);
+        }
+
+        .range-slider-wrap input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.16);
+        }
+
+        .range-slider-wrap input[type="range"]::-moz-range-thumb {
+            pointer-events: auto;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #f8fafc;
+            border: 2px solid var(--accent);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+            cursor: grab;
         }
 
         .db-meta-bar {
@@ -855,56 +1035,91 @@
     <!-- ВКЛАДКА 2: БАЗА ДАННЫХ -->
     <section id="tab-database" class="tab-content">
         <div class="db-toolbar">
-            <div class="form-group">
-                <label>Поиск</label>
-                <input type="text" id="search-query" placeholder="Название или описание...">
+            <div class="db-row-top">
+                <div class="form-group">
+                    <label>Поиск по названию</label>
+                    <div class="input-clear-wrap">
+                        <input type="text" id="search-name" placeholder="Название или #ID...">
+                        <button type="button" class="btn-input-clear" data-clear="search-name" title="Очистить" aria-label="Очистить поиск по названию">×</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Поиск по описанию</label>
+                    <div class="input-clear-wrap">
+                        <input type="text" id="search-desc" placeholder="Слова в описании...">
+                        <button type="button" class="btn-input-clear" data-clear="search-desc" title="Очистить" aria-label="Очистить поиск по описанию">×</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="filter-category">
+                        <option value="all">Все категории</option>
+                        <option value="abilities">Способности</option>
+                        <option value="items">Предметы</option>
+                        <option value="traits">Черты</option>
+                        <option value="skills">Навыки</option>
+                        <option value="familiars">Фамильяры</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Сортировка</label>
+                    <select id="filter-sort">
+                        <option value="num-asc">По ID (1 → 9)</option>
+                        <option value="rate-desc">Рейтинг (Высокий)</option>
+                        <option value="rate-asc">Рейтинг (Низкий)</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Категория</label>
-                <select id="filter-category">
-                    <option value="all">Все категории</option>
-                    <option value="abilities">Способности</option>
-                    <option value="items">Предметы</option>
-                    <option value="traits">Черты</option>
-                    <option value="skills">Навыки</option>
-                    <option value="familiars">Фамильяры</option>
-                </select>
+
+            <div class="db-row-bottom">
+                <div class="form-group rating-range-group">
+                    <div class="rating-header">
+                        <label>Диапазон рейтинга</label>
+                        <div class="rating-inputs">
+                            <input type="number" id="rating-min-input" min="0.1" max="10.0" step="0.1" value="0.1" aria-label="Минимальный рейтинг">
+                            <span class="rating-sep">–</span>
+                            <input type="number" id="rating-max-input" min="0.1" max="10.0" step="0.1" value="10.0" aria-label="Максимальный рейтинг">
+                        </div>
+                    </div>
+                    <div class="range-slider-wrap">
+                        <div class="range-track-bg"></div>
+                        <div class="range-track-fill" id="range-track-fill"></div>
+                        <input type="range" id="rating-min-slider" min="0.1" max="10.0" step="0.1" value="0.1" aria-label="Ползунок минимального рейтинга">
+                        <input type="range" id="rating-max-slider" min="0.1" max="10.0" step="0.1" value="10.0" aria-label="Ползунок максимального рейтинга">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ранг редкости</label>
+                    <select id="filter-rarity-class">
+                        <option value="all">Все ранги</option>
+                        <option value="custom" hidden>Свой диапазон</option>
+                        <option value="trash">Мусор (0.1–0.9)</option>
+                        <option value="common">Обычный (1.0–1.9)</option>
+                        <option value="uncommon">Необычный (2.0–2.9)</option>
+                        <option value="rare">Редкий (3.0–3.9)</option>
+                        <option value="elite">Элитный (4.0–4.9)</option>
+                        <option value="epic">Эпический (5.0–5.9)</option>
+                        <option value="legendary">Легендарный (6.0–6.9)</option>
+                        <option value="mythical">Мифический (7.0–7.9)</option>
+                        <option value="divine">Божественный (8.0–8.9)</option>
+                        <option value="transcend">Трансцендентный (9.0–10.0)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>На странице</label>
+                    <select id="filter-limit">
+                        <option value="12">12</option>
+                        <option value="24">24</option>
+                        <option value="48" selected>48</option>
+                        <option value="100">100</option>
+                        <option value="all">Все</option>
+                    </select>
+                </div>
+
+                <button type="button" class="btn-ghost" id="btn-reset-filters" style="height: 41px;">Сбросить</button>
             </div>
-            <div class="form-group">
-                <label>Ранг редкости</label>
-                <select id="filter-rarity-class">
-                    <option value="all">Все ранги</option>
-                    <option value="trash">Мусор (0.1–0.9)</option>
-                    <option value="common">Обычный (1.0–1.9)</option>
-                    <option value="uncommon">Необычный (2.0–2.9)</option>
-                    <option value="rare">Редкий (3.0–3.9)</option>
-                    <option value="elite">Элитный (4.0–4.9)</option>
-                    <option value="epic">Эпический (5.0–5.9)</option>
-                    <option value="legendary">Легендарный (6.0–6.9)</option>
-                    <option value="mythical">Мифический (7.0–7.9)</option>
-                    <option value="divine">Божественный (8.0–8.9)</option>
-                    <option value="transcend">Трансцендентный (9.0–10.0)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Сортировка</label>
-                <select id="filter-sort">
-                    <option value="num-asc">По ID (1 → 9)</option>
-                    <option value="rate-desc">Рейтинг (Высокий)</option>
-                    <option value="rate-asc">Рейтинг (Низкий)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>На странице</label>
-                <select id="filter-limit">
-                    <option value="12">12</option>
-                    <option value="24">24</option>
-                    <option value="48" selected>48</option>
-                    <option value="100">100</option>
-                    <option value="all">Все</option>
-                </select>
-            </div>
-            <button type="button" class="btn-ghost" id="btn-reset-filters" style="height: 41px;">Сбросить</button>
         </div>
 
         <div class="db-meta-bar">
@@ -1008,16 +1223,17 @@
 
     function getRarityMeta(rating) {
         const r = parseFloat(rating);
-        if (r >= 0.1 && r <= 0.9) return { label: 'Мусор', color: '#64748b', darkTxt: false };
-        if (r >= 1.0 && r <= 1.9) return { label: 'Обычный', color: '#94a3b8', darkTxt: true };
-        if (r >= 2.0 && r <= 2.9) return { label: 'Необычный', color: '#22c55e', darkTxt: true };
-        if (r >= 3.0 && r <= 3.9) return { label: 'Редкий', color: '#3b82f6', darkTxt: false };
-        if (r >= 4.0 && r <= 4.9) return { label: 'Элитный', color: '#a855f7', darkTxt: false };
-        if (r >= 5.0 && r <= 5.9) return { label: 'Эпический', color: '#ec4899', darkTxt: false };
-        if (r >= 6.0 && r <= 6.9) return { label: 'Легендарный', color: '#ef4444', darkTxt: false };
-        if (r >= 7.0 && r <= 7.9) return { label: 'Мифический', color: '#f97316', darkTxt: false };
-        if (r >= 8.0 && r <= 8.9) return { label: 'Божественный', color: '#eab308', darkTxt: true };
-        if (r >= 9.0 && r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', darkTxt: true };
+        if (isNaN(r) || r < 0.1) return { label: 'Неизвестно', color: '#334155', darkTxt: false };
+        if (r < 1.0) return { label: 'Мусор', color: '#64748b', darkTxt: false };
+        if (r < 2.0) return { label: 'Обычный', color: '#94a3b8', darkTxt: true };
+        if (r < 3.0) return { label: 'Необычный', color: '#22c55e', darkTxt: true };
+        if (r < 4.0) return { label: 'Редкий', color: '#3b82f6', darkTxt: false };
+        if (r < 5.0) return { label: 'Элитный', color: '#a855f7', darkTxt: false };
+        if (r < 6.0) return { label: 'Эпический', color: '#ec4899', darkTxt: false };
+        if (r < 7.0) return { label: 'Легендарный', color: '#ef4444', darkTxt: false };
+        if (r < 8.0) return { label: 'Мифический', color: '#f97316', darkTxt: false };
+        if (r < 9.0) return { label: 'Божественный', color: '#eab308', darkTxt: true };
+        if (r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', darkTxt: true };
         return { label: 'Неизвестно', color: '#334155', darkTxt: false };
     }
 
@@ -1280,15 +1496,93 @@
     }
 
     /* База данных */
+    const rarityRanges = {
+        all: [0.1, 10.0],
+        trash: [0.1, 0.9],
+        common: [1.0, 1.9],
+        uncommon: [2.0, 2.9],
+        rare: [3.0, 3.9],
+        elite: [4.0, 4.9],
+        epic: [5.0, 5.9],
+        legendary: [6.0, 6.9],
+        mythical: [7.0, 7.9],
+        divine: [8.0, 8.9],
+        transcend: [9.0, 10.0]
+    };
+
+    function roundRating(val) {
+        return Math.round(val * 10) / 10;
+    }
+
+    function getCurrentRatingRange() {
+        const minVal = roundRating(parseFloat(document.getElementById('rating-min-slider').value) || 0.1);
+        const maxVal = roundRating(parseFloat(document.getElementById('rating-max-slider').value) || 10.0);
+        return [minVal, maxVal];
+    }
+
+    function updateRatingVisuals(minVal, maxVal, syncSelect = true) {
+        const minSlider = document.getElementById('rating-min-slider');
+        const maxSlider = document.getElementById('rating-max-slider');
+        const minInput = document.getElementById('rating-min-input');
+        const maxInput = document.getElementById('rating-max-input');
+        const fill = document.getElementById('range-track-fill');
+
+        const minPercent = ((minVal - 0.1) / 9.9) * 100;
+        const maxPercent = ((maxVal - 0.1) / 9.9) * 100;
+
+        const minMeta = getRarityMeta(minVal);
+        const maxMeta = getRarityMeta(maxVal);
+
+        fill.style.left = `${minPercent}%`;
+        fill.style.width = `${Math.max(0, maxPercent - minPercent)}%`;
+        fill.style.background = `linear-gradient(90deg, ${minMeta.color}, ${maxMeta.color})`;
+
+        minInput.style.color = minMeta.color;
+        maxInput.style.color = maxMeta.color;
+
+        if (minVal === maxVal) {
+            minSlider.style.zIndex = minVal > 5 ? '4' : '3';
+            maxSlider.style.zIndex = minVal > 5 ? '3' : '4';
+        }
+
+        if (syncSelect) {
+            const raritySelect = document.getElementById('filter-rarity-class');
+            const matchedKey = Object.keys(rarityRanges).find(
+                key => rarityRanges[key][0] === minVal && rarityRanges[key][1] === maxVal
+            );
+            raritySelect.value = matchedKey || 'custom';
+        }
+    }
+
+    function setRatingRange(minVal, maxVal, syncSelect = true) {
+        const min = roundRating(Math.min(10.0, Math.max(0.1, minVal)));
+        const max = roundRating(Math.min(10.0, Math.max(min, maxVal)));
+
+        document.getElementById('rating-min-slider').value = min.toFixed(1);
+        document.getElementById('rating-max-slider').value = max.toFixed(1);
+        document.getElementById('rating-min-input').value = min.toFixed(1);
+        document.getElementById('rating-max-input').value = max.toFixed(1);
+
+        updateRatingVisuals(min, max, syncSelect);
+    }
+
+    function updateClearButtons() {
+        document.querySelectorAll('.btn-input-clear').forEach(btn => {
+            const target = document.getElementById(btn.dataset.clear);
+            btn.classList.toggle('visible', Boolean(target && target.value.length > 0));
+        });
+    }
+
     function resetPageAndApply() {
         dbCurrentPage = 1;
         applyFilters();
     }
 
     function applyFilters() {
-        const query = document.getElementById('search-query').value.toLowerCase().trim();
+        const nameQuery = document.getElementById('search-name').value.toLowerCase().trim();
+        const descQuery = document.getElementById('search-desc').value.toLowerCase().trim();
         const catFilter = document.getElementById('filter-category').value;
-        const rarityFilter = document.getElementById('filter-rarity-class').value;
+        const [minRating, maxRating] = getCurrentRatingRange();
         const sortBy = document.getElementById('filter-sort').value;
         const limitVal = document.getElementById('filter-limit').value;
 
@@ -1299,29 +1593,28 @@
             }
         });
 
-        if (query) {
+        if (nameQuery) {
+            if (nameQuery.startsWith('#')) {
+                const idQuery = nameQuery.slice(1).trim();
+                if (idQuery) {
+                    combinedData = combinedData.filter(item => String(item.id) === idQuery);
+                }
+            } else {
+                combinedData = combinedData.filter(item =>
+                    item.name.toLowerCase().includes(nameQuery)
+                );
+            }
+        }
+
+        if (descQuery) {
             combinedData = combinedData.filter(item =>
-                item.name.toLowerCase().includes(query) ||
-                (item.description && item.description.toLowerCase().includes(query))
+                item.description && item.description.toLowerCase().includes(descQuery)
             );
         }
 
-        if (rarityFilter !== 'all') {
-            combinedData = combinedData.filter(item => {
-                const r = item.rating;
-                if (rarityFilter === 'trash') return r >= 0.1 && r <= 0.9;
-                if (rarityFilter === 'common') return r >= 1.0 && r <= 1.9;
-                if (rarityFilter === 'uncommon') return r >= 2.0 && r <= 2.9;
-                if (rarityFilter === 'rare') return r >= 3.0 && r <= 3.9;
-                if (rarityFilter === 'elite') return r >= 4.0 && r <= 4.9;
-                if (rarityFilter === 'epic') return r >= 5.0 && r <= 5.9;
-                if (rarityFilter === 'legendary') return r >= 6.0 && r <= 6.9;
-                if (rarityFilter === 'mythical') return r >= 7.0 && r <= 7.9;
-                if (rarityFilter === 'divine') return r >= 8.0 && r <= 8.9;
-                if (rarityFilter === 'transcend') return r >= 9.0 && r <= 10.0;
-                return true;
-            });
-        }
+        combinedData = combinedData.filter(item =>
+            item.rating >= minRating && item.rating <= maxRating
+        );
 
         if (sortBy === 'num-asc') combinedData.sort((a, b) => a.id - b.id);
         else if (sortBy === 'rate-desc') combinedData.sort((a, b) => b.rating - a.rating);
@@ -1514,17 +1807,113 @@
             renderHistory();
         });
 
-        ['search-query', 'filter-category', 'filter-rarity-class', 'filter-sort', 'filter-limit'].forEach(id => {
-            const el = document.getElementById(id);
-            el.addEventListener(id === 'search-query' ? 'input' : 'change', resetPageAndApply);
+        ['search-name', 'search-desc'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                updateClearButtons();
+                resetPageAndApply();
+            });
+        });
+
+        document.querySelectorAll('.btn-input-clear').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById(btn.dataset.clear);
+                if (!input) return;
+                input.value = '';
+                input.focus();
+                updateClearButtons();
+                resetPageAndApply();
+            });
+        });
+
+        ['filter-category', 'filter-sort', 'filter-limit'].forEach(id => {
+            document.getElementById(id).addEventListener('change', resetPageAndApply);
+        });
+
+        document.getElementById('filter-rarity-class').addEventListener('change', e => {
+            const range = rarityRanges[e.target.value];
+            if (range) {
+                setRatingRange(range[0], range[1], false);
+                resetPageAndApply();
+            }
+        });
+
+        const minSlider = document.getElementById('rating-min-slider');
+        const maxSlider = document.getElementById('rating-max-slider');
+        const minInput = document.getElementById('rating-min-input');
+        const maxInput = document.getElementById('rating-max-input');
+
+        minSlider.addEventListener('input', () => {
+            let minVal = roundRating(parseFloat(minSlider.value));
+            const maxVal = roundRating(parseFloat(maxSlider.value));
+            if (minVal > maxVal) {
+                minVal = maxVal;
+                minSlider.value = minVal.toFixed(1);
+            }
+            minSlider.style.zIndex = '5';
+            maxSlider.style.zIndex = '3';
+            minInput.value = minVal.toFixed(1);
+            updateRatingVisuals(minVal, maxVal, true);
+            resetPageAndApply();
+        });
+
+        maxSlider.addEventListener('input', () => {
+            const minVal = roundRating(parseFloat(minSlider.value));
+            let maxVal = roundRating(parseFloat(maxSlider.value));
+            if (maxVal < minVal) {
+                maxVal = minVal;
+                maxSlider.value = maxVal.toFixed(1);
+            }
+            maxSlider.style.zIndex = '5';
+            minSlider.style.zIndex = '3';
+            maxInput.value = maxVal.toFixed(1);
+            updateRatingVisuals(minVal, maxVal, true);
+            resetPageAndApply();
+        });
+
+        minInput.addEventListener('input', () => {
+            const val = parseFloat(minInput.value);
+            if (isNaN(val) || val < 0.1 || val > 10.0) return;
+            const maxVal = roundRating(parseFloat(maxSlider.value));
+            const clampedMin = roundRating(Math.min(val, maxVal));
+            minSlider.value = clampedMin.toFixed(1);
+            updateRatingVisuals(clampedMin, maxVal, true);
+            resetPageAndApply();
+        });
+
+        maxInput.addEventListener('input', () => {
+            const val = parseFloat(maxInput.value);
+            if (isNaN(val) || val < 0.1 || val > 10.0) return;
+            const minVal = roundRating(parseFloat(minSlider.value));
+            const clampedMax = roundRating(Math.max(val, minVal));
+            maxSlider.value = clampedMax.toFixed(1);
+            updateRatingVisuals(minVal, clampedMax, true);
+            resetPageAndApply();
+        });
+
+        minInput.addEventListener('change', () => {
+            const raw = parseFloat(minInput.value);
+            const maxVal = roundRating(parseFloat(maxSlider.value));
+            const nextMin = isNaN(raw) ? 0.1 : Math.min(roundRating(Math.max(0.1, raw)), maxVal);
+            setRatingRange(nextMin, maxVal, true);
+            resetPageAndApply();
+        });
+
+        maxInput.addEventListener('change', () => {
+            const raw = parseFloat(maxInput.value);
+            const minVal = roundRating(parseFloat(minSlider.value));
+            const nextMax = isNaN(raw) ? 10.0 : Math.max(roundRating(Math.min(10.0, raw)), minVal);
+            setRatingRange(minVal, nextMax, true);
+            resetPageAndApply();
         });
 
         document.getElementById('btn-reset-filters').addEventListener('click', () => {
-            document.getElementById('search-query').value = '';
+            document.getElementById('search-name').value = '';
+            document.getElementById('search-desc').value = '';
             document.getElementById('filter-category').value = 'all';
-            document.getElementById('filter-rarity-class').value = 'all';
             document.getElementById('filter-sort').value = 'num-asc';
             document.getElementById('filter-limit').value = '48';
+            updateClearButtons();
+            setRatingRange(0.1, 10.0, true);
             resetPageAndApply();
         });
 
@@ -1562,6 +1951,7 @@
             );
         });
 
+        setRatingRange(0.1, 10.0, true);
         loadHistoryFromStorage();
         loadAllDatabases();
     });
