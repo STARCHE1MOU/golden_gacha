@@ -6,17 +6,26 @@
     <title>Chaos Gacha: Blue Edition</title>
     <style>
         :root {
-            --bg-main: #0b0e14;
-            --bg-surface: #121722;
-            --bg-elevated: #19202e;
-            --bg-input: #161c28;
+            --bg-main: #060911;
+            --bg-surface: #0d1320;
+            --bg-surface-2: #11192a;
+            --bg-elevated: #162035;
+            --bg-input: #0a0f1a;
+            --bg-glass: rgba(13, 19, 32, 0.78);
+
             --text-main: #f1f5f9;
-            --text-muted: #8b9bb4;
+            --text-soft: #cbd5e1;
+            --text-muted: #7c8ea8;
+
             --accent: #3b82f6;
             --accent-hover: #2563eb;
+            --accent-cyan: #38bdf8;
             --accent-soft: rgba(59, 130, 246, 0.14);
-            --border: rgba(148, 163, 184, 0.14);
-            --border-strong: rgba(148, 163, 184, 0.28);
+            --accent-glow: rgba(59, 130, 246, 0.32);
+
+            --border: rgba(148, 163, 184, 0.13);
+            --border-strong: rgba(148, 163, 184, 0.26);
+            --inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.045);
 
             --r-trash: #64748b;
             --r-common: #94a3b8;
@@ -28,64 +37,122 @@
             --r-mythical: #f97316;
             --r-divine: #eab308;
             --r-transcend: #06b6d4;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.55);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        html {
+            color-scheme: dark;
         }
 
         body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-main);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37, 99, 235, 0.18), transparent 70%),
+                radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.08), transparent 40%),
+                linear-gradient(rgba(148, 163, 184, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.025) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+            background-attachment: fixed;
             color: var(--text-main);
             line-height: 1.55;
-            padding: 28px 20px 64px;
+            padding: 24px 20px 72px;
             -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        .tabular {
+            font-variant-numeric: tabular-nums;
         }
 
         .container {
-            max-width: 1240px;
+            max-width: 1260px;
             margin: 0 auto;
         }
 
-        /* Верхняя шапка и навигация */
+        /* Доступность фокуса */
+        :focus-visible {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
+        }
+
+        /* Верхняя шапка */
         .topbar {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
-            padding-bottom: 22px;
-            margin-bottom: 28px;
-            border-bottom: 1px solid var(--border);
+            gap: 18px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--inner-highlight), var(--shadow-card);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-emblem {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.22), rgba(6, 182, 212, 0.14));
+            border: 1px solid rgba(59, 130, 246, 0.38);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .brand-emblem svg {
+            width: 22px;
+            height: 22px;
+            color: #60a5fa;
         }
 
         .brand h1 {
-            font-size: 1.55rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
+            font-size: 1.32rem;
+            font-weight: 750;
+            letter-spacing: 0.02em;
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 9px;
+            flex-wrap: wrap;
         }
 
         .brand-badge {
-            font-size: 0.72rem;
+            font-size: 0.68rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.09em;
             padding: 3px 8px;
             border-radius: 6px;
-            background: var(--accent-soft);
-            color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(56, 189, 248, 0.14));
+            color: #7dd3fc;
+            border: 1px solid rgba(56, 189, 248, 0.35);
         }
 
         .brand p {
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.84rem;
             margin-top: 2px;
         }
 
@@ -98,9 +165,9 @@
 
         .tabs {
             display: inline-flex;
-            background: var(--bg-surface);
+            background: var(--bg-input);
             padding: 4px;
-            border-radius: 10px;
+            border-radius: 11px;
             border: 1px solid var(--border);
             gap: 4px;
         }
@@ -109,12 +176,15 @@
             background: transparent;
             color: var(--text-muted);
             border: none;
-            padding: 9px 18px;
-            border-radius: 7px;
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             font-weight: 600;
-            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
         }
 
         .tab-btn:hover {
@@ -123,21 +193,39 @@
         }
 
         .tab-btn.active {
-            background: var(--accent);
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
             color: #fff;
-            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .tab-pill-count {
+            font-size: 0.72rem;
+            padding: 1px 6px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-soft);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tab-btn.active .tab-pill-count {
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
         }
 
         .btn-ghost {
-            background: var(--bg-surface);
-            color: var(--text-muted);
+            background: var(--bg-surface-2);
+            color: var(--text-soft);
             border: 1px solid var(--border);
             padding: 9px 14px;
-            border-radius: 9px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
-            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.18s ease;
+            box-shadow: var(--inner-highlight);
         }
 
         .btn-ghost:hover {
@@ -146,17 +234,36 @@
             background: var(--bg-elevated);
         }
 
+        .source-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f59e0b;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+            flex-shrink: 0;
+        }
+
+        .source-dot.ok {
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.65);
+        }
+
+        .source-dot.err {
+            background: #ef4444;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.75);
+        }
+
         .tab-content {
             display: none;
         }
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.2s ease;
+            animation: fadeIn 0.22s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -164,9 +271,10 @@
         .drawer-panel {
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
             padding: 18px 20px;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
+            box-shadow: var(--inner-highlight), var(--shadow-card);
         }
 
         .drawer-panel.hidden {
@@ -177,22 +285,39 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
             margin-bottom: 14px;
+            flex-wrap: wrap;
         }
 
         .drawer-header h3 {
-            font-size: 0.98rem;
-            font-weight: 600;
+            font-size: 0.96rem;
+            font-weight: 650;
+            color: var(--text-main);
+        }
+
+        .drawer-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
         .config-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
             gap: 12px;
-            margin-bottom: 14px;
         }
 
-        /* Поля и кнопки */
+        .source-item {
+            background: var(--bg-surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Поля, селекты и кнопки */
         .form-group {
             display: flex;
             flex-direction: column;
@@ -200,11 +325,11 @@
         }
 
         .form-group label {
-            font-size: 0.78rem;
+            font-size: 0.73rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         input, select, textarea {
@@ -212,78 +337,106 @@
             border: 1px solid var(--border);
             color: var(--text-main);
             padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 0.92rem;
+            border-radius: 9px;
+            font-size: 0.9rem;
+            font-family: inherit;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.18s, box-shadow 0.18s, background-color 0.18s;
             width: 100%;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 34px;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b9bb4' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #55667f;
+        }
+
+        input:hover, select:hover, textarea:hover {
+            border-color: var(--border-strong);
         }
 
         input:focus, select:focus, textarea:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+            background-color: #0d1422;
         }
 
         .btn-primary {
-            background: var(--accent);
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
             color: #fff;
-            border: none;
+            border: 1px solid rgba(96, 165, 250, 0.35);
             padding: 11px 22px;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background 0.2s, transform 0.1s;
+            font-weight: 650;
+            font-size: 0.93rem;
+            transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 6px 20px -4px rgba(37, 99, 235, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.22);
         }
 
         .btn-primary:hover {
-            background: var(--accent-hover);
+            filter: brightness(1.08);
+            box-shadow: 0 8px 26px -4px rgba(59, 130, 246, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.28);
         }
 
         .btn-primary:active {
-            transform: scale(0.99);
+            transform: translateY(1px) scale(0.99);
         }
 
         .btn-copy {
-            background: var(--bg-elevated);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             color: var(--text-muted);
             cursor: pointer;
             padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 0.78rem;
+            border-radius: 7px;
+            font-size: 0.77rem;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.18s;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .btn-copy:hover {
-            border-color: var(--accent);
+            border-color: rgba(59, 130, 246, 0.55);
             color: var(--text-main);
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .btn-copy.copied {
             background: rgba(16, 185, 129, 0.16);
-            border-color: #10b981;
+            border-color: rgba(16, 185, 129, 0.5);
             color: #34d399;
         }
 
-        /* Компактная верхняя панель управления гачей */
+        /* Панель управления гачей */
         .gacha-bar {
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
+            border-radius: var(--radius-lg);
             padding: 18px 20px;
             margin-bottom: 22px;
             display: grid;
-            grid-template-columns: 1.2fr 1.5fr 0.8fr auto auto;
+            grid-template-columns: 1.25fr 1.6fr 0.75fr auto auto;
             gap: 14px;
             align-items: end;
+            box-shadow: var(--inner-highlight), var(--shadow-card);
         }
 
         @media (max-width: 1024px) {
@@ -304,21 +457,30 @@
         .checkbox-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
+            justify-content: center;
+            gap: 9px;
+            padding: 0 14px;
             background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 9px;
             font-size: 0.86rem;
-            color: var(--text-main);
+            font-weight: 600;
+            color: var(--text-soft);
             cursor: pointer;
             user-select: none;
             height: 41px;
+            transition: border-color 0.18s, color 0.18s;
+        }
+
+        .checkbox-pill:hover {
+            border-color: var(--border-strong);
+            color: var(--text-main);
         }
 
         .checkbox-pill input[type="checkbox"] {
             width: 16px;
             height: 16px;
+            padding: 0;
             accent-color: var(--accent);
             cursor: pointer;
         }
@@ -328,31 +490,69 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            gap: 12px;
+            margin-bottom: 12px;
             min-height: 32px;
         }
 
         .stage-title {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .roll-stage {
-            background: var(--bg-surface);
+            position: relative;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08), transparent 65%),
+                var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 24px;
-            min-height: 320px;
+            border-radius: var(--radius-lg);
+            padding: 26px;
+            min-height: 340px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            box-shadow: var(--inner-highlight), var(--shadow-card);
         }
 
         .roll-stage.has-items {
             justify-content: flex-start;
+        }
+
+        .empty-stage-box {
+            max-width: 440px;
+            margin: auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 10px;
+        }
+
+        .empty-stage-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            display: grid;
+            place-items: center;
+            color: #60a5fa;
+        }
+
+        .empty-stage-box h3 {
+            font-size: 1.05rem;
+            font-weight: 650;
+            color: var(--text-main);
+        }
+
+        .empty-stage-box p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
         }
 
         .roll-grid {
@@ -363,32 +563,61 @@
         }
 
         .roll-grid.single-mode {
-            grid-template-columns: minmax(0, 620px);
+            grid-template-columns: minmax(0, 640px);
             justify-content: center;
         }
 
         @media (max-width: 600px) {
+            .roll-stage {
+                padding: 16px;
+            }
             .roll-grid {
                 grid-template-columns: 1fr;
             }
         }
 
+        /* Карточка выпавшего лота */
         .lot-card {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-top: 3px solid var(--rarity-color);
-            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 90% 45% at 50% 0%, rgba(var(--rarity-rgb), 0.16), transparent 72%),
+                var(--bg-surface-2);
+            border: 1px solid rgba(var(--rarity-rgb), 0.28);
+            border-top: 2px solid var(--rarity-color);
+            border-radius: var(--radius-md);
             padding: 18px 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
-            animation: cardReveal 0.25s ease-out;
+            gap: 12px;
+            box-shadow: 0 10px 28px -8px rgba(0, 0, 0, 0.48), var(--inner-highlight);
+            animation: cardReveal 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+            transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .lot-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(var(--rarity-rgb), 0.5);
+        }
+
+        .lot-card.tier-high {
+            box-shadow:
+                0 12px 34px -8px rgba(var(--rarity-rgb), 0.25),
+                0 0 0 1px rgba(var(--rarity-rgb), 0.15),
+                var(--inner-highlight);
+        }
+
+        .lot-card.tier-ultra::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, transparent 30%, rgba(var(--rarity-rgb), 0.08) 50%, transparent 70%);
+            pointer-events: none;
         }
 
         @keyframes cardReveal {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(10px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .lot-top {
@@ -399,73 +628,133 @@
         }
 
         .lot-category {
-            font-size: 0.78rem;
-            font-weight: 600;
+            font-size: 0.74rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lot-id-tag {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 0.74rem;
+            padding: 2px 7px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-soft);
+            border: 1px solid var(--border);
         }
 
         .lot-title {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 1.24rem;
+            font-weight: 750;
             color: #fff;
-            line-height: 1.35;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
         }
 
         .lot-badge-row {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .lot-rarity-badge {
             display: inline-flex;
             align-items: center;
-            padding: 3px 10px;
+            gap: 6px;
+            padding: 4px 10px;
             border-radius: 999px;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             font-weight: 700;
-            background-color: var(--rarity-color);
-            color: #fff;
+            background: rgba(var(--rarity-rgb), 0.14);
+            border: 1px solid rgba(var(--rarity-rgb), 0.42);
+            color: var(--rarity-text);
+            font-variant-numeric: tabular-nums;
         }
 
-        .lot-rarity-badge.dark-txt {
-            color: #0b0e14;
+        .lot-rarity-badge::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--rarity-color);
+            box-shadow: 0 0 8px var(--rarity-color);
+        }
+
+        .power-meter {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .power-pip {
+            width: 6px;
+            height: 10px;
+            border-radius: 2px;
+            background: rgba(148, 163, 184, 0.15);
+        }
+
+        .power-pip.active {
+            background: var(--rarity-color);
+            box-shadow: 0 0 6px rgba(var(--rarity-rgb), 0.45);
         }
 
         .lot-desc {
-            background: rgba(11, 14, 20, 0.45);
-            padding: 12px 14px;
-            border-radius: 8px;
+            background: rgba(6, 9, 17, 0.58);
+            padding: 13px 14px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
             border-left: 3px solid var(--rarity-color);
-            font-size: 0.92rem;
+            font-size: 0.91rem;
             color: #dbe4f0;
             white-space: pre-wrap;
             flex-grow: 1;
+            line-height: 1.6;
         }
 
-        /* Компактная лента истории под сценой */
+        /* Лента истории */
         .history-section {
-            margin-top: 24px;
+            margin-top: 22px;
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
+            border-radius: var(--radius-lg);
             padding: 16px 20px;
+            box-shadow: var(--inner-highlight);
         }
 
         .history-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
             margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .history-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .history-header h3 {
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.07em;
             color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .history-hint {
+            font-size: 0.76rem;
+            color: #5d708c;
         }
 
         .history-strip {
@@ -486,18 +775,28 @@
 
         .history-chip {
             flex: 0 0 auto;
-            min-width: 190px;
-            max-width: 240px;
-            background: var(--bg-elevated);
+            min-width: 200px;
+            max-width: 245px;
+            background: var(--bg-surface-2);
             border: 1px solid var(--border);
             border-left: 3px solid var(--rarity-color);
-            border-radius: 8px;
-            padding: 9px 12px;
+            border-radius: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .history-chip:hover {
+            transform: translateY(-1px);
+            border-color: rgba(var(--rarity-rgb), 0.5);
+            background: var(--bg-elevated);
         }
 
         .history-chip-title {
-            font-size: 0.88rem;
-            font-weight: 600;
+            font-size: 0.86rem;
+            font-weight: 650;
             color: var(--text-main);
             white-space: nowrap;
             overflow: hidden;
@@ -507,21 +806,24 @@
         .history-chip-meta {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 0.75rem;
             color: var(--text-muted);
-            margin-top: 3px;
+            margin-top: 4px;
+            gap: 8px;
         }
 
         /* База данных */
         .db-toolbar {
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
+            border-radius: var(--radius-lg);
             padding: 18px 20px;
             margin-bottom: 18px;
             display: flex;
             flex-direction: column;
             gap: 14px;
+            box-shadow: var(--inner-highlight), var(--shadow-card);
         }
 
         .db-row-top {
@@ -615,10 +917,11 @@
         .rating-inputs input[type="number"] {
             width: 58px;
             padding: 3px 6px;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 700;
             text-align: center;
             border-radius: 6px;
+            font-variant-numeric: tabular-nums;
             -moz-appearance: textfield;
         }
 
@@ -660,6 +963,7 @@
 
         .range-track-fill {
             background: var(--accent);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
         }
 
         .range-slider-wrap input[type="range"] {
@@ -678,9 +982,11 @@
             appearance: none;
         }
 
-        .range-slider-wrap input[type="range"]:focus {
+        .range-slider-wrap input[type="range"]:focus,
+        .range-slider-wrap input[type="range"]:focus-visible {
             border: none;
             box-shadow: none;
+            outline: none;
         }
 
         .range-slider-wrap input[type="range"]::-webkit-slider-thumb {
@@ -692,18 +998,22 @@
             border-radius: 50%;
             background: #f8fafc;
             border: 2px solid var(--accent);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
             cursor: grab;
-            transition: transform 0.12s ease;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .range-slider-wrap input[type="range"]:focus-visible::-webkit-slider-thumb {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.35);
         }
 
         .range-slider-wrap input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.12);
+            transform: scale(1.14);
         }
 
         .range-slider-wrap input[type="range"]::-webkit-slider-thumb:active {
             cursor: grabbing;
-            transform: scale(1.16);
+            transform: scale(1.18);
         }
 
         .range-slider-wrap input[type="range"]::-moz-range-thumb {
@@ -713,7 +1023,7 @@
             border-radius: 50%;
             background: #f8fafc;
             border: 2px solid var(--accent);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
             cursor: grab;
         }
 
@@ -723,8 +1033,8 @@
             justify-content: space-between;
             align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
+            margin-bottom: 14px;
+            font-size: 0.88rem;
             color: var(--text-muted);
         }
 
@@ -732,7 +1042,7 @@
             display: inline-flex;
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 9px;
             padding: 3px;
             gap: 3px;
         }
@@ -741,22 +1051,24 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 5px 11px;
+            padding: 5px 12px;
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.15s ease;
         }
 
         .view-btn.active {
             background: var(--bg-elevated);
             color: var(--text-main);
+            box-shadow: var(--inner-highlight);
         }
 
         .db-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 15px;
         }
 
         .db-grid.list-view {
@@ -765,20 +1077,23 @@
         }
 
         .db-card {
-            background: var(--bg-surface);
+            background:
+                radial-gradient(ellipse 80% 40% at 50% 0%, rgba(var(--rarity-rgb), 0.1), transparent 70%),
+                var(--bg-surface);
             border: 1px solid var(--border);
-            border-top: 3px solid var(--rarity-color);
-            border-radius: 10px;
+            border-top: 2px solid var(--rarity-color);
+            border-radius: var(--radius-md);
             padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
+            box-shadow: var(--inner-highlight);
+            transition: border-color 0.18s ease, transform 0.15s ease;
         }
 
-        .db-grid.list-view .db-card {
-            border-top: 1px solid var(--border);
-            border-left: 4px solid var(--rarity-color);
-            padding: 12px 16px;
+        .db-card:hover {
+            border-color: rgba(var(--rarity-rgb), 0.42);
+            transform: translateY(-1px);
         }
 
         .db-card-header {
@@ -790,14 +1105,17 @@
 
         .db-card-title {
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.04rem;
             color: #fff;
+            line-height: 1.35;
         }
 
         .db-card-num {
-            font-size: 0.78rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 0.76rem;
             color: var(--text-muted);
             background: var(--bg-elevated);
+            border: 1px solid var(--border);
             padding: 2px 8px;
             border-radius: 6px;
             white-space: nowrap;
@@ -807,68 +1125,167 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .db-card-meta-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .db-card-desc {
-            font-size: 0.9rem;
-            color: #cbd5e1;
-            background: rgba(11, 14, 20, 0.35);
+            font-size: 0.89rem;
+            color: var(--text-soft);
+            background: rgba(6, 9, 17, 0.5);
+            border: 1px solid var(--border);
             padding: 10px 12px;
             border-radius: 8px;
             white-space: pre-wrap;
             flex-grow: 1;
+            line-height: 1.55;
+        }
+
+        /* Компактная строчная раскладка для режима списка на десктопе */
+        @media (min-width: 820px) {
+            .db-grid.list-view .db-card {
+                border-top: 1px solid var(--border);
+                border-left: 4px solid var(--rarity-color);
+                display: grid;
+                grid-template-columns: minmax(220px, 1.1fr) minmax(280px, 1.8fr) auto;
+                grid-template-areas:
+                    "header desc actions"
+                    "meta desc actions";
+                gap: 6px 18px;
+                align-items: center;
+                padding: 14px 18px;
+                background: var(--bg-surface);
+            }
+
+            .db-grid.list-view .db-card-header {
+                grid-area: header;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .db-grid.list-view .db-card-num {
+                order: -1;
+            }
+
+            .db-grid.list-view .db-card-meta {
+                grid-area: meta;
+                justify-content: flex-start;
+            }
+
+            .db-grid.list-view .db-card-desc {
+                grid-area: desc;
+                padding: 8px 12px;
+            }
+
+            .db-grid.list-view .db-card-actions {
+                grid-area: actions;
+            }
+        }
+
+        @media (max-width: 819px) {
+            .db-grid.list-view .db-card {
+                border-top: 1px solid var(--border);
+                border-left: 4px solid var(--rarity-color);
+            }
         }
 
         /* Вкладка предложения лота */
         .submit-card {
-            max-width: 760px;
+            max-width: 780px;
             margin: 0 auto;
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 24px;
+            border-radius: var(--radius-lg);
+            padding: 26px;
+            box-shadow: var(--inner-highlight), var(--shadow-card);
+        }
+
+        .submit-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .submit-card h2 {
-            font-size: 1.2rem;
+            font-size: 1.24rem;
+            font-weight: 700;
             margin-bottom: 6px;
         }
 
         .submit-card p {
             color: var(--text-muted);
             font-size: 0.9rem;
-            margin-bottom: 20px;
         }
 
         .submit-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
             gap: 14px;
             margin-bottom: 14px;
         }
 
+        .rating-input-with-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-input-with-badge input {
+            width: 90px;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+        }
+
         .preview-box {
-            margin-top: 16px;
-            background: var(--bg-main);
+            margin-top: 18px;
+            background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 14px;
+            border-radius: 10px;
+            padding: 13px 15px;
             font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             color: #93c5fd;
             white-space: pre-wrap;
             word-break: break-word;
+            line-height: 1.55;
         }
 
         .submit-hint {
             margin-top: 12px;
             font-size: 0.84rem;
             color: var(--text-muted);
+            padding: 9px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
         }
 
+        .submit-hint.is-error {
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .submit-hint.is-success {
+            color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        /* Пагинация */
         .pagination-controls {
             display: flex;
             justify-content: center;
@@ -878,23 +1295,26 @@
         }
 
         .page-info {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
         }
 
         .btn-page {
             background: var(--bg-surface);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 8px 14px;
-            border-radius: 8px;
+            padding: 8px 15px;
+            border-radius: 9px;
             cursor: pointer;
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             font-weight: 600;
+            transition: all 0.15s ease;
         }
 
         .btn-page:hover:not(:disabled) {
             border-color: var(--accent);
+            background: var(--bg-elevated);
         }
 
         .btn-page:disabled {
@@ -903,23 +1323,57 @@
         }
 
         .status-indicator {
-            padding: 3px 8px;
+            padding: 4px 9px;
             border-radius: 6px;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             display: inline-block;
-            margin-top: 4px;
             font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            align-self: flex-start;
         }
 
-        .status-success { background: rgba(16, 185, 129, 0.16); color: #34d399; }
-        .status-error { background: rgba(239, 68, 68, 0.16); color: #f87171; }
-        .status-loading { background: rgba(245, 158, 11, 0.16); color: #fbbf24; }
+        .status-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+        .status-error { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+        .status-loading { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
 
         .placeholder-text {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.96rem;
             text-align: center;
             margin: auto;
+        }
+
+        /* Лёгкие Toast-уведомления */
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 100;
+            background: var(--bg-elevated);
+            color: var(--text-main);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
@@ -928,31 +1382,62 @@
 <div class="container">
     <header class="topbar">
         <div class="brand">
-            <h1>Chaos Gacha <span class="brand-badge">Blue Edition</span></h1>
-            <p>Боги Хаоса благословили тебя!</p>
+            <div class="brand-emblem" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L15.8 8.2L22 12L15.8 15.8L12 22L8.2 15.8L2 12L8.2 8.2Z"/>
+                    <circle cx="12" cy="12" r="2.5"/>
+                </svg>
+            </div>
+            <div>
+                <h1>Chaos Gacha <span class="brand-badge">Blue Edition</span></h1>
+                <p>Боги Хаоса благословили тебя!</p>
+            </div>
         </div>
 
         <div class="topbar-actions">
             <nav class="tabs" role="tablist">
-                <button type="button" class="tab-btn active" data-tab="gacha">Симулятор</button>
-                <button type="button" class="tab-btn" data-tab="database">База данных</button>
-                <button type="button" class="tab-btn" data-tab="submit">Предложить лот</button>
+                <button type="button" class="tab-btn active" data-tab="gacha" role="tab" aria-selected="true">Симулятор</button>
+                <button type="button" class="tab-btn" data-tab="database" role="tab" aria-selected="false">
+                    База данных <span class="tab-pill-count" id="total-db-badge">0</span>
+                </button>
+                <button type="button" class="tab-btn" data-tab="submit" role="tab" aria-selected="false">Предложить лот</button>
             </nav>
-            <button type="button" class="btn-ghost" id="btn-toggle-sources">Источники баз</button>
+            <button type="button" class="btn-ghost" id="btn-toggle-sources">
+                <span class="source-dot" id="global-source-dot" aria-hidden="true"></span>
+                <span>Источники баз</span>
+            </button>
         </div>
     </header>
 
     <section class="drawer-panel hidden" id="sources-drawer">
         <div class="drawer-header">
-            <h3>Файлы баз данных (.txt)</h3>
+            <div>
+                <h3>Источники текстовых баз (.txt)</h3>
+                <div class="drawer-sub">Загружаются без кэша относительно расположения index.html</div>
+            </div>
             <button type="button" class="btn-primary" id="btn-reload-db" style="padding: 8px 14px; font-size: 0.85rem;">Обновить базы</button>
         </div>
         <div class="config-grid">
-            <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"><span id="status-abilities" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"><span id="status-items" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"><span id="status-traits" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"><span id="status-skills" class="status-indicator status-loading">Ожидание...</span></div>
-            <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"><span id="status-familiars" class="status-indicator status-loading">Ожидание...</span></div>
+            <div class="source-item">
+                <div class="form-group"><label>Способности</label><input type="text" id="path-abilities" value="ability.txt"></div>
+                <span id="status-abilities" class="status-indicator status-loading">Ожидание...</span>
+            </div>
+            <div class="source-item">
+                <div class="form-group"><label>Предметы</label><input type="text" id="path-items" value="item.txt"></div>
+                <span id="status-items" class="status-indicator status-loading">Ожидание...</span>
+            </div>
+            <div class="source-item">
+                <div class="form-group"><label>Черты</label><input type="text" id="path-traits" value="trait.txt"></div>
+                <span id="status-traits" class="status-indicator status-loading">Ожидание...</span>
+            </div>
+            <div class="source-item">
+                <div class="form-group"><label>Навыки</label><input type="text" id="path-skills" value="skill.txt"></div>
+                <span id="status-skills" class="status-indicator status-loading">Ожидание...</span>
+            </div>
+            <div class="source-item">
+                <div class="form-group"><label>Фамильяры</label><input type="text" id="path-familiars" value="familiar.txt"></div>
+                <span id="status-familiars" class="status-indicator status-loading">Ожидание...</span>
+            </div>
         </div>
     </section>
 
@@ -960,7 +1445,7 @@
     <main id="tab-gacha" class="tab-content active">
         <section class="gacha-bar">
             <div class="form-group">
-                <label>Категория</label>
+                <label for="roll-category">Категория</label>
                 <select id="roll-category">
                     <option value="random">Случайная (Random)</option>
                     <option value="abilities">Способности (Ability)</option>
@@ -972,7 +1457,7 @@
             </div>
 
             <div class="form-group">
-                <label>Билет</label>
+                <label for="roll-ticket">Билет</label>
                 <select id="roll-ticket">
                     <option value="all_random" selected>Рандом [0.1 – 10.0]</option>
                     <option value="bronze">Бронзовый [0.1 – 3.3]</option>
@@ -987,7 +1472,7 @@
             </div>
 
             <div class="form-group">
-                <label>Круток</label>
+                <label for="roll-count">Круток</label>
                 <select id="roll-count">
                     <option value="1" selected>1</option>
                     <option value="2">2</option>
@@ -1017,13 +1502,24 @@
             <button type="button" class="btn-copy" id="btn-copy-all" style="display: none;">Скопировать весь мультиролл</button>
         </div>
 
-        <section class="roll-stage" id="roll-stage">
-            <div class="placeholder-text">Выберите параметры сверху и нажмите «Испытать Хаос»</div>
+        <section class="roll-stage" id="roll-stage" aria-live="polite">
+            <div class="empty-stage-box">
+                <div class="empty-stage-icon" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </div>
+                <h3>Готов к призыву Хаоса</h3>
+                <p>Выберите категорию, билет и количество круток выше, затем нажмите «Испытать Хаос».</p>
+            </div>
         </section>
 
         <section class="history-section">
             <div class="history-header">
-                <h3>История роллов (<span id="history-count">0</span>)</h3>
+                <div class="history-title-wrap">
+                    <h3>История роллов (<span id="history-count" class="tabular">0</span>)</h3>
+                    <span class="history-hint">Нажмите на карточку, чтобы скопировать</span>
+                </div>
                 <button type="button" class="btn-copy" id="btn-clear-history">Очистить</button>
             </div>
             <div class="history-strip" id="gacha-history-list">
@@ -1037,21 +1533,21 @@
         <div class="db-toolbar">
             <div class="db-row-top">
                 <div class="form-group">
-                    <label>Поиск по названию</label>
+                    <label for="search-name">Поиск по названию</label>
                     <div class="input-clear-wrap">
                         <input type="text" id="search-name" placeholder="Название или #ID...">
                         <button type="button" class="btn-input-clear" data-clear="search-name" title="Очистить" aria-label="Очистить поиск по названию">×</button>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Поиск по описанию</label>
+                    <label for="search-desc">Поиск по описанию</label>
                     <div class="input-clear-wrap">
                         <input type="text" id="search-desc" placeholder="Слова в описании...">
                         <button type="button" class="btn-input-clear" data-clear="search-desc" title="Очистить" aria-label="Очистить поиск по описанию">×</button>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Категория</label>
+                    <label for="filter-category">Категория</label>
                     <select id="filter-category">
                         <option value="all">Все категории</option>
                         <option value="abilities">Способности</option>
@@ -1062,7 +1558,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Сортировка</label>
+                    <label for="filter-sort">Сортировка</label>
                     <select id="filter-sort">
                         <option value="num-asc">По ID (1 → 9)</option>
                         <option value="rate-desc">Рейтинг (Высокий)</option>
@@ -1090,7 +1586,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Ранг редкости</label>
+                    <label for="filter-rarity-class">Ранг редкости</label>
                     <select id="filter-rarity-class">
                         <option value="all">Все ранги</option>
                         <option value="custom" hidden>Свой диапазон</option>
@@ -1108,7 +1604,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>На странице</label>
+                    <label for="filter-limit">На странице</label>
                     <select id="filter-limit">
                         <option value="12">12</option>
                         <option value="24">24</option>
@@ -1124,8 +1620,8 @@
 
         <div class="db-meta-bar">
             <div>
-                Найдено: <strong id="db-counter" style="color: var(--text-main);">0</strong>
-                <span id="db-limit-note" style="margin-left: 8px; color: #60a5fa;"></span>
+                Найдено: <strong id="db-counter" class="tabular" style="color: var(--text-main);">0</strong>
+                <span id="db-limit-note" class="tabular" style="margin-left: 8px; color: #60a5fa;"></span>
             </div>
             <div class="view-switcher">
                 <button type="button" class="view-btn active" data-view="grid">Карточки</button>
@@ -1145,12 +1641,16 @@
     <!-- ВКЛАДКА 3: ПРЕДЛОЖИТЬ СВОЙ ЛОТ -->
     <section id="tab-submit" class="tab-content">
         <div class="submit-card">
-            <h2>Предложить новый лот</h2>
-            <p>Заполните поля — ниже автоматически сформируется строка для базы данных. Нажмите «Скопировать и открыть Google Форму», чтобы отправить лот в таблицу.</p>
+            <div class="submit-card-head">
+                <div>
+                    <h2>Предложить новый лот</h2>
+                    <p>Заполните поля — ниже автоматически сформируется строка в формате базы данных.</p>
+                </div>
+            </div>
 
             <div class="submit-grid">
                 <div class="form-group">
-                    <label>Категория</label>
+                    <label for="custom-lot-category">Категория</label>
                     <select id="custom-lot-category">
                         <option value="abilities">Способности (ability.txt)</option>
                         <option value="items">Предметы (item.txt)</option>
@@ -1160,28 +1660,31 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>ID (автоподстановка)</label>
-                    <input type="number" id="custom-lot-id" min="1" placeholder="1">
+                    <label for="custom-lot-id">ID (автоподстановка)</label>
+                    <input type="number" id="custom-lot-id" class="tabular" min="1" placeholder="1">
                 </div>
                 <div class="form-group">
-                    <label>Рейтинг (0.1 – 10.0)</label>
-                    <input type="number" id="custom-lot-rating" min="0.1" max="10.0" step="0.1" value="3.0">
+                    <label for="custom-lot-rating">Рейтинг (0.1 – 10.0)</label>
+                    <div class="rating-input-with-badge">
+                        <input type="number" id="custom-lot-rating" min="0.1" max="10.0" step="0.1" value="3.0">
+                        <span class="lot-rarity-badge" id="custom-lot-rarity-badge">Редкий</span>
+                    </div>
                 </div>
             </div>
 
             <div class="form-group" style="margin-bottom: 14px;">
-                <label>Название лота</label>
+                <label for="custom-lot-name">Название лота</label>
                 <input type="text" id="custom-lot-name" placeholder="Например: Клинок Блуждающей Тени">
             </div>
 
             <div class="form-group" style="margin-bottom: 16px;">
-                <label>Описание</label>
+                <label for="custom-lot-desc">Описание</label>
                 <textarea id="custom-lot-desc" rows="4" placeholder="Опишите свойства, механику или лор лота..."></textarea>
             </div>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button type="button" class="btn-primary" id="btn-open-google-form">Скопировать и открыть Google Форму ↗</button>
-                <button type="button" class="btn-copy" id="btn-copy-custom-lot" style="padding: 11px 16px;">Только скопировать строку</button>
+                <button type="button" class="btn-copy" id="btn-copy-custom-lot" style="padding: 11px 16px; font-size: 0.86rem;">Только скопировать строку</button>
             </div>
 
             <div class="preview-box" id="custom-lot-preview">[ability.txt] 1. Название лота, 3.0 #Описание</div>
@@ -1190,16 +1693,21 @@
     </section>
 </div>
 
+<div class="toast" id="app-toast" role="status" aria-live="polite"></div>
+
 <script>
     /* Укажите сюда ссылку на вашу Google Форму (или предзаполненную ссылку с {ENTRY}) */
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdCCQ8FWcT1jVjwmoE47bgisxq8NzD_UGZk8ZD-uuEEEi4GVQ/viewform?usp=publish-editor';
 
     const HISTORY_STORAGE_KEY = 'chaos_gacha_history_v1';
     const gachaDatabase = { abilities: [], items: [], traits: [], skills: [], familiars: [] };
+    const sourceStatusState = { abilities: 'loading', items: 'loading', traits: 'loading', skills: 'loading', familiars: 'loading' };
+
     let currentRollResults = [];
     let rollHistory = [];
     let dbCurrentPage = 1;
     let dbViewMode = 'grid';
+    let toastTimer = null;
 
     const categoriesMeta = {
         abilities: { name: 'Способность', icon: '🔮', file: 'ability.txt' },
@@ -1223,34 +1731,57 @@
 
     function getRarityMeta(rating) {
         const r = parseFloat(rating);
-        if (isNaN(r) || r < 0.1) return { label: 'Неизвестно', color: '#334155', darkTxt: false };
-        if (r < 1.0) return { label: 'Мусор', color: '#64748b', darkTxt: false };
-        if (r < 2.0) return { label: 'Обычный', color: '#94a3b8', darkTxt: true };
-        if (r < 3.0) return { label: 'Необычный', color: '#22c55e', darkTxt: true };
-        if (r < 4.0) return { label: 'Редкий', color: '#3b82f6', darkTxt: false };
-        if (r < 5.0) return { label: 'Элитный', color: '#a855f7', darkTxt: false };
-        if (r < 6.0) return { label: 'Эпический', color: '#ec4899', darkTxt: false };
-        if (r < 7.0) return { label: 'Легендарный', color: '#ef4444', darkTxt: false };
-        if (r < 8.0) return { label: 'Мифический', color: '#f97316', darkTxt: false };
-        if (r < 9.0) return { label: 'Божественный', color: '#eab308', darkTxt: true };
-        if (r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', darkTxt: true };
-        return { label: 'Неизвестно', color: '#334155', darkTxt: false };
+        if (isNaN(r) || r < 0.1) return { label: 'Неизвестно', color: '#475569', rgb: '71, 85, 105', textColor: '#cbd5e1', darkTxt: false };
+        if (r < 1.0) return { label: 'Мусор', color: '#64748b', rgb: '100, 116, 139', textColor: '#94a3b8', darkTxt: false };
+        if (r < 2.0) return { label: 'Обычный', color: '#94a3b8', rgb: '148, 163, 184', textColor: '#e2e8f0', darkTxt: true };
+        if (r < 3.0) return { label: 'Необычный', color: '#22c55e', rgb: '34, 197, 94', textColor: '#4ade80', darkTxt: true };
+        if (r < 4.0) return { label: 'Редкий', color: '#3b82f6', rgb: '59, 130, 246', textColor: '#60a5fa', darkTxt: false };
+        if (r < 5.0) return { label: 'Элитный', color: '#a855f7', rgb: '168, 85, 247', textColor: '#c084fc', darkTxt: false };
+        if (r < 6.0) return { label: 'Эпический', color: '#ec4899', rgb: '236, 72, 153', textColor: '#f472b6', darkTxt: false };
+        if (r < 7.0) return { label: 'Легендарный', color: '#ef4444', rgb: '239, 68, 68', textColor: '#f87171', darkTxt: false };
+        if (r < 8.0) return { label: 'Мифический', color: '#f97316', rgb: '249, 115, 22', textColor: '#fb923c', darkTxt: false };
+        if (r < 9.0) return { label: 'Божественный', color: '#eab308', rgb: '234, 179, 8', textColor: '#facc15', darkTxt: true };
+        if (r <= 10.0) return { label: 'Трансцендентный', color: '#06b6d4', rgb: '6, 182, 212', textColor: '#22d3ee', darkTxt: true };
+        return { label: 'Неизвестно', color: '#475569', rgb: '71, 85, 105', textColor: '#cbd5e1', darkTxt: false };
+    }
+
+    function applyRarityCssVars(el, meta) {
+        el.style.setProperty('--rarity-color', meta.color);
+        el.style.setProperty('--rarity-rgb', meta.rgb);
+        el.style.setProperty('--rarity-text', meta.textColor);
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('app-toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 1800);
     }
 
     function formatLotForCopy(item) {
         const meta = getRarityMeta(item.rating);
-        const catMeta = categoriesMeta[item.categoryKey];
-        return `[${catMeta.name}] #${item.id} ${item.name}\nРанг: ${meta.label} (${item.rating.toFixed(1)})\nОписание: ${item.description || 'Отсутствует'}`;
+        const catMeta = categoriesMeta[item.categoryKey] || { name: 'Лот' };
+        return `[${catMeta.name}] #${item.id} ${item.name}\nРанг: ${meta.label} (${Number(item.rating).toFixed(1)})\nОписание: ${item.description || 'Отсутствует'}`;
     }
 
     function copyTextWithFeedback(button, text, defaultLabel, successLabel) {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+            showToast('Буфер обмена недоступен в этом браузере');
+            return;
+        }
         navigator.clipboard.writeText(text).then(() => {
-            button.textContent = successLabel;
-            button.classList.add('copied');
-            setTimeout(() => {
-                button.textContent = defaultLabel;
-                button.classList.remove('copied');
-            }, 1500);
+            if (button) {
+                button.textContent = successLabel;
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = defaultLabel;
+                    button.classList.remove('copied');
+                }, 1500);
+            }
+            showToast('Скопировано в буфер обмена');
         }).catch(err => console.error(err));
     }
 
@@ -1271,9 +1802,11 @@
         } catch (e) {}
     }
 
-    function addToHistory(item) {
-        rollHistory.unshift(item);
-        if (rollHistory.length > 100) rollHistory.pop();
+    function pushHistoryBatch(items) {
+        items.forEach(item => {
+            rollHistory.unshift(item);
+            if (rollHistory.length > 100) rollHistory.pop();
+        });
         saveHistoryToStorage();
         renderHistory();
     }
@@ -1295,23 +1828,30 @@
             const meta = getRarityMeta(item.rating);
             const catMeta = categoriesMeta[item.categoryKey] || { name: 'Лот', icon: '•' };
 
-            const chip = document.createElement('div');
+            const chip = document.createElement('button');
+            chip.type = 'button';
             chip.className = 'history-chip';
-            chip.style.setProperty('--rarity-color', meta.color);
+            chip.title = 'Нажмите, чтобы скопировать лот';
+            applyRarityCssVars(chip, meta);
+
+            chip.addEventListener('click', () => {
+                copyTextWithFeedback(null, formatLotForCopy(item), '', '');
+            });
 
             const title = document.createElement('div');
             title.className = 'history-chip-title';
-            title.title = item.name;
             title.textContent = `${catMeta.icon} ${item.name}`;
 
             const sub = document.createElement('div');
             sub.className = 'history-chip-meta';
 
             const left = document.createElement('span');
+            left.className = 'tabular';
             left.textContent = `#${item.id} · ${meta.label}`;
 
             const right = document.createElement('span');
-            right.style.color = meta.color;
+            right.className = 'tabular';
+            right.style.color = meta.textColor;
             right.style.fontWeight = '700';
             right.textContent = Number(item.rating).toFixed(1);
 
@@ -1322,20 +1862,28 @@
     }
 
     /* Безопасное создание карточки лота через DOM API */
-    function createRollCardElement(item) {
+    function createRollCardElement(item, index) {
         const meta = getRarityMeta(item.rating);
         const catMeta = categoriesMeta[item.categoryKey];
 
         const card = document.createElement('article');
         card.className = 'lot-card';
-        card.style.setProperty('--rarity-color', meta.color);
+        if (item.rating >= 6.0) card.classList.add('tier-high');
+        if (item.rating >= 8.0) card.classList.add('tier-ultra');
+        card.style.animationDelay = `${Math.min(index * 45, 360)}ms`;
+        applyRarityCssVars(card, meta);
 
         const top = document.createElement('div');
         top.className = 'lot-top';
 
         const cat = document.createElement('div');
         cat.className = 'lot-category';
-        cat.textContent = `${catMeta.icon} ${catMeta.name} · #${item.id}`;
+        const catLabel = document.createElement('span');
+        catLabel.textContent = `${catMeta.icon} ${catMeta.name}`;
+        const idTag = document.createElement('span');
+        idTag.className = 'lot-id-tag tabular';
+        idTag.textContent = `#${item.id}`;
+        cat.append(catLabel, idTag);
 
         const copyBtn = document.createElement('button');
         copyBtn.type = 'button';
@@ -1355,9 +1903,20 @@
         badgeRow.className = 'lot-badge-row';
 
         const badge = document.createElement('span');
-        badge.className = `lot-rarity-badge ${meta.darkTxt ? 'dark-txt' : ''}`;
-        badge.textContent = `${meta.label} (${item.rating.toFixed(1)})`;
-        badgeRow.appendChild(badge);
+        badge.className = 'lot-rarity-badge';
+        badge.textContent = `${meta.label} · ${item.rating.toFixed(1)}`;
+
+        const meter = document.createElement('div');
+        meter.className = 'power-meter';
+        meter.title = `Сила: ${item.rating.toFixed(1)} из 10.0`;
+        const filledPips = Math.max(1, Math.min(10, Math.round(item.rating)));
+        for (let p = 1; p <= 10; p++) {
+            const pip = document.createElement('span');
+            pip.className = `power-pip ${p <= filledPips ? 'active' : ''}`;
+            meter.appendChild(pip);
+        }
+
+        badgeRow.append(badge, meter);
 
         const desc = document.createElement('div');
         desc.className = 'lot-desc';
@@ -1371,7 +1930,8 @@
     function parseChaosFile(text) {
         const items = [];
         if (!text) return items;
-        const rawBlocks = text.split(/(?=\n\d+\.)|(?=^\d+\.)/m);
+        const normalized = text.replace(/\r\n?/g, '\n');
+        const rawBlocks = normalized.split(/(?=\n\d+\.)|(?=^\d+\.)/m);
         for (let block of rawBlocks) {
             block = block.trim();
             if (!block) continue;
@@ -1397,22 +1957,43 @@
         return items;
     }
 
+    function updateGlobalSourceIndicators() {
+        const states = Object.values(sourceStatusState);
+        const dot = document.getElementById('global-source-dot');
+        dot.classList.remove('ok', 'err');
+        if (states.some(s => s === 'error')) {
+            dot.classList.add('err');
+        } else if (states.every(s => s === 'ok')) {
+            dot.classList.add('ok');
+        }
+
+        const totalItems = Object.values(gachaDatabase).reduce((sum, list) => sum + list.length, 0);
+        document.getElementById('total-db-badge').textContent = totalItems;
+    }
+
     async function loadDatabaseFile(catKey, filename) {
         const statusEl = document.getElementById(`status-${catKey}`);
         statusEl.className = 'status-indicator status-loading';
         statusEl.textContent = 'Загрузка...';
+        sourceStatusState[catKey] = 'loading';
+        updateGlobalSourceIndicators();
+
         try {
-            const response = await fetch(`${filename}?t=${Date.now()}`, { cache: 'no-store' });
+            const cleanName = filename.trim();
+            const response = await fetch(`${cleanName}?t=${Date.now()}`, { cache: 'no-store' });
             if (!response.ok) throw new Error();
             const text = await response.text();
             gachaDatabase[catKey] = parseChaosFile(text);
             statusEl.className = 'status-indicator status-success';
             statusEl.textContent = `ОК (${gachaDatabase[catKey].length})`;
+            sourceStatusState[catKey] = 'ok';
         } catch (e) {
             statusEl.className = 'status-indicator status-error';
             statusEl.textContent = 'Ошибка 404';
             gachaDatabase[catKey] = [];
+            sourceStatusState[catKey] = 'error';
         }
+        updateGlobalSourceIndicators();
     }
 
     async function loadAllDatabases() {
@@ -1486,13 +2067,13 @@
             }
 
             currentRollResults.push(rolledItem);
-            addToHistory(rolledItem);
-            grid.appendChild(createRollCardElement(rolledItem));
+            grid.appendChild(createRollCardElement(rolledItem, i));
         }
 
+        pushHistoryBatch(currentRollResults);
         stage.appendChild(grid);
         stageSummary.textContent = `Выпало лотов: ${currentRollResults.length}`;
-        copyAllBtn.style.display = currentRollResults.length > 1 ? 'inline-block' : 'none';
+        copyAllBtn.style.display = currentRollResults.length > 1 ? 'inline-flex' : 'none';
     }
 
     /* База данных */
@@ -1537,8 +2118,8 @@
         fill.style.width = `${Math.max(0, maxPercent - minPercent)}%`;
         fill.style.background = `linear-gradient(90deg, ${minMeta.color}, ${maxMeta.color})`;
 
-        minInput.style.color = minMeta.color;
-        maxInput.style.color = maxMeta.color;
+        minInput.style.color = minMeta.textColor;
+        maxInput.style.color = maxMeta.textColor;
 
         if (minVal === maxVal) {
             minSlider.style.zIndex = minVal > 5 ? '4' : '3';
@@ -1658,7 +2239,7 @@
         if (displayData.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'placeholder-text';
-            empty.style.cssText = 'grid-column: 1 / -1; padding: 32px 0;';
+            empty.style.cssText = 'grid-column: 1 / -1; padding: 36px 0;';
             empty.textContent = 'Лоты по заданным фильтрам не найдены.';
             grid.appendChild(empty);
             return;
@@ -1670,7 +2251,7 @@
 
             const card = document.createElement('article');
             card.className = 'db-card';
-            card.style.setProperty('--rarity-color', meta.color);
+            applyRarityCssVars(card, meta);
 
             const header = document.createElement('div');
             header.className = 'db-card-header';
@@ -1680,7 +2261,7 @@
             title.textContent = item.name;
 
             const num = document.createElement('span');
-            num.className = 'db-card-num';
+            num.className = 'db-card-num tabular';
             num.textContent = `#${item.id}`;
 
             header.append(title, num);
@@ -1689,13 +2270,19 @@
             metaRow.className = 'db-card-meta';
 
             const leftMeta = document.createElement('div');
+            leftMeta.className = 'db-card-meta-left';
+
             const catSpan = document.createElement('span');
-            catSpan.textContent = `${catMeta.icon} ${catMeta.name} · `;
-            const rankSpan = document.createElement('span');
-            rankSpan.style.color = meta.color;
-            rankSpan.style.fontWeight = '700';
-            rankSpan.textContent = `${meta.label} (${item.rating.toFixed(1)})`;
-            leftMeta.append(catSpan, rankSpan);
+            catSpan.textContent = `${catMeta.icon} ${catMeta.name}`;
+
+            const rankBadge = document.createElement('span');
+            rankBadge.className = 'lot-rarity-badge';
+            rankBadge.textContent = `${meta.label} · ${item.rating.toFixed(1)}`;
+
+            leftMeta.append(catSpan, rankBadge);
+
+            const actionsWrap = document.createElement('div');
+            actionsWrap.className = 'db-card-actions';
 
             const copyBtn = document.createElement('button');
             copyBtn.type = 'button';
@@ -1705,13 +2292,22 @@
                 copyTextWithFeedback(copyBtn, formatLotForCopy(item), 'Копировать', '✓ Скопировано');
             });
 
-            metaRow.append(leftMeta, copyBtn);
+            actionsWrap.appendChild(copyBtn);
+            metaRow.append(leftMeta);
+
+            if (dbViewMode !== 'list') {
+                metaRow.appendChild(actionsWrap);
+            }
 
             const desc = document.createElement('div');
             desc.className = 'db-card-desc';
             desc.textContent = item.description || 'Описание лота отсутствует.';
 
             card.append(header, metaRow, desc);
+            if (dbViewMode === 'list') {
+                card.appendChild(actionsWrap);
+            }
+
             grid.appendChild(card);
         });
     }
@@ -1741,23 +2337,35 @@
 
     function updateCustomLotPreview() {
         document.getElementById('custom-lot-preview').textContent = buildCustomLotString();
+
+        const rawRating = parseFloat(document.getElementById('custom-lot-rating').value);
+        const badge = document.getElementById('custom-lot-rarity-badge');
+        const safeRating = isNaN(rawRating) ? 1.0 : Math.min(10, Math.max(0.1, rawRating));
+        const meta = getRarityMeta(safeRating);
+        applyRarityCssVars(badge, meta);
+        badge.textContent = meta.label;
     }
 
     function openGoogleFormWithLot() {
         const rawName = document.getElementById('custom-lot-name').value.trim();
         const rawRating = parseFloat(document.getElementById('custom-lot-rating').value);
+        const hintEl = document.getElementById('submit-status-hint');
+
+        hintEl.classList.remove('is-error', 'is-success');
+
         if (!rawName || isNaN(rawRating) || rawRating < 0.1 || rawRating > 10.0) {
-            alert('Укажите название лота и рейтинг от 0.1 до 10.0.');
+            hintEl.textContent = 'Укажите название лота и корректный рейтинг от 0.1 до 10.0 перед отправкой.';
+            hintEl.classList.add('is-error');
+            if (!rawName) document.getElementById('custom-lot-name').focus();
             return;
         }
 
         const lotLine = buildCustomLotString();
-        const hintEl = document.getElementById('submit-status-hint');
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(lotLine).then(() => {
                 hintEl.textContent = '✓ Строка скопирована! Вставьте её (Ctrl+V) в открывшуюся Google Форму.';
-                hintEl.style.color = '#34d399';
+                hintEl.classList.add('is-success');
             }).catch(() => {});
         }
 
@@ -1772,9 +2380,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
                 const tabId = btn.dataset.tab;
                 document.getElementById(`tab-${tabId}`).classList.add('active');
                 if (tabId === 'database') applyFilters();
@@ -1805,6 +2417,7 @@
             rollHistory = [];
             saveHistoryToStorage();
             renderHistory();
+            showToast('История очищена');
         });
 
         ['search-name', 'search-desc'].forEach(id => {
@@ -1952,6 +2565,7 @@
         });
 
         setRatingRange(0.1, 10.0, true);
+        updateCustomLotPreview();
         loadHistoryFromStorage();
         loadAllDatabases();
     });
